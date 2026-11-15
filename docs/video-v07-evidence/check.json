@@ -1,0 +1,434 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-15T15:46:54.534Z",
+  "baseCommit": "c488d1cf78d450777d13e243bc1678483d465902",
+  "implementationBranch": "codex/jimeng-video-workbench-v07-20261115",
+  "scope": "implementation_and_isolated_acceptance_only",
+  "realVideoSubmissions": 0,
+  "newImageGenerationCalls": 0,
+  "newModelTurns": 0,
+  "canvasWrites": 0,
+  "voiceOrEditingTasks": 0,
+  "cli": {
+    "checkedAt": "2026-11-15T15:46:27.845Z",
+    "version": "1.4.22",
+    "contractDetected": true,
+    "directLoggedIn": false,
+    "canvasVersion": "1.2.0",
+    "canvasLoggedIn": true,
+    "models": [
+      {
+        "id": "seedance1.0fast",
+        "model": "seedance1.0fast",
+        "duration": {
+          "min": 5,
+          "max": 10,
+          "step": 1
+        },
+        "resolutions": [
+          "720p"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance1.5pro",
+        "model": "seedance1.5pro",
+        "duration": {
+          "min": 5,
+          "max": 12,
+          "step": 1
+        },
+        "resolutions": [
+          "720p"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance2.0",
+        "model": "seedance2.0",
+        "duration": {
+          "min": 4,
+          "max": 15,
+          "step": 1
+        },
+        "resolutions": [
+          "720p"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance2.0fast",
+        "model": "seedance2.0fast",
+        "duration": {
+          "min": 4,
+          "max": 15,
+          "step": 1
+        },
+        "resolutions": [
+          "720p"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance2.0_vip",
+        "model": "seedance2.0_vip",
+        "duration": {
+          "min": 4,
+          "max": 15,
+          "step": 1
+        },
+        "resolutions": [
+          "720p",
+          "1080p",
+          "4k"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance2.0fast_vip",
+        "model": "seedance2.0fast_vip",
+        "duration": {
+          "min": 4,
+          "max": 15,
+          "step": 1
+        },
+        "resolutions": [
+          "720p"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance2.0mini",
+        "model": "seedance2.0mini",
+        "duration": {
+          "min": 4,
+          "max": 15,
+          "step": 1
+        },
+        "resolutions": [
+          "720p"
+        ],
+        "ratioSupported": true
+      },
+      {
+        "id": "seedance2.5",
+        "model": "seedance2.5",
+        "duration": {
+          "min": 4,
+          "max": 30,
+          "step": 1
+        },
+        "resolutions": [
+          "480p",
+          "720p",
+          "1080p"
+        ],
+        "ratioSupported": false
+      }
+    ],
+    "defaults": {
+      "model": "seedance2.0_vip",
+      "durationSeconds": 5,
+      "resolution": "720p",
+      "audioMode": "provider_default"
+    },
+    "audio": {
+      "nativeDisableSupported": false,
+      "modes": [
+        "provider_default",
+        "mute_derivative"
+      ],
+      "status": "native_disable_not_supported",
+      "reason": "实际image2video帮助没有音频开关；mute_derivative是独立本地去音轨派生计划，不能称为模型原生无声。"
+    },
+    "inputImage": {
+      "localFileRequired": true,
+      "supportedFormats": null,
+      "minimumDimensions": null,
+      "maximumDimensions": null,
+      "status": "not_specified_in_help",
+      "reason": "本机image2video帮助未给出输入格式、像素和大小限制，提交前仍需核实；不从其他渠道推断。"
+    },
+    "quote": {
+      "status": "unknown",
+      "canQuote": false,
+      "channel": "dreamina-cli-image2video",
+      "reason": "direct CLI帮助没有报价命令；所有生成消耗积分，但缺本账号本模型本参数的权威报价。余额不是报价，画布报价不能套用。"
+    },
+    "canvasImport": {
+      "status": "detected_not_verified",
+      "uploadCommand": "dreamina-canvas resource upload --project-id <UUID> --file <video> --type video --import-kind external_generated --resource-id <UUID>",
+      "nodeCommand": "dreamina-canvas node create video --project-id <UUID> --resource-id <registeredUUID> --import-kind external_generated --submit-id <UUID>",
+      "reason": "仅核对官方Schema与帮助，未上传、写节点或同步画布；直接视频成功不等于画布已导入。"
+    },
+    "canSubmit": false,
+    "realSubmissionEnabled": false,
+    "nativeSubmissionEnabled": false,
+    "actualGenerationVerified": false,
+    "evidence": [
+      {
+        "command": "dreamina version",
+        "exitCode": 0,
+        "sha256": "0f488e07030fd488c35ca68e17f080059ad325ca5c8f23ab9291d539d0b2521b",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina -h",
+        "exitCode": 0,
+        "sha256": "2693bdbf45369f4e81a4748aeb50e6b15296b81a84122c4e61ff64351cb4ac8a",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina image2video -h",
+        "exitCode": 0,
+        "sha256": "5556de03489978a611d71558b1fc3851899440e721ff79dae6c1f416da732a13",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina query_result -h",
+        "exitCode": 0,
+        "sha256": "a6ca9c9a3f072581e256dfbfb7af229f47779d86efe083dd4f44265bef426e3c",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina user_credit",
+        "exitCode": 1,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina-canvas version",
+        "exitCode": 0,
+        "sha256": "d4b982e1492b57988ce115b68fdbe38e8ea0ad237f2caab5a9e0f7434777fc6b",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina-canvas auth status",
+        "exitCode": 0,
+        "sha256": "c0084d56398c06ed6bf03240dc67c2738fa2a606fbcfacb7926c3543647fd560",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina-canvas schema",
+        "exitCode": 0,
+        "sha256": "0f501ad7b7a9229ac450abfe76e0c9de318771fd0021290a169c484d688387bd",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina-canvas resource upload --help",
+        "exitCode": 0,
+        "sha256": "7be9f9f9200669e078a7af3ff6e8b03811f86c22ae871f61cba2dbc622de313b",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina-canvas node create video --help",
+        "exitCode": 0,
+        "sha256": "c3191673c19d4bda86475e6259eea7ca49e2de626347121e6675c5f0754e850b",
+        "runtimeVerified": false
+      },
+      {
+        "command": "dreamina-canvas node quote --help",
+        "exitCode": 0,
+        "sha256": "12eb9fb9f854007096e8a450c3ecadd11b7c25b9eed2d26d863b9b483cf370d5",
+        "runtimeVerified": false
+      }
+    ]
+  },
+  "actualCliVideoOutputVerified": false,
+  "preservation": {
+    "originalFiles": 500,
+    "byteIdentical": 500,
+    "excludedServiceLock": "studio.lock",
+    "originalDataDirectoryReused": true,
+    "authenticationConfigurationModified": false,
+    "originalImageApplicationSubmissions": 1,
+    "originalImageBudgetRemaining": 0,
+    "originalFailedTaskUnchanged": true,
+    "autoImageConnectorChanged": false,
+    "autoImageEntryEnabled": false
+  },
+  "tests": {
+    "command": "node --test tests/*.test.mjs",
+    "tests": 252,
+    "passed": 252,
+    "failed": 0,
+    "baseline": 215,
+    "adapterCases": 10,
+    "backendCases": 22,
+    "mediaCases": 3,
+    "httpCases": 2,
+    "realProviderCalls": 0
+  },
+  "videoBrowser": {
+    "passed": true,
+    "consoleExceptions": 0,
+    "fixtureOnly": true,
+    "testVideo": {
+      "sha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+      "width": 1280,
+      "height": 720,
+      "durationSeconds": 5,
+      "audioStreams": 0
+    },
+    "fixtureCalls": {
+      "submit": 2,
+      "query": 3,
+      "download": 3
+    },
+    "checks": [
+      "当前人工选用的TEST图片显示实际Hash/版本；CLI与画布分开，未知视频报价禁提交，不把余额或文字报价当视频价格",
+      "有明确隔离费用依据后人工确认；重复准备和重复提交复用同一任务，仅1次fixture提交、0真实提交",
+      "查询失败继续原ID；下载失败只重试原下载；FFprobe实测后才导入候选，真实Chrome加载并播放测试MP4，未自动检查或选用",
+      "候选、人工检查和显式选用分别保存；测试来源醒目标识，费用未知不显示免费",
+      "显式单镜重做另存任务和第二个视频版本；旧片可读取、旧选用记录保留，新候选不自动替换",
+      "上游选用图片改判拒绝后两个旧视频及任务需复核；保留文件与历史，不重新生成",
+      "服务重启恢复原任务号、真实测试文件、人工选用历史和过期状态；0自动重提、0未处理页面异常"
+    ]
+  },
+  "existingPages": {
+    "images": {
+      "passed": true,
+      "checks": [
+        "真实Chrome显示三镜头、人物/场景版本、画面提示词与导演规则；费用待确认、手工出图及正式阶段未接入分开说明",
+        "通过实际文件控件上传并预览带像素标记的测试PNG；人物与场景各自人工检查后选用，Hash/格式/尺寸与来源声明真实保存",
+        "真实提示词任务包与ZIP包含两份选定参考及Hash，attached=false且官网未发送；仅文字实体引用不冒充图片附加",
+        "三镜头实际图片各自绑定当前分镜版本，检查后人工选用；第一镜关联实际导出的任务包，其他手工上传明确未验证模型输入",
+        "仅第二镜换图；前后镜选用不变，旧图可读取，两个图片版本与替换历史保留",
+        "人物参考换版使受影响分镜图需复核；旧参考、旧图及选用历史均保留，缓存JSON下载、旧提示词复制及ZIP均被当前门禁拒绝",
+        "保存输入改变后旧图片全部明确需复核；重启恢复7份实际文件、Hash、旧版、人工检查与选择历史，0页面异常"
+      ]
+    },
+    "creative": {
+      "passed": true,
+      "checks": [
+        "从已保存构思执行文字任务，独立隔离runner产生可见候选，未访问即梦报价",
+        "真实Chrome显示15导演/17预设数据、显式手册勾选默认关闭、三镜头三区编辑；两种预设规则差异可见，人物天气保持",
+        "生成分镜候选与独立审阅分别保存；模型PASS未自动采用或冒充正式岗位PASS",
+        "人工点击采用候选，人工修改另存不可变版本；轮询不覆盖未保存输入",
+        "人工剧本新版本成为实际分镜来源，继续生成绑定新版本而非旧候选",
+        "新要求使旧分镜和审阅过期，后端拒绝旧候选采用并保留人工稿",
+        "重启恢复原任务、原候选、人工版本及审阅过期状态；无重复调用，无未处理页面异常"
+      ]
+    },
+    "script": {
+      "passed": true,
+      "checks": [
+        "从已保存创作说明整理输入并显示未知费用",
+        "通过显式按钮保存并核对画布绑定（隔离适配器）",
+        "费用未知时按钮禁用、后端拒绝、重复准备复用原request-id，零生成调用",
+        "轮询保留未保存剧本与未保存输入",
+        "人工修改另存新版本，历史稿完整保留；独立报告与稿件分开显示（隔离报告）",
+        "上游改变后旧剧本和独立报告均标记需要复核，不冒充有效审阅",
+        "独立服务重启后稿件、报告、原request-id与过期状态恢复",
+        "真实Chrome无未处理页面异常"
+      ]
+    }
+  },
+  "localPreparedBrowser": {
+    "passed": true,
+    "checks": [
+      "本机实际prepared任务展示费用待确认，提交按钮禁用，未产生外部任务ID或消费意图",
+      "实际选用的TEST PNG可解码，Hash、图片版本与分镜版本绑定一致",
+      "直连待登录、画布已登录、无原生静音参数分别展示，不把画布登录或报价套用直连",
+      "原500份数据文件Hash不变，原失败任务及1/1保留；本轮真实视频、图片和模型调用均为0"
+    ],
+    "realVideoSubmissions": 0
+  },
+  "preparedProposal": {
+    "projectId": "76e18591-47fc-48cf-992d-112d183a3036",
+    "image": {
+      "id": "7910017a-b01d-4dca-9ab2-1309c374aeca",
+      "version": 1,
+      "width": 1280,
+      "height": 720,
+      "sha256": "0a016af311df50b5b82ead4dc39292d03e8ed5eef738eac3197336de3c6b53ba",
+      "source": {
+        "kind": "test",
+        "description": "确定性软件测试PNG，实际像素明确TEST FIXTURE / NOT AI，1280×720；非AI生成、非个人素材，不作为剧情视觉质量通过依据。"
+      },
+      "selected": true,
+      "reviewId": "ffd0d260-0865-4482-90f3-59bbf317bf8d",
+      "storyboardVersion": "7a1d65e2-ceaa-4ee7-8d57-d0e442de62f2",
+      "url": "/api/projects/76e18591-47fc-48cf-992d-112d183a3036/image-assets/7910017a-b01d-4dca-9ab2-1309c374aeca"
+    },
+    "task": {
+      "id": "00e1653b-f54a-461e-8a6c-09430b7c8e15",
+      "requestId": "b44dada5-1289-4179-be6a-2499b97435bb",
+      "status": "prepared",
+      "parameters": {
+        "model": "seedance2.0_vip",
+        "durationSeconds": 5,
+        "resolution": "720p",
+        "audioMode": "provider_default",
+        "motionPrompt": "保持首帧测试卡的文字和布局；固定机位，5秒内仅蓝色色块做轻微明暗变化。不新增人物、真实场景或额外字幕。本次是软件链路验收。",
+        "ratioPolicy": "infer_from_first_frame",
+        "audioDescription": "保留模型原始音频行为，CLI未验证原生静音；下载后实测音轨。"
+      },
+      "quote": {
+        "status": "unknown",
+        "currency": "CREDITS",
+        "unit": "credits/task",
+        "amount": null,
+        "channel": "dreamina-cli-image2video",
+        "parameters": {
+          "model": "seedance2.0_vip",
+          "durationSeconds": 5,
+          "resolution": "720p",
+          "audioMode": "provider_default"
+        },
+        "basis": "本机dreamina 1.4.22顶层和image2video帮助未暴露本渠道报价命令；余额、文字报价和画布节点报价均不能套用。",
+        "sources": [
+          {
+            "type": "actual_cli_help",
+            "command": "dreamina -h; dreamina image2video -h",
+            "channel": "dreamina-cli-image2video"
+          }
+        ],
+        "conditions": [
+          "当前账号、模型、时长、分辨率和渠道的权威报价尚未取得。"
+        ],
+        "expiresAt": null,
+        "canSubmit": false,
+        "officialQuoteId": null,
+        "cnyAmount": null
+      },
+      "creditsBudget": 100,
+      "submittedAt": null,
+      "externalTaskId": null,
+      "bindingHash": "193329f0567c825b2ef82f8ca84421ea1e1d7a596a4ace5b298f3fc68b821872"
+    },
+    "page": "http://127.0.0.1:4320/video.html?projectId=76e18591-47fc-48cf-992d-112d183a3036",
+    "budgetMeaning": "100积分只是待确认方案的建议硬上限，不是报价或授权；费用未知仍禁止提交。",
+    "currentCapability": {
+      "directLoggedIn": false,
+      "canvasLoggedIn": true,
+      "nativeAudioDisable": false,
+      "canSubmit": false,
+      "canvasImport": "detected_not_verified"
+    }
+  },
+  "ffprobeVersion": "ffprobe version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers",
+  "audio": {
+    "nativeDisableSupported": false,
+    "originalRetained": true,
+    "derivativePlanOnly": true,
+    "productionDerivativeExecuted": false,
+    "deterministicFixtureDerivativeTested": true
+  },
+  "canvas": {
+    "status": "not_synced",
+    "importContract": "detected_not_verified",
+    "actualImportExecuted": false
+  },
+  "formalStages": {
+    "guard": "not_checked",
+    "ledger": "not_integrated",
+    "productionPackagePass": false
+  },
+  "blockersForRealAcceptance": [
+    "direct dreamina CLI当前未登录；canvas登录不能替代。",
+    "缺本账号、本模型、5秒、720p、direct image2video渠道可核实费用或可靠上限；预算100只是提议。",
+    "输入图片格式/像素限制及实际任务JSON/下载契约尚未以真实任务验收。",
+    "没有原生音频关闭参数；若要求无音轨，需要另行明确本地派生并保留原片。"
+  ]
+}
