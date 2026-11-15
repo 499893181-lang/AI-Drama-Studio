@@ -1,6 +1,6 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.3.0保留立项与即梦文字适配，新增本机Codex剧本、导演规则、分镜候选和新会话独立审阅工作台。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.4.0保留立项、即梦文字适配、本机Codex剧本与分镜，新增实体来源证据校验及手工出图、实际图片导入与版本工作台。
 
 公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。网页版调试先读[调试入口](docs/CHATGPT_CONTEXT.md)与[源码索引](llms.txt)。GitHub提供代码和文档；本机服务、个人项目和认证不会随仓库公开。
 
@@ -16,8 +16,14 @@ node .\src\server.mjs
 
 打开[故事立项](http://127.0.0.1:4317)、[Codex创作与分镜](http://127.0.0.1:4317/creative.html)或[可选即梦文字](http://127.0.0.1:4317/script.html)。需要Node.js22+，没有npm运行依赖或独立数据库。启动器支持 `NODE_BIN`、PATH和已安装CodexPrimaryRuntime，不下载程序或修改全局PATH。保留旧服务并行验收时可用 `.\scripts\start.ps1 -Port 4318`，打开对应4318地址；每个服务须使用独立数据目录。
 
+[分镜图片工作台](http://127.0.0.1:4317/images.html)从已保存分镜开始。独立图片实施worktree可用 `.\scripts\start.ps1 -Port 4319`，打开 [4319图片入口](http://127.0.0.1:4319/images.html)。[图片操作与数据说明](docs/image-workbench.md) · [本机图像能力核查](docs/image-tools-check.md)。
+
+0.4.0[本轮验收](docs/image-workbench-acceptance.md)：134/134测试通过；真实Chrome验证三镜头图片绑定、单镜换图、参考及输入变更需复核、实际ZIP、旧版保留和重启恢复。测试图片均明确标注非AI生成，本轮没有发起任何模型或图像生成任务。
+
 ## 当前功能
 
+- 图片工作台：逐镜实际提示词、导演规则、实体版本引用；PNG/JPEG/静态WebP上传、预览、文件Hash/尺寸/来源声明；人工检查和选用分开，单镜换图追加版本，旧文件和选择历史保留。导出JSON及含实际参考图片的ZIP，尚未发送的素材不冒称已附加；旧包回图和上游变化需复核。费用待确认，无自动图像生成或付费API切换。
+- 来源保护：新增实体自报 `source=user` 需可定位输入证据；无充分证据保持待确认，AI补充保留说明。采用和下游核对快照与实体Hash，历史原文保留，不补造证据；待确认候选须显式确认保存，不能因此变为用户事实锁。
 - Codex创作与分镜：本机官方CLI生成剧本候选、分镜候选，新会话独立审阅，人工采用/编辑保存。15位导演、17个作品级预设显示规则来源，90条手册扩展显式勾选，案例默认关闭。静态、摄影和后期声音分栏；任务包及提示词可导出。采用前从当前存储重编译Hash，保留人工稿、原始回执及不可变版本。[操作与能力边界](docs/creative-workbench.md)。
 - 故事立项：项目列表、默认30秒、横竖屏、画风、参考素材、预算、真实Codex扩写、人工修改、revision冲突保护与重启恢复。候选采用一次写入正文与来源，备份保留旧人工稿。
 - 剧本输入：从当前保存的创作说明确定性整理大纲/单集参数，显式绑定并只读核验真实即梦画布与空间ID，不自动创建画布。
@@ -52,6 +58,7 @@ Codex继续使用本机认证与模型配置；未认证时执行 `codex login`�
 node --test tests/*.test.mjs
 node tests/script-browser-smoke.mjs
 node tests/creative-browser-smoke.mjs
+node tests/image-browser-smoke.mjs
 ```
 
 浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。
@@ -77,5 +84,5 @@ node scripts/preview-creative.mjs --list
 node scripts/preview-creative.mjs examples/creative/waiting-shot.json
 ```
 
-知识库版本为0.4.0，工作台版本为0.3.0。规则核心已接入文字与分镜页面，图像、即梦画布／无对白视频及后期尚未接入。默认路线采用本机Codex编写与独立审阅；既有即梦剧本工具保留可选。四岗位正式guard与账本尚未接入，因此候选有效、人工采用或模型审阅PASS均不代表正式制作包通过。
+知识库版本为0.4.0，软件工作台版本为0.4.0，二者分别管理。规则核心已接入文字与分镜页面；图片手工任务包、实际文件导入和人工选用已接入，自动出图、即梦画布／无对白视频及后期仍未接入。默认文字路线采用本机Codex；既有即梦剧本工具保留可选。四岗位正式guard与账本尚未接入，因此候选有效、人工采用、选图或模型审阅PASS均不代表正式制作包通过。
 

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { Store } from '../src/store.mjs';
 import { CreativeService } from '../src/creative-jobs.mjs';
+import { entityFacts } from '../src/entity-provenance.mjs';
 import { fixtureIdea, fixtureSubject, fixtureEntities, fixtureShots, fixtureResult, isolatedRunner } from './creative-fixtures.mjs';
 
 const artifacts = path.resolve('tests/.artifacts');
@@ -32,7 +33,7 @@ async function finished(ctx, job) {
 }
 async function script(ctx) { const task = await finished(ctx, start(ctx, 'script')); assert.equal(task.status, 'succeeded', task.error); return task; }
 async function storyboard(ctx, scriptTaskId) { const task = await finished(ctx, start(ctx, 'storyboard', { scriptTaskId })); assert.equal(task.status, 'succeeded', task.error); return task; }
-function adopt(ctx, task) { const ws = current(ctx); return ctx.service.adopt(ctx.project.id, { revision: ws.revision, projectRevision: ws.project.revision, taskId: task.id }); }
+function adopt(ctx, task) { const ws = current(ctx); return ctx.service.adopt(ctx.project.id, { revision: ws.revision, projectRevision: ws.project.revision, taskId: task.id, confirmPendingSources: true }); }
 
 test('Codex文字路线不依赖即梦报价，重复点击只执行一次；30秒三镜头与独立审阅分开保存', async t => {
   const ctx = fixture(t);
@@ -219,8 +220,8 @@ test('已有用户实体不吞掉剧本候选新增AI实体，稳定ID和来源�
   update(ctx, { selectedScriptTaskId: generated.id });
   const ws = current(ctx);
   assert.equal(ws.effectiveEntities.length, 4);
-  assert.deepEqual(ws.effectiveEntities.find(entity => entity.id === fixtureEntities[0].id), fixtureEntities[0]);
-  assert.deepEqual(ws.effectiveEntities.find(entity => entity.id === added.id), added);
+  assert.deepEqual(entityFacts(ws.effectiveEntities.find(entity => entity.id === fixtureEntities[0].id)), fixtureEntities[0]);
+  assert.deepEqual(entityFacts(ws.effectiveEntities.find(entity => entity.id === added.id)), added);
   assert.deepEqual(ws.entities, fixtureEntities);
   assert.deepEqual(ws.locks, locks);
   const board = await storyboard(ctx, generated.id);

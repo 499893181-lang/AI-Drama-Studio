@@ -1,9 +1,11 @@
 # AI-Drama-Studio
 
-> Windows 本地中文 AI 短剧软件0.3.0；包含立项、可选即梦剧本适配、本机Codex文字与分镜候选工作台。本索引用于查找公开源代码与开发记录，不表示读取方已自动加载全部文件。
+> Windows 本地中文 AI 短剧软件0.4.0；包含立项、可选即梦剧本适配、Codex文字分镜、实体来源及图片文件版本工作台。本索引用于查找公开源代码与开发记录，不表示读取方已自动加载全部文件。
 
 ## 调试入口
 
+- [分镜图片工作台](docs/image-workbench.md)、[官方能力检查](docs/image-tools-check.md)：手工任务包、实际图片导入、人工检查与选用；自动出图未接。源码：[图片存储](src/image-store.mjs)、[文件格式](src/image-files.mjs)、[来源证据](src/entity-provenance.mjs)、[页面](public/images.js)。
+- [0.4.0来源修复与图片验收](docs/image-workbench-acceptance.md)：134项回归、实际Chrome图片流程与恢复，明确测试图不冒充AI产物；[机器证据](docs/image-workbench-evidence/acceptance.json)。
 - [当前文字与分镜工作台](docs/creative-workbench.md)：Codex剧本、分镜、新会话审阅、人工采用；[服务](src/creative-jobs.mjs)、[当前输入与不可变版本](src/creative-store.mjs)、[真实Codex执行](src/creative-runner.mjs)、[页面](public/creative.js)。正式guard与媒体未接入。
 - [当前创作路线与三手册／Huobao整合](docs/creative-knowledge-v04.md)：知识库0.4的来源与设计基线。该历史文档所说的界面待接已由0.3.0实现，媒体仍待接。
 - [创作编译核心](src/creative-design.mjs)、[来源与规则数据](knowledge/creative/manifest.json)、[离线预览命令](scripts/preview-creative.mjs)。知识库0.4不代表工作台已升级或媒体能力已实现。

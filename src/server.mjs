@@ -7,6 +7,8 @@ import { CodexJobs } from './codex.mjs';
 import { inspectTools } from './tools.mjs';
 import { ScriptService } from './scripts.mjs';
 import { CreativeService } from './creative-jobs.mjs';
+import { ImageWorkspace } from './image-store.mjs';
+import { inspectImageCapabilities } from './image-capabilities.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -30,6 +32,13 @@ export function createStudio(options = {}) {
   const jobs = new CodexJobs(store);
   const scripts = new ScriptService(store, options.scriptOptions);
   const creative = new CreativeService(store, options.creativeOptions);
+  const images = new ImageWorkspace(store, { creativeWorkspace: creative.workspace, ...options.imageOptions });
+  let imageReport = null, imageInspection = null;
+  const getImageCapabilities = () => {
+    if (imageReport && Date.now() - Date.parse(imageReport.checkedAt) < 60000) return Promise.resolve(imageReport);
+    if (!imageInspection) imageInspection = (options.inspectImageTools ?? inspectImageCapabilities)().then(value => { imageReport = value; return value; }).finally(() => { imageInspection = null; });
+    return imageInspection;
+  };
   let report = null, inspection = null;
   const withRuntimeEvidence = value => {
     const result = structuredClone(value);
@@ -64,7 +73,8 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.3.0', phase: 'creative-workbench', supportedPhases: ['story-initiation', 'script', 'creative'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.4.0', phase: 'image-workbench', supportedPhases: ['story-initiation', 'script', 'creative', 'images'], now: now() }); return; }
+      if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/creative/knowledge' && method === 'GET') { json(response, creative.catalog()); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
       if (url.pathname === '/api/tools' && method === 'GET') { json(response, await getTools()); return; }
@@ -76,6 +86,35 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'images') {
+          if (segments.length === 4 && method === 'GET') { json(response, images.view(id)); return; }
+          if (segments.length === 7 && segments[4] === 'packets' && segments[6] === 'bundle' && method === 'GET') {
+            if (!validId(segments[5])) throw new AppError('图片任务包标识不正确。');
+            const bundle = images.bundle(id, segments[5]);
+            response.writeHead(200, { 'Content-Type': bundle.mimeType, 'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(bundle.name)}`, 'Content-Length': bundle.bytes.length, 'Cache-Control': 'no-store' });
+            response.end(bundle.bytes); return;
+          }
+          if (segments.length === 5 && method === 'POST') {
+            if (segments[4] === 'import') {
+              let metadata;
+              try {
+                metadata = JSON.parse(decodeURIComponent(request.headers['x-image-metadata'] ?? ''));
+                if (!metadata || typeof metadata !== 'object' || Array.isArray(metadata)) throw new Error();
+              } catch { throw new AppError('图片上传元信息不是有效JSON对象。'); }
+              json(response, images.import(id, metadata, await body(request, 20 * 1024 * 1024)), 201); return;
+            }
+            const input = await readJson(request);
+            if (segments[4] === 'review') { json(response, images.review(id, input)); return; }
+            if (segments[4] === 'select') { json(response, images.select(id, input)); return; }
+            if (segments[4] === 'prepare') { json(response, images.prepare(id, input), 201); return; }
+          }
+        }
+        if (segments[3] === 'image-assets' && segments.length === 5 && method === 'GET') {
+          if (!validId(segments[4])) throw new AppError('图片标识不正确。');
+          const file = images.file(id, segments[4]);
+          response.writeHead(200, { 'Content-Type': file.mimeType, 'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(file.name)}`, 'Content-Length': fs.statSync(file.path).size, 'Cache-Control': 'no-store' });
+          fs.createReadStream(file.path).pipe(response); return;
+        }
         if (segments[3] === 'creative') {
           if (segments.length === 4 && method === 'GET') { json(response, creative.view(id)); return; }
           if (segments.length === 4 && method === 'PUT') { json(response, creative.update(id, await readJson(request))); return; }
@@ -170,7 +209,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, getTools, close: () => { creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, images, getTools, getImageCapabilities, close: () => { creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {
