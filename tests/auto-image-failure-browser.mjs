@@ -34,7 +34,7 @@ try {
   await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('image-unverified-artifact'))})`, 20000);
   const generation = await (await fetch(`${base}/api/projects/${project.id}/images/generation`)).json(), task = generation.tasks[0];
   assert.equal(task.status, 'failed'); assert.equal(task.result, null); assert.equal(generation.usageLimit.remaining, 0); assert.equal(generation.capability.actualGenerationVerified, false); assert.equal(app.images.get(project.id).assets.length, 0); assert.equal(calls, 1);
-  assert.ok(await browser.evaluate("document.body.textContent.includes('真实产物已保留，但未通过自动验收')&&document.body.textContent.includes('人民币费用：未知')&&document.body.textContent.includes('积分费用：未知')"));
+  assert.ok(await browser.evaluate("document.body.textContent.includes('隔离测试产物已保留（非真实生成），未通过自动验收')&&document.body.textContent.includes('人民币费用：未知')&&document.body.textContent.includes('积分费用：未知')"));
   report.checks.push('失败仍占原提交次数，官方完成文字及真实文件不能冒充自动候选或免费');
   const decoded = await browser.evaluate(`(async()=>{const response=await fetch('/api/image-generation-tasks/${task.id}/artifacts/0');if(!response.ok)throw new Error('保留原图读取失败');const url=URL.createObjectURL(await response.blob());const image=new Image();image.src=url;await image.decode();const result={width:image.naturalWidth,height:image.naturalHeight};URL.revokeObjectURL(url);return result;})()`);
   assert.deepEqual(decoded, { width: 320, height: 180 }); report.checks.push('只读保留原图接口返回真实可解码PNG，不将它导入为可信自动来源');

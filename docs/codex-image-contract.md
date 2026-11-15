@@ -1,5 +1,7 @@
 # 本机 Codex 单图调用契约核查
 
+0.5.1纠正与更新：`inputImages`不是官方必返字段，实际Schema允许缺省、无default；缺失应保持未知而非认定协议违规。返回时只证明图像请求成功读取本地文件，不能当远端使用或视觉符合证明。[本轮附件核查](image-reference-contract-v061.md)、[故障期中断](image-execution-faults-v061.md)及[无新增生成验收](image-contract-v061-acceptance.md)优先于下方0.5.0历史描述。严格单次不能保证，自动入口继续关闭，原failed和1/1保持。
+
 检查日期：2026-11-15。本轮唯一真实验收已生成一张实际图片，但自动流程验收失败：原生hook启动失败，工具仍继续执行，完成事件缺少实际参考附件证明。原图、原始回执和失败原文保留；未导入为成功候选。当前 `canSubmit=false`、`contractVerified=false`，runner自身也拒绝新提交，没有第二次模型turn。此记录区分官方说明、本机只读检测、软件隔离夹具和真实业务结果。
 
 ## 渠道与额度

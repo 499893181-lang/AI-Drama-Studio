@@ -30,25 +30,28 @@ export function createImageGuard({ directory, prompt, references = [], policy = 
   fs.writeFileSync(manifestPath, manifestBytes, { flag: 'wx' });
   const markerPath = path.join(directory, 'image-call.accepted.json');
   const logPath = path.join(directory, 'hook-events.jsonl');
+  const inputLogPath = path.join(directory, 'hook-inputs.jsonl');
   const scriptPath = path.join(directory, 'single-image-guard.mjs');
   const script = `import fs from 'node:fs';import{createHash}from'node:crypto';
 const sha=v=>createHash('sha256').update(v).digest('hex');
-const manifestPath=${JSON.stringify(manifestPath)}, markerPath=${JSON.stringify(markerPath)}, logPath=${JSON.stringify(logPath)};
+const manifestPath=${JSON.stringify(manifestPath)}, markerPath=${JSON.stringify(markerPath)}, logPath=${JSON.stringify(logPath)}, inputLogPath=${JSON.stringify(inputLogPath)};
+function observe(input,raw,updatedInput){const value={schemaVersion:1,kind:updatedInput===undefined?'pre_tool_observation':'requested_rewrite',at:new Date().toISOString(),hook_event_name:input.hook_event_name,tool_name:input.tool_name,tool_use_id:input.tool_use_id,stdinSha256:sha(raw),inputSha256:sha(JSON.stringify(input.tool_input)),manifestHash:sha(fs.readFileSync(manifestPath)),expectedManifestHash:${JSON.stringify(sha(manifestBytes))},finalToolExecutionVerified:false,backendReferenceUsageVerified:false,...(updatedInput===undefined?{tool_input:input.tool_input}:{requestedUpdatedInput:updatedInput,requestedUpdatedInputSha256:sha(JSON.stringify(updatedInput))})};const line=JSON.stringify(value);if(Buffer.byteLength(line,'utf8')>1048576)throw new Error('hook observation too large');fs.appendFileSync(inputLogPath,line+'\\n');}
 function deny(reason,input){try{fs.appendFileSync(logPath,JSON.stringify({at:new Date().toISOString(),allowed:false,toolName:input?.tool_name??null,toolUseId:input?.tool_use_id??null,reason})+'\\n');}catch{}process.stdout.write(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',permissionDecision:'deny',permissionDecisionReason:reason}}));}
-try{let raw='';for await(const chunk of process.stdin){raw+=chunk;if(raw.length>1000000)throw new Error('hook input too large');}const input=JSON.parse(raw);
+try{const chunks=[];let inputBytes=0;for await(const chunk of process.stdin){inputBytes+=chunk.length;if(inputBytes>1048576)throw new Error('hook input too large');chunks.push(chunk);}const raw=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks));const input=JSON.parse(raw);if(!input||typeof input!=='object'||Array.isArray(input)||typeof input.tool_use_id!=='string'||!input.tool_use_id||!input.tool_input||typeof input.tool_input!=='object'||Array.isArray(input.tool_input))throw new Error('hook input or tool_input invalid');observe(input,raw);
 if(input.hook_event_name!=='PreToolUse'||input.tool_name!=='image_genimagegen')deny('本次只允许受控的单次内置image_gen.imagegen；其他工具均禁止。',input);
 else{const bytes=fs.readFileSync(manifestPath);if(sha(bytes)!==${JSON.stringify(sha(manifestBytes))})throw new Error('trusted manifest changed');const manifest=JSON.parse(bytes);
 for(const ref of manifest.references)if(sha(fs.readFileSync(ref.path))!==ref.sha256)throw new Error('reference image hash changed');
 if(manifest.policy){const {Store}=await import(${JSON.stringify(pathToFileURL(path.join(import.meta.dirname,'store.mjs')).href)});const {ImageWorkspace}=await import(${JSON.stringify(pathToFileURL(path.join(import.meta.dirname,'image-store.mjs')).href)});const {creativeHash}=await import(${JSON.stringify(pathToFileURL(path.join(import.meta.dirname,'creative-store.mjs')).href)});const policy=manifest.policy;const current=new ImageWorkspace(new Store(policy.dataRoot)).assertExecutablePacket(policy.projectId,policy.packetId);if(creativeHash(current.packet.binding)!==policy.expectedBindingHash||creativeHash(current.packet.sourceSnapshot)!==policy.expectedInputSnapshotHash||current.packet.prompt!==manifest.prompt)throw new Error('current input, storyboard or reference approval changed before actual generation');const expected=current.references.map(ref=>ref.sha256).sort(),actual=manifest.references.map(ref=>ref.sha256).sort();if(JSON.stringify(expected)!==JSON.stringify(actual))throw new Error('current attachment list does not match trusted runtime copies');}
 try{fs.writeFileSync(markerPath,JSON.stringify({at:new Date().toISOString(),toolName:input.tool_name,toolUseId:input.tool_use_id,manifestHash:sha(bytes),references:manifest.references}),{flag:'wx'});}catch(error){if(error.code==='EEXIST'){deny('本次图像调用额度已使用，禁止再次调用、重试、细化或生成第二张。',input);process.exit(0);}throw error;}
 const updatedInput={prompt:manifest.prompt,transparent_background:false,...(manifest.references.length?{referenced_image_paths:manifest.references.map(ref=>ref.path)}:{})};
+observe(input,raw,updatedInput);
 fs.appendFileSync(logPath,JSON.stringify({at:new Date().toISOString(),allowed:true,toolName:input.tool_name,toolUseId:input.tool_use_id,manifestHash:sha(bytes),references:manifest.references})+'\\n');
 process.stdout.write(JSON.stringify({hookSpecificOutput:{hookEventName:'PreToolUse',permissionDecision:'allow',updatedInput}}));}}
 catch(error){deny('私有单图校验失败：'+error.message,null);}
 `;
   fs.writeFileSync(scriptPath, script, { flag: 'wx' });
   const command = buildImageGuardCommand(scriptPath);
-  return { directory, scriptPath, manifestPath, markerPath, logPath, scriptHash: sha(script), manifestHash: sha(manifestBytes), command,
+  return { directory, scriptPath, manifestPath, markerPath, logPath, inputLogPath, scriptHash: sha(script), manifestHash: sha(manifestBytes), command,
     config: { hooks: { PreToolUse: [{ matcher: '.*', hooks: [{ type: 'command', command, timeout: 10, async: false, statusMessage: '核对单次图像调用与真实参考图' }] }] } } };
 }
 

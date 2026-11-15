@@ -6,6 +6,7 @@ import { resolveExecutable, runProbe, redact } from './tools.mjs';
 import { createImageGuard, verifyImageGuard } from './codex-image-guard.mjs';
 import { openImageRpc } from './codex-image-rpc.mjs';
 import { inspectImage } from './image-files.mjs';
+import { createImageWatchdog } from './codex-image-watchdog.mjs';
 
 const sha = value => createHash('sha256').update(value).digest('hex');
 const canonicalFile = file => { const resolved=fs.realpathSync.native(file).replace(/^\\\\\?\\/, '');return process.platform==='win32'?resolved.toLowerCase():resolved; };
@@ -35,7 +36,7 @@ export function verifyImageSession(response) {
   if (response.modelProvider !== 'openai' || response.sandbox?.type !== 'readOnly' || response.approvalPolicy !== 'never') throw new Error('真实会话未确认使用官方OpenAI提供方、只读沙箱和禁止额外授权，停止提交。');
 }
 /** Retain actual failed output without upgrading it to a validated candidate. */
-export function failedImageReceipt({error,events=[],imageGeneration=null,threadId=null,turnId=null,turnCompleted=false,usage=null,accountUsage=null,processExitCode=null,cwd=null}) {
+export function failedImageReceipt({error,events=[],imageGeneration=null,threadId=null,turnId=null,turnCompleted=false,usage=null,accountUsage=null,processExitCode=null,cwd=null,executionDiagnostics=null}) {
   const envelope=[...events].reverse().find(event=>event.method==='item/completed'&&event.params?.item?.type==='imageGeneration')?.params;
   const generation=imageGeneration??envelope?.item??null,images=[];
   let artifactError=null;
@@ -49,7 +50,7 @@ export function failedImageReceipt({error,events=[],imageGeneration=null,threadI
       images.push({path:file,sha256:sha(bytes),verified:false});
     }
   }catch(cause){artifactError=redact(cause.message);}
-  return {exitCode:null,processExitCode,completed:false,turnCompleted,error:redact(error?.message??error??'真实图像完成条件未通过。'),threadId:threadId??envelope?.threadId??null,turnId:turnId??envelope?.turnId??null,imageGeneration:generation,images,usage,accountUsage,artifactError,runnerMode:'official-codex-account',verificationStatus:'unverified_actual_output',automaticallySelected:false};
+  return {exitCode:null,processExitCode,completed:false,turnCompleted,error:redact(error?.message??error??'真实图像完成条件未通过。'),threadId:threadId??envelope?.threadId??null,turnId:turnId??envelope?.turnId??null,imageGeneration:generation,images,usage,accountUsage,artifactError,executionDiagnostics,runnerMode:'official-codex-account',verificationStatus:'unverified_actual_output',automaticallySelected:false};
 }
 async function prepareSession({ binary, directory, cwd, prompt, references = [], policy, onEvent, signal, rawDirectory }) {
   const guard = createImageGuard({ directory, prompt, references, policy });
@@ -96,7 +97,7 @@ export async function inspectCodexImageCapability() {
   } catch (error) { return { ...base, message: redact(error.message), limitations: [redact(error.message)] }; }
   finally { session?.rpc.close(); }
 }
-/** Exactly one guarded native image call; caller persists its own submit intent. */
+/** Native path remains disabled: asynchronous observation is not a strict cap. */
 export async function runCodexImage({ prompt, references = [], cwd, signal, onEvent, policy, timeoutMs = 600000 }) {
   // The one authorized real acceptance attempt exposed an enforcement gap.
   // Reopening the connector requires a separately authorized acceptance change;
@@ -111,34 +112,38 @@ export async function runCodexImage({ prompt, references = [], cwd, signal, onEv
   fs.mkdirSync(hostDirectory, { recursive: true });
   fs.writeFileSync(path.join(hostDirectory, 'connector.intent.json'), JSON.stringify({ at: new Date().toISOString(), policy, references, promptHash: sha(prompt) }), { flag: 'wx' });
   const contract = await checkBinary(binary, hostDirectory);
-  let terminalResolve, terminalReject, session, timer, completed = false, turnId = null, completedThreadId = null, usage = null;
-  const generations = [], terminal = new Promise((resolve,reject) => { terminalResolve=resolve;terminalReject=reject; });
-  // Attach immediately so failed setup cannot create an unhandled rejection.
-  terminal.catch(() => {});
-  const abort=()=>terminalReject(new Error('本地等待已取消；原提交和结果保留，不自动重试。'));signal?.addEventListener('abort',abort,{once:true});
+  let session, watchdog, timer, completed = false, turnId = null, completedThreadId = null, usage = null;
+  const generations = [];
+  const abort=()=>watchdog?.fail('local_cancelled','本地等待已取消；异步中断不保证服务端已停，原提交保留，不自动重试。');signal?.addEventListener('abort',abort,{once:true});
   try {
     session = await prepareSession({ binary, directory: path.join(hostDirectory, 'guard'), cwd, prompt, references, policy, signal, rawDirectory: path.join(cwd, 'official-rpc'), onEvent: event => {
-      const p = event.params ?? {};
-      if (event.method === 'item/completed' && p.item?.type === 'imageGeneration') { generations.push(p); onEvent?.({ type:'image.item.completed',threadId:p.threadId,turnId:p.turnId,message:`真实图像工具状态：${p.item.status}` }); }
-      if (event.method === 'thread/tokenUsage/updated') { usage = p.tokenUsage; onEvent?.({type:'usage.updated',threadId:p.threadId,usage}); }
-      if (event.method === 'turn/completed') { turnId=p.turn?.id;completedThreadId=p.threadId;completed=p.turn?.status==='completed';completed?terminalResolve(p.turn):terminalReject(new Error(`官方turn终态：${p.turn?.status} ${JSON.stringify(p.turn?.error??'')}`)); }
-      if (event.method === 'connector/processClosed' && !completed) terminalReject(new Error(`官方进程提前结束：${p.exitCode}`));
+      watchdog?.event(event);
     } });
     verifyPrivateHook(await session.rpc.request('hooks/list',{threadId:session.threadId}),session.guard,true);
     if (signal?.aborted) throw new Error('提交前已取消。');
-    // Prompt never serves as the call limit: the trusted hook enforces wx once,
-    // pins the actual tool arguments and denies every other Function tool.
+    watchdog=createImageWatchdog({rpc:session.rpc,threadId:session.threadId,guard:session.guard,onDiagnostic:entry=>onEvent?.({type:`execution.${entry.type}`,threadId:session.threadId,turnId,message:entry.reason??entry.error??entry.type,diagnostic:entry}),onBoundEvent:event=>{
+      const p=event.params;
+      if(event.method==='item/completed'&&p.item?.type==='imageGeneration'){if(!generations.some(previous=>previous.item.id===p.item.id))generations.push(p);onEvent?.({type:'image.item.completed',threadId:p.threadId,turnId:p.turnId,message:`真实图像工具状态：${p.item.status}`});}
+      if(event.method==='thread/tokenUsage/updated'){usage=p.tokenUsage;onEvent?.({type:'usage.updated',threadId:p.threadId,turnId:p.turnId,usage});}
+      if(event.method==='turn/completed'){turnId=p.turn.id;completedThreadId=p.threadId;completed=p.turn.status==='completed';}
+    }});
+    // The script's wx ledger only arbitrates successfully executing scripts.
+    // A failed hook can fail open in native execution; observation and async
+    // interrupt below cannot guarantee a strict number of provider calls.
     const input = [{type:'text',text:`请直接调用一次原生 image_gen.imagegen，生成一张图片。不得调用其他工具、再次生成、细化、执行命令或API。实际提示词和附件由受信hook锁定。完成后结束。\n\n${prompt}`}, ...references.map(ref=>({type:'localImage',path:ref.path}))];
-    timer=setTimeout(()=>terminalReject(new Error('等待图像终态超时；原提交保留，不会自动重试。')),timeoutMs);
-    const started=await session.rpc.request('turn/start',{threadId:session.threadId,input},30000);const submittedTurnId=started.turn?.id??null;if(!turnId)turnId=submittedTurnId;
+    timer=setTimeout(()=>watchdog.fail('turn_timeout','等待图像终态超时；请求异步中断，原提交保留，不会自动重试。'),timeoutMs);
+    const started=await watchdog.startTurn({input});const submittedTurnId=started.turn?.id??null;if(!turnId)turnId=submittedTurnId;
     onEvent?.({type:'turn.started',threadId:session.threadId,turnId,message:'官方单次图像turn已提交。'});
-    await terminal; clearTimeout(timer);
+    await watchdog.waitForTurn(); clearTimeout(timer);watchdog.throwIfFailed();
     if (generations.length !== 1 || generations[0].item.status !== 'completed') throw new Error('未收到恰好一个真实完成的imageGeneration事件。');
     if(!submittedTurnId||turnId!==submittedTurnId||completedThreadId!==session.threadId||generations[0].threadId!==session.threadId||generations[0].turnId!==submittedTurnId)throw new Error('图像和终态事件不属于本次提交的会话与turn。');
     const imageGeneration=generations[0].item;
-    if (!fs.existsSync(session.guard.markerPath)) throw new Error('未找到私有hook准许的原生图像调用证据。');
-    const expected=references.map(ref=>`${canonicalFile(ref.path)}:${ref.sha256}`).sort(),actual=(imageGeneration.inputImages??[]).map(ref=>`${canonicalFile(ref.path)}:${ref.sha256}`).sort();
-    if(JSON.stringify(expected)!==JSON.stringify(actual))throw new Error('官方事件未证明完整实际参考图片及Hash。');
+    // inputImages is optional in this Schema. Its presence describes observed
+    // local inputs successfully read for the request, not server-side usage or
+    // semantic adherence. Absence is unknown, never an invented empty receipt.
+    if(references.length&&!Object.hasOwn(imageGeneration,'inputImages'))throw new Error('完成事件未返回本地图像工具入参证据（Schema允许缺省）；参考使用仍未验证，不能通过完整验收。');
+    const expected=references.map(ref=>`${canonicalFile(ref.path)}:${ref.sha256}`).sort(),actual=Array.isArray(imageGeneration.inputImages)?imageGeneration.inputImages.map(ref=>`${canonicalFile(ref.path)}:${ref.sha256}`).sort():null;
+    if(actual&&JSON.stringify(expected)!==JSON.stringify(actual))throw new Error('本地图像工具入参的参考文件及Hash与原请求不一致。');
     let imagePath=imageGeneration.savedPath;
     if (imagePath && (!path.isAbsolute(imagePath)||!fs.statSync(imagePath).isFile())) throw new Error('官方savedPath不是实际存在的绝对图片文件。');
     if (!imagePath && typeof imageGeneration.result === 'string') {
@@ -151,10 +156,14 @@ export async function runCodexImage({ prompt, references = [], cwd, signal, onEv
     let accountUsageAfter;try{accountUsageAfter=usageSummary(await session.rpc.request('account/rateLimits/read',{supportsLunaReserve:false,excludeResetCreditDetails:true}));}catch(error){accountUsageAfter={status:'unknown',error:redact(error.message)};}
     const exitCode=await session.rpc.shutdown();
     if(exitCode!==0)throw new Error(`图像turn完成但官方进程未干净结束（${exitCode}）；原始产物保留待核对。`);
-    return {exitCode,completed:true,threadId:session.threadId,turnId,imageGeneration,images:[{path:imagePath,sha256:sha(bytes)}],usage,accountUsage:{before:session.accountUsage,after:accountUsageAfter},error:null,contract,guard:{markerPath:session.guard.markerPath,logPath:session.guard.logPath,trustedHash:session.hook.currentHash},runnerMode:'official-codex-account'};
+    return {exitCode,completed:true,threadId:session.threadId,turnId,imageGeneration,images:[{path:imagePath,sha256:sha(bytes)}],usage,accountUsage:{before:session.accountUsage,after:accountUsageAfter},error:null,contract,executionDiagnostics:watchdog.snapshot(),referenceEvidence:{toolLocalInputs:actual?'observed':'not_returned',serverUsageReceipt:null,visualCheckRequired:true},guard:{markerPath:session.guard.markerPath,logPath:session.guard.logPath,trustedHash:session.hook.currentHash},runnerMode:'official-codex-account'};
   } catch(error) {
-    let processExitCode=null;try{if(completed&&session)processExitCode=await session.rpc.shutdown();else session?.rpc.close();}catch{session?.rpc.close();}
-    return failedImageReceipt({error,imageGeneration:generations.at(-1)?.item??null,threadId:session?.threadId??null,turnId,turnCompleted:completed,usage,accountUsage:session?{before:session.accountUsage,after:{status:'unknown'}}:null,processExitCode,cwd});
+    watchdog?.fail(error.code??'connector_failed',error);
+    // Keep consuming the original stream during the interrupt acknowledgement
+    // and bounded shutdown so already-started/late image events are retained.
+    // Neither acknowledgement nor process exit proves provider cancellation.
+    let processExitCode=null;try{await watchdog?.settleInterrupt();if(session)processExitCode=await session.rpc.shutdown();}catch{session?.rpc.close();}
+    return failedImageReceipt({error,imageGeneration:generations.at(-1)?.item??null,threadId:session?.threadId??null,turnId:turnId??watchdog?.boundTurnId()??null,turnCompleted:completed,usage,accountUsage:session?{before:session.accountUsage,after:{status:'unknown'}}:null,processExitCode,cwd,executionDiagnostics:watchdog?.snapshot()??null});
   }
-  finally { clearTimeout(timer);signal?.removeEventListener('abort',abort); }
+  finally { clearTimeout(timer);watchdog?.dispose();signal?.removeEventListener('abort',abort); }
 }
