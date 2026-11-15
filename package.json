@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "node src/server.mjs",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "preview:creative": "node scripts/preview-creative.mjs"
   },
   "license": "MIT"
 }

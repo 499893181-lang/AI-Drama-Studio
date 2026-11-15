@@ -1,0 +1,91 @@
+{
+  "version": "0.4.0",
+  "created_at": "2026-11-15",
+  "manuals": [
+    {
+      "id": "M01",
+      "filename": "01_AI画面提示词与细节质感设计手册.docx",
+      "sha256": "98c7f53e23fbd43cea71efa7c1fd4c6050b69f6d37d96b78df8f2e95e552ab19",
+      "bytes": 55119,
+      "paragraphs": 298,
+      "tables": [
+        "T001",
+        "T002",
+        "T003"
+      ],
+      "source_delivery": "user_attachment",
+      "anchor_convention": "P序号只计含文字正文段落，T序号为表格；对应本轮抽取，不是Word页码",
+      "learning_scope": "原手册50条抽样观察记录；本轮读取手册，不声称重新观看50条作品",
+      "validation_status": "user_learning_synthesis_not_generation_validated",
+      "repo": "499893181-lang/AI-Drama-Studio",
+      "repo_commit": "2fecee1aaee195fc4fcb52c2927aded5f6e87fdd",
+      "repo_path": "docs/research/2026-11-15-douyin-study/01-image-prompt-handbook.docx",
+      "git_blob_sha": "a5b5765c550c8588d14c8fc2e2dbcfe25dbd5bd5",
+      "mirror_verification": "attachment_bytes_match_repository_git_blob",
+      "text_path": "docs/research/2026-11-15-douyin-study/01-image-prompt-handbook.md"
+    },
+    {
+      "id": "M02",
+      "filename": "02_AI短剧运镜设计与提示词手册.docx",
+      "sha256": "556ce7f1c7aa519eecdbead525e60eed12e8885a0a4e2815a7715f0e9816428a",
+      "bytes": 53127,
+      "paragraphs": 221,
+      "tables": [
+        "T001",
+        "T002",
+        "T003",
+        "T004",
+        "T005",
+        "T006"
+      ],
+      "source_delivery": "user_attachment",
+      "anchor_convention": "P序号只计含文字正文段落，T序号为表格；对应本轮抽取，不是Word页码",
+      "learning_scope": "原手册50条抽样观察记录；本轮读取手册，不声称重新观看50条作品",
+      "validation_status": "user_learning_synthesis_not_generation_validated",
+      "repo": "499893181-lang/AI-Drama-Studio",
+      "repo_commit": "2fecee1aaee195fc4fcb52c2927aded5f6e87fdd",
+      "repo_path": "docs/research/2026-11-15-douyin-study/02-camera-movement-handbook.docx",
+      "git_blob_sha": "2e88c6470edf255cc456b0c98a35702a0cdc9601",
+      "mirror_verification": "attachment_bytes_match_repository_git_blob",
+      "text_path": "docs/research/2026-11-15-douyin-study/02-camera-movement-handbook.md"
+    },
+    {
+      "id": "M03",
+      "filename": "03_十五位导演风格与AI短剧制作预设手册.docx",
+      "sha256": "d509e680ffc5d9e3ced47b5c6bd961b123283c509961eb25aa4c9e290d551adc",
+      "bytes": 69914,
+      "paragraphs": 493,
+      "tables": [],
+      "source_delivery": "user_attachment",
+      "anchor_convention": "P序号只计含文字正文段落，T序号为表格；对应本轮抽取，不是Word页码",
+      "learning_scope": "原手册50条抽样观察记录；本轮读取手册，不声称重新观看50条作品",
+      "validation_status": "user_learning_synthesis_not_generation_validated",
+      "repo": "499893181-lang/AI-Drama-Studio",
+      "repo_commit": "2fecee1aaee195fc4fcb52c2927aded5f6e87fdd",
+      "repo_path": "docs/research/2026-11-15-douyin-study/03-director-style-handbook.docx",
+      "git_blob_sha": "6d668d4a7025cc329d823ac807e9d7e84209d6e1",
+      "mirror_verification": "attachment_bytes_match_repository_git_blob",
+      "text_path": "docs/research/2026-11-15-douyin-study/03-director-style-handbook.md"
+    }
+  ],
+  "workflow_source": {
+    "id": "H01",
+    "repo": "499893181-lang/AI-Drama-Studio",
+    "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+    "path": "docs/huobao-breakdown-and-account-integration.md",
+    "sha256": "9bac0c6155d1471eb3089647359fb4fe0aa11752119515bd7d11ad834b062e6b",
+    "scope": "用户提供的软件流程与已有账号接入设计；并非本轮验证了全部外部服务"
+  },
+  "word_mirror": {
+    "repo": "499893181-lang/AI-Work-Hub",
+    "directory_label": "AI 短剧资料",
+    "status": "reported_by_user; attached_bytes_used_as_authoritative_source"
+  },
+  "evidence_policy": {
+    "source_fact": "原文可定位内容",
+    "design_rule": "转译成的软件建议",
+    "verified_behavior": "只用于本轮实际执行的测试或服务回执",
+    "source_links": "手册原有链接，不代表本轮已重新打开"
+  },
+  "verified_repository_snapshot": "2fecee1aaee195fc4fcb52c2927aded5f6e87fdd"
+}

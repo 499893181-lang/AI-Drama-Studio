@@ -64,3 +64,14 @@ node tests/script-browser-smoke.mjs
 
 [抖音150条作品学习与十五位导演预设手册](docs/research/2026-11-15-douyin-study/README.md)：三份Word、可检索文本版及来源记录，供后续提示词、运镜与风格数据库设计参考。资料归档不代表相关预设或媒体生成能力已经接入。
 
+## 创作规则库与离线预览
+
+新增[三个手册与Huobao整合方案](docs/creative-knowledge-v04.md)和独立编写的[提示词编译核心](src/creative-design.mjs)：15位导演、17个作品级预设，分别输出静态图与视频运动提示词，保留来源、用户锁和候选状态。90条新增手册扩展按需勾选；模型回答中的PASS不能代替正式阶段验收。
+
+```powershell
+node scripts/preview-creative.mjs --list
+node scripts/preview-creative.mjs examples/creative/waiting-shot.json
+```
+
+知识库版本为0.4.0，工作台版本仍为0.2.1。本次新增内容可离线运行，尚未接入分镜页面、真实图像生成或视频提交。新的默认创作路线采用自有ChatGPT／Codex编写与审阅，图像、即梦画布／无对白视频与后期分步接入；既有即梦剧本工具保留可选。
+
