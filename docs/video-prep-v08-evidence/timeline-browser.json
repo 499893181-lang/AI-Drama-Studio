@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-15T16:36:00.086Z",
+  "testFixture": true,
+  "source": {
+    "path": "docs/video-v07-evidence/TEST-FIXTURE-NOT-AI.mp4",
+    "sha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+    "size": 17750,
+    "durationSeconds": 5,
+    "width": 1280,
+    "height": 720,
+    "audioStreams": 0
+  },
+  "newInputVideos": 0,
+  "newImageGenerationCalls": 0,
+  "externalVideoSubmissions": 0,
+  "voiceCalls": 0,
+  "productionCanvasCalls": 0,
+  "formalStageStatus": "not_checked",
+  "checks": [
+    "当前有效且accepted+selected的三个既有测试视频可添加；Chrome实际解码原片，fixture及not_checked醒目标识",
+    "三镜头添加/上移/保存后，顺序、视频版本、完整实测时长、来源、绑定Hash写入不可变时间轴版本",
+    "重复准备复用同一导出任务；明确确认后本机FFmpeg拼接真实15秒MP4，FFprobe和Chrome loadedmetadata/playback均通过，外部调用0",
+    "导出MP4可Range/HEAD读取；manifest逐段保留镜头顺序、版本、来源、实测、原片Hash及本地命令，测试结果不冒充AI成片",
+    "排序/音轨未保存时导出关闭，刷新保留本页草稿；后处理静音明确区别于模型原生无声",
+    "新顺序和静音参数另存第二版本；旧导出显示需复核且保留原MP4和manifest，不冒充当前参数结果",
+    "隔离FFmpeg失败显示真实错误与失败历史；原片三个Hash保持不变，重复run不自动重导失败任务",
+    "明确另备导出后可恢复本地处理，旧失败不追改成功；原片本就0音轨；静音模式执行-an且实测0音轨，未验收有声转无声或模型原生无声",
+    "准备任务可明确取消，0本地运行；取消任务保留且不会自动恢复执行",
+    "撤销源视频人工审核使相关版本与旧导出需复核；该素材从可添加列表移除、禁止继续导出，原文件和历史仍保留",
+    "服务重启恢复两个时间轴版本、四个任务、成功/失败/取消、静音参数与过期状态，0视频提供方调用、0页面未处理异常",
+    "390px窄窗口无整页横向溢出；片段比例通过受CSP允许的样式属性设置，导航和导出操作仍可用"
+  ],
+  "output": {
+    "taskId": "066b9b4c-5f52-433c-9fec-4adf13b62441",
+    "timelineVersionId": "f3960de6-deb1-4135-8441-69b339f9e491",
+    "sha256": "b4a26f91381ae647736daf9e5ccb367babb73f9b7601fea27b03bed86668d4f9",
+    "probe": {
+      "width": 1280,
+      "height": 720,
+      "durationSeconds": 15,
+      "audioStreams": 0
+    },
+    "chromePlayback": {
+      "width": 1280,
+      "height": 720,
+      "duration": 15,
+      "currentTime": 0.2485,
+      "readyState": 4
+    },
+    "relativePath": "data-SokG1d\\runtime\\timeline-exports\\066b9b4c-5f52-433c-9fec-4adf13b62441\\output.mp4"
+  },
+  "mobileLayout": {
+    "viewport": 390,
+    "pageWidth": 375,
+    "ruler": [
+      {
+        "width": 102.328125,
+        "grow": "5"
+      },
+      {
+        "width": 102.34375,
+        "grow": "5"
+      },
+      {
+        "width": 102.328125,
+        "grow": "5"
+      }
+    ]
+  },
+  "passed": true,
+  "providerCalls": {
+    "inspect": 0,
+    "quote": 0,
+    "submit": 0,
+    "query": 0,
+    "download": 0
+  },
+  "consoleExceptions": 0,
+  "finishedAt": "2026-11-15T16:37:26.355Z"
+}

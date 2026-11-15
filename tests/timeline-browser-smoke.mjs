@@ -1,0 +1,161 @@
+// Real Chrome + local FFmpeg concatenation of the existing, clearly marked MP4.
+// No new input videos, image generation, provider submit, voice or canvas calls.
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import { createHash, randomUUID } from 'node:crypto';
+import { createStudio } from '../src/server.mjs';
+import { probeVideo } from '../src/video-media.mjs';
+import { fixtureEntities, fixtureShots } from './creative-fixtures.mjs';
+import { launchBrowser } from './cdp.mjs';
+
+const directory = path.resolve('tests/.artifacts/timeline-browser');
+fs.mkdirSync(directory, { recursive: true });
+const sourcePath = path.resolve('docs/video-v07-evidence/TEST-FIXTURE-NOT-AI.mp4');
+const png = fs.readFileSync(path.resolve('docs/video-v07-evidence/TEST-FIXTURE-NOT-AI-input.png'));
+const sourceBytes = fs.readFileSync(sourcePath), sourceProbe = await probeVideo(sourcePath);
+const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+assert.equal(hash(sourceBytes), '7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3');
+const providerCalls = { inspect: 0, quote: 0, submit: 0, query: 0, download: 0 };
+const disabledAdapter = Object.fromEntries(Object.keys(providerCalls).map(name => [name, async () => { providerCalls[name]++; throw new Error('时间轴验收禁止调用任何视频提供方。'); }]));
+const dataDir = fs.mkdtempSync(path.join(directory, 'data-'));
+const options = { dataDir, videoOptions: { adapter: disabledAdapter }, inspectImageTools: async () => ({ canSubmit: false, message: '本地时间轴验收不调用图像工具。' }), imageGenerationOptions: { inspectCapabilities: async () => ({ canSubmit: false, message: '自动出图保持关闭。' }) } };
+let app = createStudio(options);
+async function listen() { await new Promise(resolve => app.server.listen(0, '127.0.0.1', resolve)); return `http://127.0.0.1:${app.server.address().port}`; }
+let base = await listen();
+const project = app.store.create({ name: '[隔离时间轴验收] TEST FIXTURE / NOT AI', idea: '【软件测试，非个人故事】三镜头老人留茶。已有测试视频仅验证镜头顺序、本地拼接和恢复。', durationSeconds: 30, aspectRatio: '16:9' });
+app.creative.update(project.id, { revision: 0, entities: structuredClone(fixtureEntities), shots: fixtureShots() });
+app.creative.addVersion(project.id, { revision: 1, kind: 'storyboard', body: '【人工软件测试分镜】三镜头仅验证文件和版本，不是AI作品或正式四岗位PASS。' });
+const imported = [];
+for (const shot of fixtureShots()) {
+  let images = app.images.view(project.id);
+  images = app.images.import(project.id, { revision: images.revision, role: 'shot', targetId: shot.id, filename: `TEST-FIXTURE-NOT-AI-${shot.id}.png`, source: { kind: 'test', description: '复用v07既有标记PNG；只作软件测试，不是AI生成图片。' } }, png);
+  const image = images.assets.at(-1);
+  images = app.images.review(project.id, { revision: images.revision, assetId: image.id, verdict: 'accepted', notes: '隔离软件夹具，非真实媒体验收。' });
+  app.images.select(project.id, { revision: images.revision, assetId: image.id });
+  const current = app.videos.workspace.source(project.id, shot.id);
+  const asset = app.videos.workspace.importCandidate(project.id, { task: { id: randomUUID(), externalTaskId: `TEST-LOCAL-EXISTING-${shot.id}`, providerStatus: 'success', executionMode: 'isolated-fixture', shotId: shot.id, binding: current.binding, bindingHash: current.bindingHash, inputSnapshot: current.snapshot, parameters: { audioMode: 'provider_default', durationSeconds: 5, model: 'TEST-FIXTURE-NOT-AI' } }, bytes: sourceBytes, probe: sourceProbe });
+  let videos = app.videos.workspace.get(project.id);
+  app.videos.workspace.review(project.id, { revision: videos.revision, assetId: asset.id, verdict: 'accepted', notes: '仅软件测试视频；原文件像素TEST FIXTURE / NOT AI，不是即梦回执证据。' });
+  videos = app.videos.workspace.get(project.id);
+  app.videos.workspace.select(project.id, { revision: videos.revision, assetId: asset.id });
+  imported.push(asset);
+}
+const browser = await launchBrowser(path.join(directory, `browser-${Date.now()}`));
+const q = id => `[data-testid="${id}"]`;
+const click = async selector => {
+  await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)})&&!document.querySelector(${JSON.stringify(selector)}).disabled`);
+  await browser.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
+  // A DOM click does not await an async event listener. Wait for the durable
+  // request to finish, or for its explicit confirmation dialog, before reading.
+  await browser.waitFor("document.querySelector('#timeline-confirm').open||!document.querySelector('[data-testid=\"timeline-refresh\"]').disabled");
+};
+async function api(route, body, method = 'POST') { const response = await fetch(base + route, { method: body === undefined ? 'GET' : method, headers: { 'Content-Type': 'application/json' }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }); const result = await response.json(); assert.ok(response.ok, `${response.status}: ${result.error}`); return result; }
+const timelineRoute = `/api/projects/${project.id}/timeline`;
+async function waitTask(id, status, timeout = 25000) { const start = Date.now(); while (Date.now() - start < timeout) { const view = await api(timelineRoute), task = view.exports.find(item => item.id === id); if (task?.status === status) return { view, task }; if (task && ['failed','cancelled','timed_out'].includes(task.status) && task.status !== status) throw new Error(JSON.stringify(task)); await new Promise(resolve => setTimeout(resolve, 120)); } throw new Error(`等待本地导出状态超时：${status}`); }
+async function screenshot(filename) { const result = await browser.call('Page.captureScreenshot', { format: 'png' }); fs.writeFileSync(path.join(directory, filename), Buffer.from(result.data, 'base64')); }
+async function decoded(selector) { return browser.evaluate(`(async()=>{const video=document.querySelector(${JSON.stringify(selector)});if(video.readyState<1)await new Promise((resolve,reject)=>{video.addEventListener('loadedmetadata',resolve,{once:true});video.addEventListener('error',()=>reject(new Error('Chrome MP4解码失败')),{once:true});});video.muted=true;await video.play();await new Promise(resolve=>setTimeout(resolve,250));video.pause();return{width:video.videoWidth,height:video.videoHeight,duration:video.duration,currentTime:video.currentTime,readyState:video.readyState};})()`); }
+const report = { at: new Date().toISOString(), testFixture: true, source: { path: 'docs/video-v07-evidence/TEST-FIXTURE-NOT-AI.mp4', sha256: sourceProbe.sha256, size: sourceBytes.length, durationSeconds: sourceProbe.durationSeconds, width: sourceProbe.width, height: sourceProbe.height, audioStreams: sourceProbe.audioStreams }, newInputVideos: 0, newImageGenerationCalls: 0, externalVideoSubmissions: 0, voiceCalls: 0, productionCanvasCalls: 0, formalStageStatus: 'not_checked', checks: [] };
+try {
+  await browser.call('Page.navigate', { url: `${base}/timeline.html?projectId=${project.id}` });
+  await browser.waitFor("document.querySelectorAll('[data-available-asset]').length===3");
+  assert.ok(await browser.evaluate("document.body.textContent.includes('TEST FIXTURE / NOT AI')&&document.body.textContent.includes('not_checked')&&document.body.textContent.includes('原片保留')"));
+  const originalDecoded = await decoded('[data-available-asset] video');
+  assert.equal(originalDecoded.width, 1280); assert.equal(originalDecoded.height, 720); assert.ok(Math.abs(originalDecoded.duration - 5) < .1);
+  report.checks.push('当前有效且accepted+selected的三个既有测试视频可添加；Chrome实际解码原片，fixture及not_checked醒目标识');
+  for (const asset of imported) await click(`[data-add="${asset.id}"]`);
+  assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(q('timeline-clip-count'))}).textContent`), '3');
+  assert.ok(await browser.evaluate(`document.querySelector(${JSON.stringify(q('timeline-total'))}).textContent.includes('15')`));
+  await click('[data-move="2"][data-direction="-1"]');
+  const order = [imported[0], imported[2], imported[1]];
+  await click(q('timeline-save'));
+  await browser.waitFor(`document.querySelector(${JSON.stringify(q('timeline-save'))}).disabled`);
+  let view = await api(timelineRoute), version1 = view.activeVersionId;
+  assert.equal(view.versions.length, 1); assert.deepEqual(view.clips.map(item => item.assetId), order.map(item => item.id));
+  assert.deepEqual(view.clips.map(item => item.durationSeconds), [5, 5, 5]); assert.equal(view.totalDurationSeconds, 15);
+  assert.ok(view.clips.every(item => item.bindingHash && item.sha256 === sourceProbe.sha256 && item.source.kind === 'test'));
+  report.checks.push('三镜头添加/上移/保存后，顺序、视频版本、完整实测时长、来源、绑定Hash写入不可变时间轴版本');
+  await screenshot('timeline-ordered-fixture.png');
+  await click(q('timeline-prepare')); await click(q('timeline-prepare'));
+  view = await api(timelineRoute); assert.equal(view.exports.length, 1); const firstTaskId = view.exports[0].id;
+  assert.equal(view.exports[0].status, 'prepared'); assert.equal(view.exports[0].submittedAt, null);
+  await click(`[data-run="${firstTaskId}"]`); await click(q('timeline-confirm-submit'));
+  let completed = await waitTask(firstTaskId, 'succeeded');
+  await browser.waitFor(`!!document.querySelector('[data-export-id="${firstTaskId}"] video')`, 25000);
+  const outputDecoded = await decoded(`[data-export-id="${firstTaskId}"] video`);
+  assert.equal(outputDecoded.width, 1280); assert.equal(outputDecoded.height, 720); assert.ok(Math.abs(outputDecoded.duration - 15) < .2); assert.ok(outputDecoded.currentTime > 0); assert.ok(outputDecoded.readyState >= 2);
+  assert.equal(completed.task.runAttempts, 1); assert.equal(completed.task.externalProviderCalls, 0); assert.equal(completed.task.result.probe.audioStreams, 0); assert.equal(completed.task.testFixture, true);
+  report.output = { taskId: firstTaskId, timelineVersionId: version1, sha256: completed.task.result.sha256, probe: { width: outputDecoded.width, height: outputDecoded.height, durationSeconds: outputDecoded.duration, audioStreams: completed.task.result.probe.audioStreams }, chromePlayback: outputDecoded, relativePath: path.relative(directory, app.timeline.file(firstTaskId).path) };
+  report.checks.push('重复准备复用同一导出任务；明确确认后本机FFmpeg拼接真实15秒MP4，FFprobe和Chrome loadedmetadata/playback均通过，外部调用0');
+  const manifest = await api(`/api/timeline-exports/${firstTaskId}/manifest`);
+  assert.equal(manifest.testFixture, true); assert.equal(manifest.formalStageStatus, 'not_checked'); assert.equal(manifest.externalProviderCalls, 0); assert.equal(manifest.audioMode, 'preserve');
+  assert.deepEqual(manifest.clips.map(item => item.assetId), order.map(item => item.id)); assert.equal(manifest.output.sha256, completed.task.result.sha256);
+  assert.ok(manifest.clips.every(item => item.actualProbe.verified && item.sha256 === sourceProbe.sha256));
+  const fileResponse = await fetch(base + completed.task.url, { headers: { Range: 'bytes=0-31' } }); assert.equal(fileResponse.status, 206); assert.equal((await fileResponse.arrayBuffer()).byteLength, 32);
+  const head = await fetch(base + completed.task.url, { method: 'HEAD' }); assert.equal(head.status, 200); assert.ok(Number(head.headers.get('Content-Length')) > 100);
+  report.checks.push('导出MP4可Range/HEAD读取；manifest逐段保留镜头顺序、版本、来源、实测、原片Hash及本地命令，测试结果不冒充AI成片');
+  await screenshot('timeline-export-playback-fixture.png');
+  await browser.evaluate(`{const node=document.querySelector(${JSON.stringify(q('timeline-audio'))});node.value='mute_derivative';node.dispatchEvent(new Event('change',{bubbles:true}));}`);
+  await click('[data-move="0"][data-direction="1"]');
+  const draftOrder = await browser.evaluate("[...document.querySelectorAll('[data-clip-index]')].map(node=>node.dataset.assetId)");
+  assert.ok(await browser.evaluate(`document.querySelector(${JSON.stringify(q('timeline-prepare'))}).disabled&&document.querySelector(${JSON.stringify(q('timeline-audio-note'))}).textContent.includes('后处理静音')`));
+  await click(q('timeline-refresh'));
+  assert.deepEqual(await browser.evaluate("[...document.querySelectorAll('[data-clip-index]')].map(node=>node.dataset.assetId)"), draftOrder);
+  assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(q('timeline-audio'))}).value`), 'mute_derivative');
+  report.checks.push('排序/音轨未保存时导出关闭，刷新保留本页草稿；后处理静音明确区别于模型原生无声');
+  await click(q('timeline-save')); await browser.waitFor(`document.querySelector(${JSON.stringify(q('timeline-save'))}).disabled`);
+  view = await api(timelineRoute); assert.equal(view.versions.length, 2); assert.notEqual(view.activeVersionId, version1); assert.equal(view.audioMode, 'mute_derivative');
+  assert.ok(view.exports.find(item => item.id === firstTaskId).stale); assert.equal((await fetch(base + completed.task.url)).status, 200);
+  await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('timeline-export-stale'))})`);
+  report.checks.push('新顺序和静音参数另存第二版本；旧导出显示需复核且保留原MP4和manifest，不冒充当前参数结果');
+  const originalRunner = app.timeline.runner;
+  app.timeline.runner = async () => { throw new Error('【隔离故障注入】FFmpeg执行失败；不是生产服务错误。'); };
+  await click(q('timeline-prepare')); view = await api(timelineRoute); const failedId = view.exports.find(item => item.versionId === view.activeVersionId).id;
+  await click(`[data-run="${failedId}"]`); await click(q('timeline-confirm-submit'));
+  const failed = await waitTask(failedId, 'failed'); assert.equal(failed.task.runAttempts, 1); assert.ok(failed.task.error.includes('隔离故障注入'));
+  await browser.waitFor(`!!document.querySelector('[data-export-id="${failedId}"] [data-testid="timeline-export-error"]')`);
+  await api(`/api/timeline-exports/${failedId}/run`, {}); assert.equal(app.timeline.read(failedId).runAttempts, 1);
+  for (const asset of imported) assert.equal(hash(app.videos.file(project.id, asset.id).bytes), sourceProbe.sha256);
+  app.timeline.runner = originalRunner;
+  report.checks.push('隔离FFmpeg失败显示真实错误与失败历史；原片三个Hash保持不变，重复run不自动重导失败任务');
+  await screenshot('timeline-export-failure-fixture.png');
+  await click(`[data-redo="${failedId}"]`);
+  view = await api(timelineRoute); const retry = view.exports.find(item => item.redoOfTaskId === failedId); assert.ok(retry); assert.equal(retry.status, 'prepared');
+  await click(`[data-run="${retry.id}"]`); await click(q('timeline-confirm-submit'));
+  const muted = await waitTask(retry.id, 'succeeded');
+  const mutedManifest = await api(`/api/timeline-exports/${retry.id}/manifest`);
+  assert.equal(mutedManifest.audioMode, 'mute_derivative'); assert.ok(mutedManifest.audioDescription.includes('后处理')); assert.equal(muted.task.result.probe.audioStreams, 0);
+  assert.equal(app.timeline.read(failedId).status, 'failed'); assert.equal(app.timeline.read(firstTaskId).status, 'succeeded');
+  report.checks.push('明确另备导出后可恢复本地处理，旧失败不追改成功；原片本就0音轨；静音模式执行-an且实测0音轨，未验收有声转无声或模型原生无声');
+  await browser.waitFor(`!!document.querySelector('[data-export-id="${retry.id}"] video')`);
+  await decoded(`[data-export-id="${retry.id}"] video`);
+  await click(`[data-redo="${retry.id}"]`);
+  view = await api(timelineRoute); const cancel = view.exports.find(item => item.redoOfTaskId === retry.id); await click(`[data-cancel="${cancel.id}"]`);
+  assert.equal(app.timeline.read(cancel.id).status, 'cancelled'); assert.equal(app.timeline.read(cancel.id).runAttempts, 0);
+  report.checks.push('准备任务可明确取消，0本地运行；取消任务保留且不会自动恢复执行');
+  let videoWs = app.videos.workspace.get(project.id);
+  app.videos.workspace.review(project.id, { revision: videoWs.revision, assetId: imported[0].id, verdict: 'rejected', notes: '【隔离故障】撤销视频审核，验证时间轴依赖失效。' });
+  await click(q('timeline-refresh')); await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('timeline-stale'))})`);
+  view = await api(timelineRoute); assert.equal(view.availableAssets.filter(item => item.eligible).length, 2); assert.ok(view.versions.every(item => item.stale));
+  assert.ok(await browser.evaluate(`document.querySelector(${JSON.stringify(q('timeline-prepare'))}).disabled`));
+  assert.equal(await browser.evaluate("document.querySelectorAll('[data-available-asset]').length"), 2);
+  assert.equal((await fetch(base + completed.task.url)).status, 200);
+  for (const asset of imported) assert.equal(hash(app.videos.file(project.id, asset.id).bytes), sourceProbe.sha256);
+  report.checks.push('撤销源视频人工审核使相关版本与旧导出需复核；该素材从可添加列表移除、禁止继续导出，原文件和历史仍保留');
+  await app.close(); app = createStudio(options); base = await listen();
+  await browser.call('Page.navigate', { url: `${base}/timeline.html?projectId=${project.id}` });
+  await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('timeline-stale'))})`);
+  const restored = await api(timelineRoute);
+  assert.equal(restored.versions.length, 2); assert.equal(restored.exports.length, 4); assert.deepEqual(restored.clips.map(item => item.assetId), draftOrder);
+  assert.equal(restored.exports.find(item => item.id === failedId).status, 'failed'); assert.equal(restored.exports.find(item => item.id === retry.id).status, 'succeeded'); assert.equal(restored.exports.find(item => item.id === cancel.id).runAttempts, 0);
+  assert.deepEqual(providerCalls, { inspect: 0, quote: 0, submit: 0, query: 0, download: 0 }); assert.equal(browser.messages.length, 0, JSON.stringify(browser.messages));
+  await screenshot('timeline-restored-stale-fixture.png');
+  report.checks.push('服务重启恢复两个时间轴版本、四个任务、成功/失败/取消、静音参数与过期状态，0视频提供方调用、0页面未处理异常');
+  await browser.call('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:false});
+  const layout=await browser.evaluate("({viewport:innerWidth,pageWidth:document.documentElement.scrollWidth,ruler:[...document.querySelectorAll('[data-duration]')].map(node=>({width:node.getBoundingClientRect().width,grow:getComputedStyle(node).flexGrow}))})");
+  assert.ok(layout.pageWidth<=layout.viewport+1,JSON.stringify(layout));assert.ok(layout.ruler.every(item=>Number(item.grow)>0));
+  await screenshot('timeline-mobile-fixture.png');report.mobileLayout=layout;
+  report.checks.push('390px窄窗口无整页横向溢出；片段比例通过受CSP允许的样式属性设置，导航和导出操作仍可用');
+  report.passed = true; report.providerCalls = providerCalls; report.consoleExceptions = 0; report.finishedAt = new Date().toISOString();
+  fs.writeFileSync(path.join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n'); console.log(JSON.stringify(report, null, 2));
+} finally { await browser.close(); await app.close(); }

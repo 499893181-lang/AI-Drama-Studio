@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-15T16:44:55.25Z",
+  "channel": "dreamina-cli-image2video",
+  "auth": {
+    "loggedIn": false,
+    "status": "needs_configuration",
+    "reason": "dreamina直接生成CLI当前登录未核实或不可用；没有发起登录、退出或刷新授权。"
+  },
+  "realSubmissionEnabled": false,
+  "quoteStatus": "unknown",
+  "quoteAmount": null,
+  "authorizationStarted": false,
+  "reason": "Canvas同节点已取得报价；未另发direct授权、未复制认证。"
+}

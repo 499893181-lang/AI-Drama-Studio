@@ -1,0 +1,865 @@
+{
+  "source": "Actual locally executed dreamina-canvas 1.2.0 schema; selected exact command fields only.",
+  "sourceSha256": "0f501ad7b7a9229ac450abfe76e0c9de318771fd0021290a169c484d688387bd",
+  "schemaVersion": "1",
+  "commands": [
+    {
+      "command": "dreamina-canvas node create video",
+      "summary": "创建视频节点，不触发生成",
+      "reads": true,
+      "writes": true,
+      "confirmation": true,
+      "flags": [
+        {
+          "name": "x",
+          "type": "number",
+          "required": false,
+          "description": "节点左上角 X；组内为父组相对坐标；与 --y 成组提供",
+          "constraints": "finite; requires y; node left; parent-local when grouped"
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "required": false,
+          "description": "节点左上角 Y；组内为父组相对坐标；与 --x 成组提供",
+          "constraints": "finite; requires x; node top; parent-local when grouped"
+        },
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；省略时使用当前项目",
+          "constraints": "UUID"
+        },
+        {
+          "name": "node-id",
+          "type": "string",
+          "required": false,
+          "description": "稳定 node_id；省略时生成",
+          "constraints": "canonical Node ID; generated when omitted"
+        },
+        {
+          "name": "update-id",
+          "type": "string",
+          "required": false,
+          "description": "稳定更新 UUID；省略时生成",
+          "constraints": "UUID"
+        },
+        {
+          "name": "dry-run",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "只做本地校验并输出计划；不连接服务端、不写草稿、不报价或扣分",
+          "constraints": "local validation only; no runtime, network, draft write, credit estimate, approval, journal, dispatch, or credit side effects"
+        },
+        {
+          "name": "resource-source",
+          "type": "string[]",
+          "required": false,
+          "description": "跨项目资源来源：<资源 UUID>@<来源项目 UUID>；可重复，仅声明本次保存使用的资源",
+          "constraints": "repeatable ResourceUUID@SourceProjectUUID; resource must be assigned by this save; conflicting sources rejected"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "节点标题；按 flag 出现更新",
+          "constraints": "at most 512 UTF-16 code units"
+        },
+        {
+          "name": "tag",
+          "type": "string[]",
+          "required": false,
+          "description": "颜色标签 ID，可重复传入；取值 default-tag-1..default-tag-5，除非用户明确指定标签否则不要默认传",
+          "constraints": "default-tag-1|default-tag-2|default-tag-3|default-tag-4|default-tag-5; max 5; omit unless the user explicitly asks for color labels"
+        },
+        {
+          "name": "clear-tags",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "把节点标签完整集合清空"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "required": false,
+          "description": "视频生成模式：t2v（text-to-video，文生视频）、first_last_frame（首尾帧）或 m2v（multimodal-to-video，多模态生视频）；提供生成参数时必须显式指定，纯元信息更新或清空生成配置无需传入",
+          "constraints": "t2v|first_last_frame|m2v (t2v=text-to-video, first_last_frame=first and last frames, m2v=multimodal-to-video); first_last_frame accepts one first-frame image or two ordered first- and last-frame images; explicitly required when any generation parameter is supplied; metadata-only saves and clear-generation do not require mode"
+        },
+        {
+          "name": "prompt",
+          "type": "string",
+          "required": false,
+          "description": "完整视频生成提示词；引用写成 {{node:node_xxx}}、{{res:resourceId}}、{{uri:value}} 或 {{vid:value}}，写字面 {{ 用 \\{{ 转义；画布已有来源节点时优先使用 Node ID，保留上游连线；Resource ID 用于资产库等无来源节点的素材或用户明确要求冻结，不自动从节点产物提取",
+          "constraints": "may be empty at save time if the model spec permits; Core validates effective text before run; create --run needs explicit title when prompt is empty"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "required": false,
+          "description": "服务端登记的视频模型标识"
+        },
+        {
+          "name": "ratio",
+          "type": "string",
+          "required": false,
+          "description": "视频宽高比，例如 16:9"
+        },
+        {
+          "name": "resolution",
+          "type": "string",
+          "required": false,
+          "description": "视频分辨率，例如 720P"
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "default": "5",
+          "description": "视频时长（秒）",
+          "constraints": ">0"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "required": false,
+          "default": "1",
+          "description": "生成数量；上限以 model list 返回的 --count max 为准",
+          "constraints": ">0 and int32; dynamic maximum is the --count max from model list"
+        },
+        {
+          "name": "ref",
+          "type": "string[]",
+          "required": false,
+          "description": "完整类型化引用集合（node/res/uri/vid）；first_last_frame 传一个首帧引用，或按顺序传首帧、尾帧两个引用；画布已有来源节点时优先使用 Node ID，保留上游连线；Resource ID 用于资产库等无来源节点的素材或用户明确要求冻结，不自动从节点产物提取",
+          "constraints": "ordered type:value references; type is node|res|uri|vid; node value requires node_ prefix; res value requires canonical lowercase UUID"
+        },
+        {
+          "name": "resource-id",
+          "type": "string[]",
+          "required": false,
+          "description": "本节点已有产物的资源 UUID，可重复传入；需同时提供 --import-kind local_upload 或 external_generated。多个视为同一批次内的候选，顺序即候选顺序，首个为主选。资源须已登记、状态成功且类型为视频",
+          "constraints": "Resource IDs; create only; requires import-kind=local_upload|external_generated; first is primary"
+        },
+        {
+          "name": "import-kind",
+          "type": "string",
+          "required": false,
+          "description": "节点导入类别：local_upload（挂本地上传登记的资源）或 external_generated（外部平台生成产物导入）；与 resource upload 的登记意图同一套词汇",
+          "constraints": "local_upload | external_generated; may stand alone; required by resource-id"
+        },
+        {
+          "name": "run",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "保存后依次报价、批准并运行该节点",
+          "constraints": "when false, only save the draft; when true, save → estimate → approve → run"
+        },
+        {
+          "name": "submit-id",
+          "type": "string",
+          "required": false,
+          "description": "稳定提交 UUID；--run 或 --resource-id 时省略则生成，停顿后续跑或重试导入须复用它",
+          "constraints": "UUID; with run, or with resource-id as the imported resource batch identity; generated when omitted; non-empty when supplied"
+        },
+        {
+          "name": "credit-token",
+          "type": "string",
+          "required": false,
+          "description": "已批准的 creditConfirmationToken；--run 时使用",
+          "constraints": "only with run; creditConfirmationToken issued by node confirm; mutually exclusive with credit-ceiling"
+        },
+        {
+          "name": "credit-ceiling",
+          "type": "integer",
+          "required": false,
+          "description": "批准的积分消费上限；--run 时报价超过它会在运行前停止",
+          "constraints": ">=0; only with run; mutually exclusive with credit-token; stops before run when the estimate exceeds it"
+        },
+        {
+          "name": "wait",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "--run 后等待该节点生成进入终态",
+          "constraints": "only with run; wait for the submitted node to become terminal"
+        },
+        {
+          "name": "timeout",
+          "type": "duration",
+          "required": false,
+          "default": "10m",
+          "description": "--wait 的最长等待时间；默认 10m，0 表示只查询一次",
+          "constraints": "only with wait; 0 means query once"
+        },
+        {
+          "name": "interval",
+          "type": "duration",
+          "required": false,
+          "default": "5s",
+          "description": "--wait 的轮询间隔；默认 5s",
+          "constraints": "only with wait; >0"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "consumptionSubject",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "node",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "mutation",
+          "type": "object"
+        },
+        {
+          "name": "quote",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "approval",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "submission",
+          "type": "object",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas node edit video",
+      "summary": "编辑视频节点，不触发生成",
+      "reads": true,
+      "writes": true,
+      "confirmation": true,
+      "flags": [
+        {
+          "name": "x",
+          "type": "number",
+          "required": false,
+          "description": "节点左上角 X；组内为父组相对坐标；与 --y 成组提供",
+          "constraints": "finite; requires y; node left; parent-local when grouped"
+        },
+        {
+          "name": "y",
+          "type": "number",
+          "required": false,
+          "description": "节点左上角 Y；组内为父组相对坐标；与 --x 成组提供",
+          "constraints": "finite; requires x; node top; parent-local when grouped"
+        },
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；省略时使用当前项目",
+          "constraints": "UUID"
+        },
+        {
+          "name": "node-id",
+          "type": "string",
+          "required": true,
+          "description": "要编辑的节点 node_id；必填",
+          "constraints": "canonical Node ID of the node to edit; required"
+        },
+        {
+          "name": "update-id",
+          "type": "string",
+          "required": false,
+          "description": "稳定更新 UUID；省略时生成",
+          "constraints": "UUID"
+        },
+        {
+          "name": "dry-run",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "只做本地校验并输出计划；不连接服务端、不写草稿、不报价或扣分",
+          "constraints": "local validation only; no runtime, network, draft write, credit estimate, approval, journal, dispatch, or credit side effects"
+        },
+        {
+          "name": "resource-source",
+          "type": "string[]",
+          "required": false,
+          "description": "跨项目资源来源：<资源 UUID>@<来源项目 UUID>；可重复，仅声明本次保存使用的资源",
+          "constraints": "repeatable ResourceUUID@SourceProjectUUID; resource must be assigned by this save; conflicting sources rejected"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false,
+          "description": "节点标题；按 flag 出现更新",
+          "constraints": "at most 512 UTF-16 code units"
+        },
+        {
+          "name": "tag",
+          "type": "string[]",
+          "required": false,
+          "description": "颜色标签 ID，可重复传入；取值 default-tag-1..default-tag-5，除非用户明确指定标签否则不要默认传",
+          "constraints": "default-tag-1|default-tag-2|default-tag-3|default-tag-4|default-tag-5; max 5; omit unless the user explicitly asks for color labels"
+        },
+        {
+          "name": "clear-tags",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "把节点标签完整集合清空"
+        },
+        {
+          "name": "clear-generation",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "清空 generationDraft"
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "required": false,
+          "description": "视频生成模式：t2v（text-to-video，文生视频）、first_last_frame（首尾帧）或 m2v（multimodal-to-video，多模态生视频）；提供生成参数时必须显式指定，纯元信息更新或清空生成配置无需传入",
+          "constraints": "t2v|first_last_frame|m2v (t2v=text-to-video, first_last_frame=first and last frames, m2v=multimodal-to-video); first_last_frame accepts one first-frame image or two ordered first- and last-frame images; explicitly required when any generation parameter is supplied; metadata-only saves and clear-generation do not require mode"
+        },
+        {
+          "name": "prompt",
+          "type": "string",
+          "required": false,
+          "description": "完整视频生成提示词；引用写成 {{node:node_xxx}}、{{res:resourceId}}、{{uri:value}} 或 {{vid:value}}，写字面 {{ 用 \\{{ 转义；画布已有来源节点时优先使用 Node ID，保留上游连线；Resource ID 用于资产库等无来源节点的素材或用户明确要求冻结，不自动从节点产物提取",
+          "constraints": "may be empty at save time if the model spec permits; Core validates effective text before run; create --run needs explicit title when prompt is empty"
+        },
+        {
+          "name": "model",
+          "type": "string",
+          "required": false,
+          "description": "服务端登记的视频模型标识"
+        },
+        {
+          "name": "ratio",
+          "type": "string",
+          "required": false,
+          "description": "视频宽高比，例如 16:9"
+        },
+        {
+          "name": "resolution",
+          "type": "string",
+          "required": false,
+          "description": "视频分辨率，例如 720P"
+        },
+        {
+          "name": "duration",
+          "type": "number",
+          "required": false,
+          "default": "5",
+          "description": "视频时长（秒）",
+          "constraints": ">0"
+        },
+        {
+          "name": "count",
+          "type": "integer",
+          "required": false,
+          "default": "1",
+          "description": "生成数量；上限以 model list 返回的 --count max 为准",
+          "constraints": ">0 and int32; dynamic maximum is the --count max from model list"
+        },
+        {
+          "name": "ref",
+          "type": "string[]",
+          "required": false,
+          "description": "完整类型化引用集合（node/res/uri/vid）；first_last_frame 传一个首帧引用，或按顺序传首帧、尾帧两个引用；画布已有来源节点时优先使用 Node ID，保留上游连线；Resource ID 用于资产库等无来源节点的素材或用户明确要求冻结，不自动从节点产物提取",
+          "constraints": "ordered type:value references; type is node|res|uri|vid; node value requires node_ prefix; res value requires canonical lowercase UUID"
+        },
+        {
+          "name": "run",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "保存后依次报价、批准并运行该节点",
+          "constraints": "when false, only save the draft; when true, save → estimate → approve → run"
+        },
+        {
+          "name": "submit-id",
+          "type": "string",
+          "required": false,
+          "description": "稳定提交 UUID；--run 或 --resource-id 时省略则生成，停顿后续跑或重试导入须复用它",
+          "constraints": "UUID; with run, or with resource-id as the imported resource batch identity; generated when omitted; non-empty when supplied"
+        },
+        {
+          "name": "credit-token",
+          "type": "string",
+          "required": false,
+          "description": "已批准的 creditConfirmationToken；--run 时使用",
+          "constraints": "only with run; creditConfirmationToken issued by node confirm; mutually exclusive with credit-ceiling"
+        },
+        {
+          "name": "credit-ceiling",
+          "type": "integer",
+          "required": false,
+          "description": "批准的积分消费上限；--run 时报价超过它会在运行前停止",
+          "constraints": ">=0; only with run; mutually exclusive with credit-token; stops before run when the estimate exceeds it"
+        },
+        {
+          "name": "wait",
+          "type": "boolean",
+          "required": false,
+          "default": "false",
+          "description": "--run 后等待该节点生成进入终态",
+          "constraints": "only with run; wait for the submitted node to become terminal"
+        },
+        {
+          "name": "timeout",
+          "type": "duration",
+          "required": false,
+          "default": "10m",
+          "description": "--wait 的最长等待时间；默认 10m，0 表示只查询一次",
+          "constraints": "only with wait; 0 means query once"
+        },
+        {
+          "name": "interval",
+          "type": "duration",
+          "required": false,
+          "default": "5s",
+          "description": "--wait 的轮询间隔；默认 5s",
+          "constraints": "only with wait; >0"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "consumptionSubject",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "node",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "mutation",
+          "type": "object"
+        },
+        {
+          "name": "quote",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "approval",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "submission",
+          "type": "object",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas node quote",
+      "summary": "对给定节点做运行前积分预估",
+      "reads": true,
+      "writes": false,
+      "confirmation": false,
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；同时用作 draft-id；省略时使用当前项目",
+          "constraints": "UUID"
+        },
+        {
+          "name": "node-id",
+          "type": "string[]",
+          "required": true,
+          "description": "需要预估的节点 node_id，可重复传入"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "consumptionSubject",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "items",
+          "type": "array<object>"
+        },
+        {
+          "name": "totalMaxCredits",
+          "type": "integer"
+        },
+        {
+          "name": "draftVersion",
+          "type": "integer"
+        },
+        {
+          "name": "confirmable",
+          "type": "boolean",
+          "optional": true
+        },
+        {
+          "name": "confirmationRequired",
+          "type": "boolean",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas node confirm",
+      "summary": "批准给定节点的积分消费上限并取回短期凭证",
+      "reads": true,
+      "writes": true,
+      "confirmation": false,
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；同时用作 draft-id；省略时使用当前项目",
+          "constraints": "UUID"
+        },
+        {
+          "name": "node-id",
+          "type": "string[]",
+          "required": true,
+          "description": "需要批准的节点 node_id，可重复传入"
+        },
+        {
+          "name": "credit-ceiling",
+          "type": "integer",
+          "required": true,
+          "description": "批准的积分消费上限；低于服务端最新报价总额时不签发",
+          "constraints": ">=0; must cover the latest service estimate"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "consumptionSubject",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "creditConfirmationToken",
+          "type": "string"
+        },
+        {
+          "name": "creditCeiling",
+          "type": "integer"
+        },
+        {
+          "name": "expiresAt",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas node run",
+      "summary": "触发给定节点的运行",
+      "reads": true,
+      "writes": true,
+      "confirmation": false,
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；同时用作 draft-id；省略时使用当前项目",
+          "constraints": "UUID"
+        },
+        {
+          "name": "node-id",
+          "type": "string[]",
+          "required": true,
+          "description": "需要运行的节点 node_id，可重复传入"
+        },
+        {
+          "name": "submit-id",
+          "type": "string[]",
+          "required": false,
+          "description": "逐节点稳定提交 UUID，可重复传入并与 --node-id 按顺序对应；全部省略时自动生成",
+          "constraints": "UUID; optional; count must equal node-id count; each value is also the operation status/wait reference"
+        },
+        {
+          "name": "credit-token",
+          "type": "string",
+          "required": false,
+          "description": "确认扣费后返回的 creditConfirmationToken",
+          "constraints": "creditConfirmationToken issued by node confirm"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "consumptionSubject",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "items",
+          "type": "array<object>"
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas operation status",
+      "summary": "查询一次生成操作状态",
+      "reads": true,
+      "writes": false,
+      "confirmation": false,
+      "arguments": [
+        {
+          "name": "operation-ref",
+          "required": true,
+          "constraints": "UUID; same value as a node run submitId"
+        }
+      ],
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；仅在本地恢复记录丢失时需要，用于直接向服务端只读查询",
+          "constraints": "UUID; only needed when the local recovery record is gone"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "localStorageWarning",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "operationRef",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        },
+        {
+          "name": "resources",
+          "type": "array<object>"
+        },
+        {
+          "name": "submission",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "submissionError",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "awaitingConfirmation",
+          "type": "object",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas operation wait",
+      "summary": "等待生成操作进入终态",
+      "reads": true,
+      "writes": false,
+      "confirmation": false,
+      "arguments": [
+        {
+          "name": "operation-ref",
+          "required": true,
+          "constraints": "UUID; same value as a node run submitId"
+        }
+      ],
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；仅在本地恢复记录丢失时需要，用于直接向服务端只读查询",
+          "constraints": "UUID; only needed when the local recovery record is gone"
+        },
+        {
+          "name": "timeout",
+          "type": "duration",
+          "required": false,
+          "default": "10m",
+          "description": "最长等待时间；0 表示只查询一次"
+        },
+        {
+          "name": "interval",
+          "type": "duration",
+          "required": false,
+          "default": "5s",
+          "description": "轮询间隔"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "localStorageWarning",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "operationRef",
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "type": "string"
+        },
+        {
+          "name": "resources",
+          "type": "array<object>"
+        },
+        {
+          "name": "submission",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "submissionError",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "awaitingConfirmation",
+          "type": "object",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas resource get",
+      "summary": "查素材状态与稳定事实（running/success/failed/canceled 四态都可查）",
+      "reads": true,
+      "writes": false,
+      "confirmation": false,
+      "arguments": [
+        {
+          "name": "resource-id",
+          "required": true
+        }
+      ],
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；省略时使用当前项目",
+          "constraints": "UUID"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "image",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "video",
+          "type": "object",
+          "optional": true
+        },
+        {
+          "name": "generationKind",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "optional": true
+        },
+        {
+          "name": "createdAt",
+          "type": "integer",
+          "optional": true
+        },
+        {
+          "name": "errorCode",
+          "type": "integer",
+          "optional": true
+        },
+        {
+          "name": "creditsAmount",
+          "type": "integer",
+          "optional": true
+        },
+        {
+          "name": "source",
+          "type": "string",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "command": "dreamina-canvas resource download",
+      "summary": "安全下载成功的图片素材",
+      "reads": true,
+      "writes": false,
+      "confirmation": false,
+      "arguments": [
+        {
+          "name": "resource-id",
+          "required": true
+        }
+      ],
+      "flags": [
+        {
+          "name": "project-id",
+          "type": "string",
+          "required": false,
+          "description": "项目 UUID；省略时使用当前项目",
+          "constraints": "UUID"
+        },
+        {
+          "name": "output",
+          "type": "string",
+          "required": false,
+          "default": ".",
+          "description": "输出文件（路径原样使用，不转码）或已存在目录（采用服务端文件名）"
+        }
+      ],
+      "successFields": [
+        {
+          "name": "resourceId",
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "type": "string"
+        },
+        {
+          "name": "size",
+          "type": "integer"
+        },
+        {
+          "name": "sha256",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "videoDownloadVerified": false,
+  "generationInvoked": false
+}

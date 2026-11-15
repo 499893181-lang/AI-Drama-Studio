@@ -11,6 +11,8 @@ import { ImageWorkspace } from './image-store.mjs';
 import { inspectImageCapabilities } from './image-capabilities.mjs';
 import { ImageGenerationJobs } from './image-jobs.mjs';
 import { VideoService } from './video-jobs.mjs';
+import { TimelineService } from './timeline-jobs.mjs';
+import { readCanvasVideoEvidence } from './canvas-video.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -52,6 +54,7 @@ export function createStudio(options = {}) {
   const images = new ImageWorkspace(store, { creativeWorkspace: creative.workspace, ...options.imageOptions });
   const imageGeneration = new ImageGenerationJobs(store, { images, ...options.imageGenerationOptions });
   const videos = new VideoService(store, { images, ...options.videoOptions });
+  const timeline = new TimelineService(store, { videos, ...options.timelineOptions });
   let imageReport = null, imageInspection = null;
   const getImageCapabilities = () => {
     if (imageReport && Date.now() - Date.parse(imageReport.checkedAt) < 60000) return Promise.resolve(imageReport);
@@ -92,8 +95,12 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.6.0', phase: 'jimeng-single-shot-video', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.7.0', phase: 'video-preparation-local-timeline', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
+      if (url.pathname === '/api/video-channels/canvas') {
+        if (method !== 'GET') throw new AppError('渠道证据仅供只读查看，生成和授权入口关闭。', 405);
+        json(response, readCanvasVideoEvidence()); return;
+      }
       if (url.pathname === '/api/creative/knowledge' && method === 'GET') { json(response, creative.catalog()); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
       if (url.pathname === '/api/tools' && method === 'GET') { json(response, await getTools()); return; }
@@ -105,6 +112,14 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'timeline') {
+          if (segments.length === 4 && method === 'GET') { json(response, timeline.view(id)); return; }
+          if (segments.length === 4 && method === 'PUT') { json(response, timeline.update(id, await readJson(request))); return; }
+          if (segments.length === 5 && method === 'POST') {
+            if (segments[4] === 'versions') { json(response, timeline.createVersion(id, await readJson(request)), 201); return; }
+            if (segments[4] === 'exports') { json(response, timeline.prepareExport(id, await readJson(request)), 201); return; }
+          }
+        }
         if (segments[3] === 'videos') {
           if (segments.length === 4 && method === 'GET') { json(response, await videos.view(id)); return; }
           if (segments.length === 5 && method === 'POST') {
@@ -201,6 +216,25 @@ export function createStudio(options = {}) {
           }
         }
       }
+      if (segments[0] === 'api' && segments[1] === 'timeline-exports' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, timeline.read(id)); return; }
+        if (segments.length === 4 && method === 'POST') {
+          await readJson(request);
+          if (segments[3] === 'run') {
+            timeline.read(id);
+            const execution = timeline.startExport(id);
+            // Preflight failures have no durable execution intent; return their
+            // real error. Once exporting, poll/cancel the persisted local task.
+            if (timeline.read(id).status === 'prepared') await execution;
+            else void execution.catch(error => console.error('本地导出任务异常：', error.message));
+            json(response, timeline.read(id), 202); return;
+          }
+          if (segments[3] === 'cancel') { json(response, timeline.cancel(id)); return; }
+        }
+        if (segments.length === 4 && ['GET', 'HEAD'].includes(method) && segments[3] === 'file') { sendVideo(request, response, timeline.file(id)); return; }
+        if (segments.length === 4 && method === 'GET' && segments[3] === 'manifest') { json(response, timeline.manifest(id)); return; }
+      }
       if (segments[0] === 'api' && segments[1] === 'jobs' && validId(segments[2])) {
         const id = segments[2];
         if (segments.length === 3 && method === 'GET') { json(response, store.read('jobs', id)); return; }
@@ -273,7 +307,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, images, imageGeneration, videos, getTools, getImageCapabilities, close: () => { videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, images, imageGeneration, videos, timeline, getTools, getImageCapabilities, close: () => { timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {

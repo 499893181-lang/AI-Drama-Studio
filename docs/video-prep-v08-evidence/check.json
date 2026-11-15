@@ -1,0 +1,115 @@
+{
+  "checkedAt": "2026-11-15T16:46:41.535Z",
+  "baseline": "96b95e5418606586820ea4f9cec0f5603d153df3",
+  "implementationBranch": "codex/canvas-video-prep-timeline-v08-20261116",
+  "regression": {
+    "tests": 279,
+    "passed": 279,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browserChecks": [
+    {
+      "name": "timeline",
+      "checks": 12,
+      "passed": true
+    },
+    {
+      "name": "video",
+      "checks": 7,
+      "passed": true
+    },
+    {
+      "name": "creative",
+      "checks": 7,
+      "passed": true
+    },
+    {
+      "name": "images",
+      "checks": 7,
+      "passed": true
+    },
+    {
+      "name": "script",
+      "checks": 8,
+      "passed": true
+    }
+  ],
+  "mainServiceChecks": {
+    "checkedAt": "2026-11-15T16:46:38.533Z",
+    "mainVersion": "0.7.0",
+    "newImageGenerations": 0,
+    "realVideoSubmissions": 0,
+    "accountCreditsConsumedByGeneration": 0,
+    "checks": [
+      "主服务真实浏览器显示同节点最大预估70积分，只读归档、无生成按钮、100积分未授权计划预算",
+      "本地输入与注册资源分别保存字节Hash；实际Chrome解码并比较RGBA，未将上传/引用当作生成参考使用回执",
+      "原DATA_DIR新增独立TEST项目，3段既有5秒素材实际本地拼接15秒；主服务Chrome实播，来源与正式未检查状态清楚",
+      "升级后原507个文件Hash全部不变，原失败任务/result/error和1/1未重置，自动出图继续关闭"
+    ],
+    "autoImage": {
+      "status": "failed",
+      "result": null,
+      "error": "未找到私有hook准许的原生图像调用证据。",
+      "maxSubmissions": 1,
+      "submitted": 1,
+      "remaining": 0
+    },
+    "quote": {
+      "requestId": "202611160036145D1B464F0CD9065569DB",
+      "amount": 70,
+      "kind": "maximum_estimate",
+      "expiresAt": null,
+      "officialQuoteId": null,
+      "canSubmit": false
+    },
+    "uploadedImage": {
+      "originalFileSha256": "0a016af311df50b5b82ead4dc39292d03e8ed5eef738eac3197336de3c6b53ba",
+      "registeredDownloadSha256": "679b92bc271603e46dd9eb2650d678129cf0d9bd279375159e1b2da012697e16",
+      "original": {
+        "width": 1280,
+        "height": 720,
+        "rgbaSha256": "4e3111e6fe61d7e035f753969848aed5fa25faf4971f03ce66535b1ecfe613b8"
+      },
+      "registered": {
+        "width": 1280,
+        "height": 720,
+        "rgbaSha256": "4e3111e6fe61d7e035f753969848aed5fa25faf4971f03ce66535b1ecfe613b8"
+      },
+      "identicalDecodedPixels": true,
+      "scope": "此次Chrome解码RGBA比较；不能证明生成工具实际使用了该参考。"
+    },
+    "timeline": {
+      "projectId": "437306c6-d0b8-4b1b-86b4-6c259c89b006",
+      "taskId": "db04101b-8026-495a-a15b-a7787a0d55c5",
+      "outputSha256": "b4a26f91381ae647736daf9e5ccb367babb73f9b7601fea27b03bed86668d4f9",
+      "decoded": {
+        "width": 1280,
+        "height": 720,
+        "duration": 15,
+        "currentTime": 0.3101,
+        "readyState": 4
+      }
+    },
+    "preservation": {
+      "originalFiles": 507,
+      "changed": 0,
+      "originalFailedTaskPreserved": true,
+      "noBudgetReset": true
+    },
+    "consoleExceptions": 0,
+    "passed": true
+  },
+  "actualVideoSubmissions": 0,
+  "newAIImages": 0,
+  "creditConfirmations": 0,
+  "productionCanvasSynchronization": false,
+  "formalStageStatus": "not_checked",
+  "quoteEvidence": "../canvas-video-v08-evidence/check.json",
+  "remaining": [
+    "Canvas实际生成准入、视频资源下载、参考符合性和最终扣费未验收。",
+    "Direct独立未登录且无可靠同渠道报价，未发起授权。",
+    "本地时间轴仅完整镜头兼容MP4拼接，未提供转场/裁切/配音/字幕。",
+    "本轮既有测试源无音轨；静音路径不冒充有声转无声素材验收。"
+  ]
+}
