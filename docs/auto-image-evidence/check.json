@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-15T10:54:11.625Z",
+  "baseCommit": "218772af36166705958e42a31a31e6ac171ebfd1",
+  "implementationBranch": "codex/auto-image-v06-20261115",
+  "overall": "partial_real_acceptance_blocked",
+  "automaticAcceptancePassed": false,
+  "automaticSubmitEnabled": false,
+  "regression": {
+    "command": "node --test tests/*.test.mjs",
+    "tests": 171,
+    "passed": 171,
+    "failed": 0,
+    "actualModelOrImageCalls": 0
+  },
+  "preservation": {
+    "existingWorktrees": 3,
+    "preexistingDataFiles": 37,
+    "unchanged": 37,
+    "authenticationReadOrChanged": false,
+    "originalServicesPreserved": true
+  },
+  "real": {
+    "projectId": "2fabba3a-6f4a-4b2f-b714-8506a4b42f64",
+    "taskId": "8eb1182e-5a89-47fe-9220-2e1ea08c1f00",
+    "packetId": "9ea94adc-d1d5-4806-98e5-5b918a7b43c2",
+    "requestId": "9a209470-119a-4d26-863b-31cb0c95c0df",
+    "submittedAt": "2026-11-15T10:34:48.587Z",
+    "status": "failed",
+    "error": "未找到私有hook准许的原生图像调用证据。",
+    "threadId": "01a1dec6-2d54-7ce0-92c8-f02908d619f1",
+    "turnId": "01a1dec6-2dd8-7502-be10-4438d14271ee",
+    "actualModelTurns": 1,
+    "imageToolStarted": 1,
+    "imageToolCompleted": 1,
+    "actualImages": 1,
+    "officialImageEvent": {
+      "type": "imageGeneration",
+      "id": "exec-76957a5d-1187-4dcf-b165-fca994539d0f",
+      "generationId": "b2de9922-5394-4374-988d-6be4ecb024b1",
+      "status": "completed",
+      "hasSavedPath": true,
+      "hasBase64Result": true,
+      "hasInputImagesField": false,
+      "inputImages": null
+    },
+    "officialTurnCompleted": true,
+    "hook": {
+      "status": "failed",
+      "exitCode": 1,
+      "markerPresent": false,
+      "originalGuardUnchanged": true,
+      "runtimeContinuedAfterHookFailure": true
+    },
+    "image": {
+      "filename": "real-image.png",
+      "sha256": "bbe2683b21c5362a8cd501e322310ad716437c6fe4afb431de7897dd486c6738",
+      "bytes": 2023286,
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "actualBrowserDecoded": true,
+      "bytesMatchOfficialBase64": true,
+      "source": "official_codex_account_real_output_not_accepted"
+    },
+    "sourceBinding": {
+      "shotId": "SHOT-01",
+      "inputSnapshotHash": "bad66d1c606e81441fe1cea40f2c798e259da738cd9252a43f7e4b91758b43a8",
+      "bindingHash": "1a8224728bf98f74a3205ab271d9a051c2e31ad4770a6bed64d913534852c617",
+      "plannedLocalReferenceFilesCount": 1,
+      "references": [
+        {
+          "assetId": "93427943-4960-4c7b-b696-0f75533eb587",
+          "sha256": "8c88484107d20940dfd54c6a41ced4a3c9b2d644138f92d2bd1db460e701846d",
+          "entityId": "SCENE-01",
+          "entityVersion": "v1",
+          "sourceKind": "test",
+          "testFixture": true
+        }
+      ],
+      "attachmentsVerified": false
+    },
+    "automaticCandidateImported": false,
+    "automaticallySelected": false,
+    "manualInspection": {
+      "assetId": "40e7096f-5d0f-49f8-986c-7bd9a60e4109",
+      "sourceKind": "other",
+      "verdict": "rejected",
+      "userSignoff": false,
+      "originalInputBinding": true,
+      "inputChangedNeedsReview": true,
+      "restoredAfterRestart": true
+    },
+    "rawEvidence": {
+      "exported": false,
+      "eventsSha256": "5c3bf31653c717faf49db8e4ac94417d7851e6ca91c82052ab7669755745962b",
+      "requestsSha256": "846fa810d8c215ade284d1bce3d7ed9fb8c217f8de4b7b0c34aaa30b77d9780b",
+      "note": "原始RPC事件、请求、回执和失败guard仅本机保留，未补造marker。"
+    }
+  },
+  "accountUsage": {
+    "channel": "existing_chatgpt_codex_account",
+    "accountType": "chatgpt",
+    "ordinaryUsageAllowedBefore": true,
+    "before": {
+      "primary": {
+        "usedPercent": 34,
+        "windowDurationMins": 10080,
+        "resetsAt": 1794906571
+      },
+      "credits": {
+        "hasCredits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "planType": "prolite"
+    },
+    "afterNotification": {
+      "primary": {
+        "usedPercent": 34,
+        "windowDurationMins": 10080,
+        "resetsAt": 1794906571
+      },
+      "credits": {
+        "hasCredits": false,
+        "unlimited": false,
+        "balance": "0"
+      },
+      "planType": "prolite"
+    },
+    "costCny": null,
+    "costCredits": null,
+    "perImageUsage": null,
+    "purchasedCredits": false,
+    "switchedToPaidApi": false,
+    "note": "窗口用量百分比和credits余额不是本次费用，也不能推算单图消耗。"
+  },
+  "browsers": {
+    "manualImages": {
+      "isolatedFixtureOnly": true,
+      "at": "2026-11-15T10:48:43.308Z",
+      "passed": true,
+      "consoleExceptions": 0,
+      "newRealCalls": 0,
+      "checks": [
+        "真实Chrome显示三镜头、人物/场景版本、画面提示词与导演规则；费用待确认、手工出图及正式阶段未接入分开说明",
+        "通过实际文件控件上传并预览带像素标记的测试PNG；人物与场景各自人工检查后选用，Hash/格式/尺寸与来源声明真实保存",
+        "真实提示词任务包与ZIP包含两份选定参考及Hash，attached=false且官网未发送；仅文字实体引用不冒充图片附加",
+        "三镜头实际图片各自绑定当前分镜版本，检查后人工选用；第一镜关联实际导出的任务包，其他手工上传明确未验证模型输入",
+        "仅第二镜换图；前后镜选用不变，旧图可读取，两个图片版本与替换历史保留",
+        "人物参考换版使受影响分镜图需复核；旧参考、旧图及选用历史均保留，缓存JSON下载、旧提示词复制及ZIP均被当前门禁拒绝",
+        "保存输入改变后旧图片全部明确需复核；重启恢复7份实际文件、Hash、旧版、人工检查与选择历史，0页面异常"
+      ]
+    },
+    "automaticFixture": {
+      "isolatedFixtureOnly": true,
+      "at": "2026-11-15T10:50:54.229Z",
+      "passed": true,
+      "consoleExceptions": 0,
+      "newRealCalls": 0,
+      "checks": [
+        "真实Chrome预览当前镜头提示词、实际参考Hash和账号用量说明；准备不调用生成，不把未知费用显示免费",
+        "一次隔离runner返回真实PNG文件；生产Chrome解码器核对像素后自动导入新候选，保存回执与输入附件，不自动选用",
+        "浏览器实际预览、人工填写检查依据并明确选用；重复submit复用原任务，fixture调用仍一次",
+        "上游输入改变后原候选与任务需复核，原参考及图片Hash不变，不自动重新生成",
+        "重启恢复原任务、实际图片、检查和选择历史，提交次数不重置，未发第二次调用"
+      ]
+    },
+    "failureFixture": {
+      "isolatedFixtureOnly": true,
+      "at": "2026-11-15T10:50:52.817Z",
+      "passed": true,
+      "consoleExceptions": 0,
+      "newRealCalls": 0,
+      "checks": [
+        "失败仍占原提交次数，官方完成文字及真实文件不能冒充自动候选或免费",
+        "只读保留原图接口返回真实可解码PNG，不将它导入为可信自动来源",
+        "自动验收失败后手工任务包流程仍可使用，未重复生成"
+      ]
+    },
+    "creative": {
+      "isolatedFixtureOnly": true,
+      "at": "2026-11-15T10:45:30.735Z",
+      "passed": true,
+      "consoleExceptions": 0,
+      "newRealCalls": 0,
+      "checks": [
+        "从已保存构思执行文字任务，独立隔离runner产生可见候选，未访问即梦报价",
+        "真实Chrome显示15导演/17预设数据、显式手册勾选默认关闭、三镜头三区编辑；两种预设规则差异可见，人物天气保持",
+        "生成分镜候选与独立审阅分别保存；模型PASS未自动采用或冒充正式岗位PASS",
+        "人工点击采用候选，人工修改另存不可变版本；轮询不覆盖未保存输入",
+        "人工剧本新版本成为实际分镜来源，继续生成绑定新版本而非旧候选",
+        "新要求使旧分镜和审阅过期，后端拒绝旧候选采用并保留人工稿",
+        "重启恢复原任务、原候选、人工版本及审阅过期状态；无重复调用，无未处理页面异常"
+      ]
+    },
+    "scripts": {
+      "isolatedFixtureOnly": true,
+      "at": "2026-11-15T10:45:25.735Z",
+      "passed": true,
+      "consoleExceptions": 0,
+      "newRealCalls": 0,
+      "checks": [
+        "从已保存创作说明整理输入并显示未知费用",
+        "通过显式按钮保存并核对画布绑定（隔离适配器）",
+        "费用未知时按钮禁用、后端拒绝、重复准备复用原request-id，零生成调用",
+        "轮询保留未保存剧本与未保存输入",
+        "人工修改另存新版本，历史稿完整保留；独立报告与稿件分开显示（隔离报告）",
+        "上游改变后旧剧本和独立报告均标记需要复核，不冒充有效审阅",
+        "独立服务重启后稿件、报告、原request-id与过期状态恢复",
+        "真实Chrome无未处理页面异常"
+      ]
+    },
+    "actualRetainedImage": {
+      "isolatedFixtureOnly": false,
+      "at": "2026-11-15T10:54:07.054Z",
+      "passed": true,
+      "consoleExceptions": 0,
+      "newRealCalls": 0,
+      "checks": [
+        "原任务仍failed/result=null，保留一张真实图；现有提交次数1/1，自动能力未声称验证成功",
+        "真实Chrome读取原图接口、实际img.decode及Hash一致；页面明确显示未通过自动验收",
+        "实际原图沿手工流程导入，保留原packet及inputSnapshotHash；浏览器检查明确拒绝、未选用，非用户签收",
+        "输入改变后手工原图和旧任务需复核，原Hash/拒绝历史保留、旧包409，没有追加生成",
+        "重启后真实原图、手工来源声明、原绑定、拒绝记录和过期状态恢复，没有重复生成"
+      ]
+    }
+  },
+  "formalStages": {
+    "guard": "not_checked",
+    "ledger": "not_integrated",
+    "productionPackagePass": false
+  },
+  "unsubmitted": [
+    "jimeng_canvas",
+    "video",
+    "voice",
+    "editing"
+  ],
+  "blockers": [
+    "实际PreToolUse首次启动失败且runtime继续工具调用；修正启动方式只经过无模型验证，尚未完成真实单次拦截验收。",
+    "实际imageGeneration完成事件未提供inputImages，无法核实图像工具实际附加了参考。",
+    "本轮最多1次/1张已用完，不再真实重试；人民币、积分和单图用量未返回，保持未知。"
+  ]
+}

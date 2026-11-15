@@ -1,5 +1,7 @@
 # AI-Drama-Studio
 
+最新0.5.0：[单镜头图像任务与边界](docs/auto-image-workbench.md)、[本轮真实验收](docs/auto-image-acceptance.md)、[官方契约及实际缺口](docs/codex-image-contract.md)。仅一次真实图像调用/一张原图，自动验收失败，当前自动提交关闭；手工流程及失败原图保留可用。fixture不能当作真实成功。
+
 > Windows 本地中文 AI 短剧软件0.4.0；包含立项、可选即梦剧本适配、Codex文字分镜、实体来源及图片文件版本工作台。本索引用于查找公开源代码与开发记录，不表示读取方已自动加载全部文件。
 
 ## 调试入口

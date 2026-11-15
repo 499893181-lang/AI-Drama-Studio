@@ -11,7 +11,7 @@ const artifacts=path.resolve('tests/.artifacts'),directory=path.join(artifacts,'
 fs.mkdirSync(directory,{recursive:true});
 const dataDir=fs.mkdtempSync(path.join(artifacts,'image-browser-data-'));
 const fixtureFiles=[['test-character.png',[35,64,95]],['test-scene.png',[55,95,65]],['test-shot-01.png',[100,65,45]],['test-shot-02.png',[90,55,110]],['test-shot-03.png',[45,100,115]],['test-shot-02-redo.png',[155,55,55]],['test-character-redo.png',[45,45,120]]].map(([name,color])=>{const file=path.join(directory,name);fs.writeFileSync(file,testPng(320,180,color));return file;});
-const options={dataDir,inspectTools:async()=>({checkedAt:new Date().toISOString(),tools:[]}),inspectImageTools:async()=>({mode:'manual_export_import',automaticSubmissionEnabled:false,codex:{installed:true,version:'isolated-browser-fixture',loggedIn:false,imageGenerationFlagDetected:true,note:'隔离能力展示夹具，非真实账号或自动产物验证。'},cost:{status:'unknown',label:'费用待确认',amount:null}}),creativeOptions:{runner:async()=>{throw new Error('图片浏览器测试禁止模型调用');}}};
+const options={dataDir,imageGenerationOptions:{inspectCapabilities:async()=>({canSubmit:false,contractVerified:false,message:'隔离手工图片测试不探测真实账户或调用生成。'}),runner:async()=>{throw new Error('手工测试禁止自动生成');}},inspectTools:async()=>({checkedAt:new Date().toISOString(),tools:[]}),inspectImageTools:async()=>({mode:'manual_export_import',automaticSubmissionEnabled:false,codex:{installed:true,version:'isolated-browser-fixture',loggedIn:false,imageGenerationFlagDetected:true,note:'隔离能力展示夹具，非真实账号或自动产物验证。'},cost:{status:'unknown',label:'费用待确认',amount:null}}),creativeOptions:{runner:async()=>{throw new Error('图片浏览器测试禁止模型调用');}}};
 let app=createStudio(options);
 const project=app.store.create({name:'[隔离图片验收] 三镜头与测试图',idea:fixtureIdea,durationSeconds:30});
 let creative=app.creative.view(project.id);
@@ -60,6 +60,8 @@ async function imported(role,targetId,file,packetId=''){
 try{
   await browser.call('Page.navigate',{url:`${base}/images.html?projectId=${project.id}`});
   await browser.waitFor(`document.querySelectorAll('[data-target-role="shot"]').length===3`);
+  await browser.call('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:path.join(directory,'downloads')});
+  await browser.evaluate(`(()=>{window.__packetReads=0;window.__jsonDownloads=0;window.__copiedPrompts=[];const fetchOriginal=window.fetch;window.fetch=(...args)=>{if(/\\/images\\/packets\\/[^/]+$/.test(String(args[0])))window.__packetReads++;return fetchOriginal(...args);};const clickOriginal=HTMLAnchorElement.prototype.click;HTMLAnchorElement.prototype.click=function(){if(this.download.endsWith('.json'))window.__jsonDownloads++;return clickOriginal.call(this);};Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copiedPrompts.push(text);}}});})()`);
   assert.equal(await browser.evaluate(`document.querySelectorAll('[data-target-role="character"]').length`),1);
   assert.equal(await browser.evaluate(`document.querySelectorAll('[data-target-role="scene"]').length`),1);
   assert.ok(await browser.evaluate(`document.body.textContent.includes('费用待确认')`));
@@ -75,6 +77,7 @@ try{
   await click('image-prepare');
   ws=await wait(value=>value.packets.length===1);
   const packet=ws.packets[0];
+  await browser.waitFor(`window.__jsonDownloads===1`);assert.equal(await browser.evaluate('window.__packetReads'),1,'首次JSON下载也必须重新走当前任务包门禁');
   assert.equal(packet.references.length,2);assert.ok(packet.references.every(ref=>ref.attached===false&&ref.includedInBundle===true));
   await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('image-download-bundle'))})`);
   const zip=await fetch(`${base}/api/projects/${project.id}/images/packets/${packet.id}/bundle`);
@@ -98,10 +101,21 @@ try{
   ws=await view();assert.ok(ws.assets.filter(a=>a.role==='shot').every(a=>a.stale));
   await click('image-refresh');await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('image-stale'))})`);
   assert.ok(ws.assets.some(a=>a.id===character.id));assert.equal(ws.assets.find(a=>a.id===characterRedo.id).state,'selected');
-  await click('image-download-bundle');
-  await browser.waitFor(`document.querySelector('#image-error').textContent.includes('任务包输入或参考版本已改变')`);
+  const invalidBundle=await fetch(`${base}/api/projects/${project.id}/images/packets/${packet.id}/bundle`);assert.equal(invalidBundle.status,409);
+  const invalidBundleError=await invalidBundle.json();assert.match(invalidBundleError.error,/任务包输入.*(?:参考版本|审核状态).*已改变/);
+  const downloadCount=await browser.evaluate('window.__jsonDownloads'),packetReads=await browser.evaluate('window.__packetReads');
+  await clickSelector('[data-action="download-packet"]');
+  await browser.waitFor(`document.querySelector('#image-error').textContent.includes(${JSON.stringify(invalidBundleError.error)})`);
+  assert.equal(await browser.evaluate('window.__jsonDownloads'),downloadCount,'缓存旧JSON不能继续下载');assert.equal(await browser.evaluate('window.__packetReads'),packetReads+1);
   await clickSelector('[data-action="dismiss"]');
-  report.checks.push('人物参考换版使受影响分镜图需复核；旧参考、旧图及选用历史均保留');
+  await click('image-copy-prompt');
+  await browser.waitFor(`document.querySelector('#image-error').textContent.includes(${JSON.stringify(invalidBundleError.error)})`);
+  assert.equal(await browser.evaluate('window.__copiedPrompts.length'),0,'旧提示词不能绕过当前审核门禁复制');assert.equal(await browser.evaluate('window.__packetReads'),packetReads+2);
+  await clickSelector('[data-action="dismiss"]');
+  await click('image-download-bundle');
+  await browser.waitFor(`document.querySelector('#image-error').textContent.includes(${JSON.stringify(invalidBundleError.error)})`);
+  await clickSelector('[data-action="dismiss"]');
+  report.checks.push('人物参考换版使受影响分镜图需复核；旧参考、旧图及选用历史均保留，缓存JSON下载、旧提示词复制及ZIP均被当前门禁拒绝');
   // Change saved upstream without replacing pictures. The user edit survives restart.
   creative=app.creative.view(project.id);
   app.creative.update(project.id,{revision:creative.revision,instructions:creative.instructions+'\n【变更测试】第二镜改为更近的景别，须人工复核旧图。'});

@@ -9,6 +9,7 @@ import { inspectImage,MAX_IMAGE_BYTES } from '../src/image-files.mjs';
 import { fixtureEntities,fixtureShots } from './creative-fixtures.mjs';
 import { testPng } from './image-fixtures.mjs';
 import { imageCodecFixtures } from './image-codec-fixtures.mjs';
+import { createHash } from 'node:crypto';
 const artifacts=path.resolve('tests/.artifacts');fs.mkdirSync(artifacts,{recursive:true});
 function fixture(){
  const root=fs.mkdtempSync(path.join(artifacts,'image-workbench-')),store=new Store(root),creative=new CreativeWorkspace(store);
@@ -19,6 +20,7 @@ function fixture(){
 }
 function upload(ctx,role,targetId,color=[44,64,98]){return ctx.images.import(ctx.project.id,{revision:ctx.images.view(ctx.project.id).revision,role,targetId,filename:'TEST-FIXTURE-NOT-AI.png',source:{kind:'test',description:'像素标明TEST FIXTURE / NOT AI；非AI生成。'}},testPng(320,180,color));}
 function use(ctx,asset){let ws=ctx.images.view(ctx.project.id);ctx.images.review(ctx.project.id,{revision:ws.revision,assetId:asset.id,verdict:'accepted',notes:'人工软件测试检查，非审美验收。'});ws=ctx.images.view(ctx.project.id);return ctx.images.select(ctx.project.id,{revision:ws.revision,assetId:asset.id});}
+function generatedFixture(bytes,taskId='fixture-generation-01') {return {taskId,provider:'isolated-fixture',threadId:'fixture-thread-01',callId:'fixture-call-01',testFixture:true,completionEvidence:{officialImageEvent:{id:'fixture-call-01',status:'completed',inputImages:[]},completedTurn:true,threadId:'fixture-thread-01',turnId:'fixture-turn-01',exitCode:0,decoded:{decoded:true,width:320,height:180,decoder:'isolated-fixture'},sha256:createHash('sha256').update(bytes).digest('hex'),attachmentsVerified:true,runnerMode:'isolated-fixture'}};}
 test('实际PNG校验尺寸、像素压缩和Hash；伪图、截断、CRC错误、超限及SVG被拒绝',()=>{
  const bytes=testPng();assert.deepEqual({...inspectImage(bytes),verification:undefined},{width:320,height:180,format:'png',mimeType:'image/png',extension:'png',verification:undefined});
  for(const invalid of [Buffer.from('<svg/>'),Buffer.from('fake.png'),bytes.subarray(0,bytes.length-4),Buffer.alloc(MAX_IMAGE_BYTES+1)])assert.throws(()=>inspectImage(invalid));
@@ -89,4 +91,64 @@ test('仅引用清单不能声称附件已包含，素材与任务包不能跨�
  const ctx=fixture();let ws=upload(ctx,'scene','SCENE-01');const asset=ws.assets.at(-1);ws=use(ctx,asset);const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01',referenceAssetIds:[]});
  assert.equal(packet.references.length,0);assert.equal(packet.referenceManifest.find(ref=>ref.assetId===asset.id).status,'reference_only');assert.equal(packet.referenceManifest.find(ref=>ref.assetId===asset.id).attached,false);
  const other=ctx.store.create({name:'[测试] 另一个项目',idea:'另一部故事。'});assert.throws(()=>ctx.images.file(other.id,asset.id),/不存在/);assert.throws(()=>ctx.images.bundle(other.id,packet.id),/不存在/);
+});
+test('选用人物参考改判拒绝后，依赖镜头及旧包需复核；原图审核历史和包原文仍保留',()=>{
+ const ctx=fixture();let ws=upload(ctx,'character','CHAR-01');const reference=ws.assets.at(-1);ws=use(ctx,reference);
+ const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'});ws=upload(ctx,'shot','SHOT-01');const shot=ws.assets.at(-1);ws=use(ctx,shot);
+ const originalPacket=structuredClone(ctx.images.get(ctx.project.id).packets[0]),originalFile=ctx.images.file(ctx.project.id,reference.id).bytes;
+ assert.equal(ws.assets.find(asset=>asset.id===shot.id).state,'selected');assert.ok(ctx.images.bundle(ctx.project.id,packet.id).bytes.length);
+ ws=ctx.images.review(ctx.project.id,{revision:ws.revision,assetId:reference.id,verdict:'rejected',notes:'人工发现人物服装错误，撤销通过。'});
+ const dependency=ws.assets.find(asset=>asset.id===shot.id),ref=ws.targets.find(target=>target.key==='shot:SHOT-01').references[0];
+ assert.equal(dependency.stale,true);assert.equal(dependency.state,'needs_review');assert.equal(ref.reviewVerdict,'rejected');assert.equal(ref.reviewCurrent,true);assert.equal(ref.eligible,false);
+ assert.equal(ws.packets[0].stale,true);assert.equal(ws.packets[0].executable,false);assert.equal(ws.packets[0].packetStatus,'needs_review');
+ assert.throws(()=>ctx.images.assertExecutablePacket(ctx.project.id,packet.id),error=>error.status===409);assert.throws(()=>ctx.images.bundle(ctx.project.id,packet.id),error=>error.status===409);
+ assert.throws(()=>ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'}),/审核被拒绝/);
+ assert.deepEqual(ctx.images.get(ctx.project.id).packets[0],originalPacket);assert.deepEqual(ctx.images.file(ctx.project.id,reference.id).bytes,originalFile);assert.equal(ws.reviews.length,3);assert.equal(ws.selectionHistory.length,2);
+});
+test('同图再次通过也保留新reviewId，旧下游与旧包不会因Hash相同自行恢复',()=>{
+ const ctx=fixture();let ws=upload(ctx,'character','CHAR-01');const reference=ws.assets.at(-1);ws=use(ctx,reference);
+ const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'});ws=upload(ctx,'shot','SHOT-01');const shot=ws.assets.at(-1);ws=use(ctx,shot);
+ ws=ctx.images.review(ctx.project.id,{revision:ws.revision,assetId:reference.id,verdict:'rejected',notes:'撤销原审查。'});
+ ws=ctx.images.review(ctx.project.id,{revision:ws.revision,assetId:reference.id,verdict:'accepted',notes:'完成新的人工审查。'});
+ assert.equal(ws.assets.find(asset=>asset.id===reference.id).state,'selected');assert.equal(ws.assets.find(asset=>asset.id===shot.id).stale,true);
+ assert.throws(()=>ctx.images.bundle(ctx.project.id,packet.id),error=>error.status===409);
+ const fresh=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'});assert.notEqual(fresh.references[0].reviewId,packet.references[0].reviewId);assert.ok(ctx.images.bundle(ctx.project.id,fresh.id).bytes.length);
+});
+test('参考审核绑定已失效而Hash未变时，reviewCurrent仍会让依赖和任务包失效',()=>{
+ const ctx=fixture();let ws=upload(ctx,'character','CHAR-01');const reference=ws.assets.at(-1);ws=use(ctx,reference);
+ const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'});ws=upload(ctx,'shot','SHOT-01');const shot=ws.assets.at(-1);use(ctx,shot);
+ const stored=ctx.images.get(ctx.project.id);stored.reviews.find(review=>review.assetId===reference.id).targetHash='invalid-review-binding';ctx.store.write('image-workspaces',stored);
+ ws=ctx.images.view(ctx.project.id);const state=ws.assets.find(asset=>asset.id===reference.id);assert.equal(state.sha256,reference.sha256);assert.equal(state.reviewCurrent,false);
+ assert.equal(ws.assets.find(asset=>asset.id===shot.id).stale,true);assert.equal(ws.packets[0].executable,false);assert.throws(()=>ctx.images.bundle(ctx.project.id,packet.id),error=>error.status===409);
+});
+test('来源分集变化使target.ready=false，即使包binding相同也不能下载或执行',()=>{
+ const ctx=fixture();let ws=ctx.images.view(ctx.project.id);const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'});
+ const creative=ctx.creative.get(ctx.project.id);ctx.creative.update(ctx.project.id,{revision:creative.revision,episodeId:'EP-02'});
+ const source=ctx.images.source(ctx.project.id),target=source.targets.find(target=>target.key==='shot:SHOT-01');
+ assert.equal(target.ready,false);assert.deepEqual(ctx.images.binding(ctx.images.get(ctx.project.id),target,source),packet.binding,'证明不能只比较旧Hash');
+ assert.throws(()=>ctx.images.assertExecutablePacket(ctx.project.id,packet.id),/来源分镜已过期/);assert.throws(()=>ctx.images.bundle(ctx.project.id,packet.id),error=>error.status===409);
+ ws=ctx.images.view(ctx.project.id);assert.equal(ws.packets[0].packetStatus,'needs_review');assert.equal(ctx.images.get(ctx.project.id).packets.length,1);
+});
+test('自动产物只追加候选并保留原包，迟到且目标已移除时仍保留原输入为stale',()=>{
+ const ctx=fixture();let ws=ctx.images.view(ctx.project.id);const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'});
+ const args={packetId:packet.id,bytes:testPng(),filename:'TEST-FIXTURE-NOT-AI.png',provenance:generatedFixture(testPng())};
+ ws=ctx.images.importGenerated(ctx.project.id,args);const first=ws.assets.at(-1);assert.equal(first.state,'pending_check');assert.equal(first.source.kind,'test');assert.equal(first.generation.taskId,args.provenance.taskId);assert.equal(ws.selectionHistory.length,0);
+ const revision=ws.revision;assert.equal(ctx.images.importGenerated(ctx.project.id,args).revision,revision);assert.equal(ctx.images.get(ctx.project.id).assets.length,1);
+ const changed=testPng(320,180,[4,5,6]);assert.throws(()=>ctx.images.importGenerated(ctx.project.id,{...args,bytes:changed,provenance:generatedFixture(changed)}),error=>error.status===409);
+ let creative=ctx.creative.get(ctx.project.id);ctx.creative.update(ctx.project.id,{revision:creative.revision,shots:[]});creative=ctx.creative.get(ctx.project.id);ctx.creative.addVersion(ctx.project.id,{revision:creative.revision,kind:'storyboard',body:'【人工测试】本轮已移除原镜头，旧任务原文保留。'});
+ const lateBytes=testPng(320,180,[7,8,9]);ws=ctx.images.importGenerated(ctx.project.id,{...args,bytes:lateBytes,provenance:generatedFixture(lateBytes,'fixture-generation-late-02')});
+ const late=ws.assets.at(-1);assert.equal(late.stale,true);assert.equal(late.targetHash,packet.binding.targetHash);assert.deepEqual(late.inputSnapshot,packet.sourceSnapshot);assert.equal(late.targetVersion,packet.targetVersion);assert.equal(ws.selectionHistory.length,0);
+ assert.equal(ctx.images.file(ctx.project.id,first.id).bytes.length,args.bytes.length);
+});
+test('手工上传不能伪造Codex服务端来源或缺少原任务的生成回传',()=>{
+ const ctx=fixture();let ws=ctx.images.view(ctx.project.id);
+ assert.throws(()=>ctx.images.import(ctx.project.id,{revision:ws.revision,role:'shot',targetId:'SHOT-01',filename:'fake.png',source:{kind:'codex-cli',description:'伪造服务端生成来源'}},testPng()),/来源/);
+ assert.throws(()=>ctx.images.importGenerated(ctx.project.id,{packetId:'nonexistent',bytes:testPng(),provenance:{}}),error=>error.status===404);assert.equal(ctx.images.get(ctx.project.id).assets.length,0);
+});
+test('文字成功声明或缺少真实完成/解码/附件Hash证据不能成为自动导入候选',()=>{
+ const ctx=fixture();let ws=ctx.images.view(ctx.project.id);const packet=ctx.images.prepare(ctx.project.id,{revision:ws.revision,shotId:'SHOT-01'}),bytes=testPng();
+ for(const mutate of [proof=>{proof.completedTurn=false;},proof=>{proof.officialImageEvent.status='inProgress';},proof=>{proof.decoded.decoded=false;},proof=>{proof.sha256='fake-hash';},proof=>{proof.officialImageEvent.inputImages=[{path:'fake.png',sha256:'not-attached'}];}]){
+  const provenance=generatedFixture(bytes);mutate(provenance.completionEvidence);assert.throws(()=>ctx.images.importGenerated(ctx.project.id,{packetId:packet.id,bytes,provenance}),error=>error.status===409);
+ }
+ assert.equal(ctx.images.get(ctx.project.id).assets.length,0);
 });

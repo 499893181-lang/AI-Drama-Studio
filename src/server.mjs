@@ -9,6 +9,7 @@ import { ScriptService } from './scripts.mjs';
 import { CreativeService } from './creative-jobs.mjs';
 import { ImageWorkspace } from './image-store.mjs';
 import { inspectImageCapabilities } from './image-capabilities.mjs';
+import { ImageGenerationJobs } from './image-jobs.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -33,6 +34,7 @@ export function createStudio(options = {}) {
   const scripts = new ScriptService(store, options.scriptOptions);
   const creative = new CreativeService(store, options.creativeOptions);
   const images = new ImageWorkspace(store, { creativeWorkspace: creative.workspace, ...options.imageOptions });
+  const imageGeneration = new ImageGenerationJobs(store, { images, ...options.imageGenerationOptions });
   let imageReport = null, imageInspection = null;
   const getImageCapabilities = () => {
     if (imageReport && Date.now() - Date.parse(imageReport.checkedAt) < 60000) return Promise.resolve(imageReport);
@@ -73,7 +75,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.4.0', phase: 'image-workbench', supportedPhases: ['story-initiation', 'script', 'creative', 'images'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.5.0', phase: 'single-image-generation', supportedPhases: ['story-initiation', 'script', 'creative', 'images'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/creative/knowledge' && method === 'GET') { json(response, creative.catalog()); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
@@ -88,6 +90,11 @@ export function createStudio(options = {}) {
         if (!validId(id)) throw new AppError('项目标识不正确。');
         if (segments[3] === 'images') {
           if (segments.length === 4 && method === 'GET') { json(response, images.view(id)); return; }
+          if (segments.length === 5 && segments[4] === 'generation' && method === 'GET') { json(response, await imageGeneration.view(id)); return; }
+          if (segments.length === 6 && segments[4] === 'packets' && method === 'GET') {
+            if (!validId(segments[5])) throw new AppError('图片任务包标识不正确。');
+            json(response, images.assertExecutablePacket(id, segments[5]).packet); return;
+          }
           if (segments.length === 7 && segments[4] === 'packets' && segments[6] === 'bundle' && method === 'GET') {
             if (!validId(segments[5])) throw new AppError('图片任务包标识不正确。');
             const bundle = images.bundle(id, segments[5]);
@@ -104,6 +111,7 @@ export function createStudio(options = {}) {
               json(response, images.import(id, metadata, await body(request, 20 * 1024 * 1024)), 201); return;
             }
             const input = await readJson(request);
+            if (segments[4] === 'generation-prepare') { json(response, await imageGeneration.prepare(id, input), 201); return; }
             if (segments[4] === 'review') { json(response, images.review(id, input)); return; }
             if (segments[4] === 'select') { json(response, images.select(id, input)); return; }
             if (segments[4] === 'prepare') { json(response, images.prepare(id, input), 201); return; }
@@ -193,6 +201,20 @@ export function createStudio(options = {}) {
         if (segments.length === 3 && method === 'GET') { json(response, store.read('creative-jobs', id)); return; }
         if (segments.length === 4 && segments[3] === 'cancel' && method === 'POST') { await readJson(request); json(response, creative.cancel(id)); return; }
       }
+      if (segments[0] === 'api' && segments[1] === 'image-generation-tasks' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, imageGeneration.read(id)); return; }
+        if (segments.length === 5 && segments[3] === 'artifacts' && /^\d{1,3}$/.test(segments[4]) && method === 'GET') {
+          const file = imageGeneration.artifactFile(id, Number(segments[4]));
+          response.writeHead(200, { 'Content-Type': file.mimeType, 'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(file.name)}`, 'Content-Length': file.bytes.length, 'Cache-Control': 'no-store' });
+          response.end(file.bytes); return;
+        }
+        if (segments.length === 4 && method === 'POST') {
+          const input = await readJson(request);
+          if (segments[3] === 'submit') { json(response, await imageGeneration.submit(id, input), 202); return; }
+          if (segments[3] === 'cancel') { json(response, imageGeneration.cancel(id)); return; }
+        }
+      }
       if (segments[0] === 'api') throw new AppError('接口不存在。', 404);
       if (method !== 'GET' && method !== 'HEAD') throw new AppError('不支持的请求方法。', 405);
       const relative = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');
@@ -209,7 +231,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, images, getTools, getImageCapabilities, close: () => { creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, images, imageGeneration, getTools, getImageCapabilities, close: () => { imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {
