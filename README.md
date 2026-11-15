@@ -1,6 +1,6 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.2.1保留故事立项，新增剧本输入、任务适配、不可变稿件版本与Codex独立审阅。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.3.0保留立项与即梦文字适配，新增本机Codex剧本、导演规则、分镜候选和新会话独立审阅工作台。
 
 公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。网页版调试先读[调试入口](docs/CHATGPT_CONTEXT.md)与[源码索引](llms.txt)。GitHub提供代码和文档；本机服务、个人项目和认证不会随仓库公开。
 
@@ -14,17 +14,18 @@ Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.2.1保留故事�
 node .\src\server.mjs
 ```
 
-打开[故事立项](http://127.0.0.1:4317)或[剧本工作台](http://127.0.0.1:4317/script.html)。需要Node.js22+，没有npm运行依赖或独立数据库。启动器支持 `NODE_BIN`、PATH和已安装CodexPrimaryRuntime，不下载程序或修改全局PATH。
+打开[故事立项](http://127.0.0.1:4317)、[Codex创作与分镜](http://127.0.0.1:4317/creative.html)或[可选即梦文字](http://127.0.0.1:4317/script.html)。需要Node.js22+，没有npm运行依赖或独立数据库。启动器支持 `NODE_BIN`、PATH和已安装CodexPrimaryRuntime，不下载程序或修改全局PATH。保留旧服务并行验收时可用 `.\scripts\start.ps1 -Port 4318`，打开对应4318地址；每个服务须使用独立数据目录。
 
 ## 当前功能
 
+- Codex创作与分镜：本机官方CLI生成剧本候选、分镜候选，新会话独立审阅，人工采用/编辑保存。15位导演、17个作品级预设显示规则来源，90条手册扩展显式勾选，案例默认关闭。静态、摄影和后期声音分栏；任务包及提示词可导出。采用前从当前存储重编译Hash，保留人工稿、原始回执及不可变版本。[操作与能力边界](docs/creative-workbench.md)。
 - 故事立项：项目列表、默认30秒、横竖屏、画风、参考素材、预算、真实Codex扩写、人工修改、revision冲突保护与重启恢复。候选采用一次写入正文与来源，备份保留旧人工稿。
 - 剧本输入：从当前保存的创作说明确定性整理大纲/单集参数，显式绑定并只读核验真实即梦画布与空间ID，不自动创建画布。
 - 即梦适配：官方 `script outline`、`script episode`、`script result`，提交前保存幂等键，保存thread/run和原始回执。中断后查询原任务，缺ID时禁止猜测重提。只有真实终态、有效ID和本次CLI导出的非空完整正文才提供候选。
 - 稿件版本：分别查看大纲、即梦候选、人工稿，编辑保存为新版本，保留历史并可切换活动版本。没有已验证的即梦Agent定向改稿接口，人工保存不冒充Agent修改。
 - 独立审阅：用户点击后新开真实Codex会话，检查用户要求、人物动机、逻辑、时长、连续性和制作难度，报告独立保存。输入或活动稿变化后旧稿/报告显示需要复核。
 
-**费用边界：官方说明剧本按产出字数计费且不支持总价预检，当前仍缺本账号CLI每字费率或免费凭证，因此显示“费用待确认”，服务端禁止提交。** 报价模块支持有真实依据的免费、积分和人民币，分别记录渠道、来源、单位、条件与有效期；积分和人民币分别设预算，不推汇率，不造官方quoteId。 准备任务仅保存输入与request-id，不消耗生成额度。项目人民币预算、账号余额及图像/视频节点估价均不能代替剧本报价。隔离测试中的已知零费用夹具不是生产价格。
+**即梦文字费用边界：官方说明剧本按产出字数计费且不支持总价预检，当前仍缺本账号CLI每字费率或免费凭证，因此显示“费用待确认”，即梦提交受阻。Codex文字路径独立可用，沿用本机账号额度。** 报价模块支持有真实依据的免费、积分和人民币，分别记录渠道、来源、单位、条件与有效期；积分和人民币分别设预算，不推汇率，不造官方quoteId。 准备任务仅保存输入与request-id，不消耗生成额度。项目人民币预算、账号余额及图像/视频节点估价均不能代替剧本报价。隔离测试中的已知零费用夹具不是生产价格。
 
 最新首次业务验收已创建并验证独立测试画布、绑定30秒测试项目，并对明确标为非即梦来源的既有手工测试文本完成一次真实Codex独立审阅，结论REVISE（5项问题）。费用未知，仍未提交即梦大纲或剧本生成。详见[首次真实业务验收](docs/first-business.md)和[费用依据](docs/first-business-fees/fees-report.md)。图片、视频、配音、字幕和剪辑尚未接入。
 
@@ -50,9 +51,12 @@ Codex继续使用本机认证与模型配置；未认证时执行 `codex login`�
 ```powershell
 node --test tests/*.test.mjs
 node tests/script-browser-smoke.mjs
+node tests/creative-browser-smoke.mjs
 ```
 
 浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。
+
+0.3.0[本轮独立验收](docs/creative-workbench-acceptance.md)：105/105测试通过；真实Codex剧本、分镜及不同会话独立审阅各一次成功，候选审阅六项PASS。真实Chrome采用及人工保存、服务重启恢复通过；人工修改后旧报告按预期需复核。显式真实验证脚本及数据隔离要求见[工作台说明](docs/creative-workbench.md)。
 
 [报价证据与单位预算](docs/pricing.md) · [第二阶段实现与验收](docs/stage2.md) · [CLI适配边界](docs/novel-adapter.md) · [独立审阅](docs/script-review.md) · [官方公开契约](docs/jimeng-cli-audit-2026-11-15/script-cli-report.md) · [历史验收](docs/validation.md) · [下一阶段](docs/next-stage.md)。
 
@@ -73,5 +77,5 @@ node scripts/preview-creative.mjs --list
 node scripts/preview-creative.mjs examples/creative/waiting-shot.json
 ```
 
-知识库版本为0.4.0，工作台版本仍为0.2.1。本次新增内容可离线运行，尚未接入分镜页面、真实图像生成或视频提交。新的默认创作路线采用自有ChatGPT／Codex编写与审阅，图像、即梦画布／无对白视频与后期分步接入；既有即梦剧本工具保留可选。
+知识库版本为0.4.0，工作台版本为0.3.0。规则核心已接入文字与分镜页面，图像、即梦画布／无对白视频及后期尚未接入。默认路线采用本机Codex编写与独立审阅；既有即梦剧本工具保留可选。四岗位正式guard与账本尚未接入，因此候选有效、人工采用或模型审阅PASS均不代表正式制作包通过。
 

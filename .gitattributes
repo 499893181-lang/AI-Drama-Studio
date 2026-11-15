@@ -1,0 +1,2 @@
+# These example bytes are bound by SHA-256 in waiting-shot.json.
+examples/creative/*.txt text eol=lf
