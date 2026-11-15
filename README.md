@@ -1,66 +1,59 @@
 # AI-Drama-Studio
 
-Windows 本地运行的中文 AI 短剧故事立项工作台。当前版本只完成第一阶段：保存故事构思与制作要求，通过本机真实 Codex 扩写创作说明，再由用户编辑和保存。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.2.0保留故事立项，新增剧本输入、任务适配、不可变稿件版本与Codex独立审阅。
 
-## 公开仓库与网页版调试
-
-公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。
-
-将[代码调试入口](docs/CHATGPT_CONTEXT.md)链接提供给网页版 ChatGPT，并按[源码索引](llms.txt)提供相关文件。入口含当前范围、真实验证、未完成能力和问题模板。若无法直接读取页面，可使用同一文件的 Raw 原始文本地址，或上传相关文件。给出仓库地址不代表模型已经读完所有源码。
-
-GitHub 公开的是源代码和文档；工作台仍在你的 Windows 本机运行，个人项目、认证与缓存没有上传。后续提交与同步方式见[发布记录](docs/publishing.md)。
+公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。网页版调试先读[调试入口](docs/CHATGPT_CONTEXT.md)与[源码索引](llms.txt)。GitHub提供代码和文档；本机服务、个人项目和认证不会随仓库公开。
 
 ## 启动
 
-需要 Node.js 22 或以上版本。项目不依赖 npm 包，不需要安装数据库。启动脚本优先使用 `NODE_BIN` 或 PATH 中的 Node.js；若没有独立安装，会自动发现并复用已安装 CodexPrimaryRuntime 中的 Node.js，不下载或复制运行时，也不修改全局 PATH。
-
-双击项目根目录的 `start.cmd`，或在 PowerShell 中执行：
+双击 `start.cmd`，或执行：
 
 ```powershell
 .\scripts\start.ps1
-```
-
-也可以直接运行：
-
-```powershell
+# 已有Node时也可
 node .\src\server.mjs
 ```
 
-打开 [http://127.0.0.1:4317](http://127.0.0.1:4317)。按 Ctrl+C 停止服务。端口被占用时，可执行 `.\scripts\start.ps1 -Port 4318`。
+打开[故事立项](http://127.0.0.1:4317)或[剧本工作台](http://127.0.0.1:4317/script.html)。需要Node.js22+，没有npm运行依赖或独立数据库。启动器支持 `NODE_BIN`、PATH和已安装CodexPrimaryRuntime，不下载程序或修改全局PATH。
 
-只检查启动环境而不启动服务，可运行 `powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\start.ps1 -CheckOnly`。如自动发现受本机权限限制，可先设置 `$env:NODE_BIN = 'C:\实际路径\node.exe'` 再启动。脚本使用 UTF-8 BOM，兼容 Windows PowerShell 5.1。已安装 Codex 运行时若被移除或升级，脚本会重新发现路径；找不到时明确报告配置问题。
+## 当前功能
 
-## 已完成功能
+- 故事立项：项目列表、默认30秒、横竖屏、画风、参考素材、预算、真实Codex扩写、人工修改、revision冲突保护与重启恢复。候选采用一次写入正文与来源，备份保留旧人工稿。
+- 剧本输入：从当前保存的创作说明确定性整理大纲/单集参数，显式绑定并只读核验真实即梦画布与空间ID，不自动创建画布。
+- 即梦适配：官方 `script outline`、`script episode`、`script result`，提交前保存幂等键，保存thread/run和原始回执。中断后查询原任务，缺ID时禁止猜测重提。只有真实终态、有效ID和本次CLI导出的非空完整正文才提供候选。
+- 稿件版本：分别查看大纲、即梦候选、人工稿，编辑保存为新版本，保留历史并可切换活动版本。没有已验证的即梦Agent定向改稿接口，人工保存不冒充Agent修改。
+- 独立审阅：用户点击后新开真实Codex会话，检查用户要求、人物动机、逻辑、时长、连续性和制作难度，报告独立保存。输入或活动稿变化后旧稿/报告显示需要复核。
 
-- 中文项目列表、新建与编辑，目标时长默认 30 秒，可修改时长、横竖屏、画风、预算上限及参考素材。
-- 项目存放在本地，关闭网页或重启服务后可恢复；手动保存并显示未保存状态。
-- 通过官方 `codex exec` 非交互接口调用本机 Codex，显示真实任务状态、错误与候选结果。
-- 创作说明包含故事梗概、背景、人物关系、核心冲突、情绪发展和结局，并单列用户指定内容与 AI 补充设定。候选经用户采用后进入可编辑稿。
-- 检测 Codex、即梦 CLI、即梦画布 CLI、FFmpeg 等本机工具，并区分检测证据、待配置和未验证能力。
-- 第一阶段以外的流程只作路线展示，尚未实现媒体制作与视频导出。
+**费用边界：当前官方公开剧本契约没有可核验的报价。生产配置始终显示“费用待确认”，服务端禁止提交真实剧本任务；没有开放手填价格绕过。** 准备任务仅保存输入与request-id，不消耗生成额度。项目人民币预算、账号余额及图像/视频节点估价均不能代替剧本报价。隔离测试中的已知零费用夹具不是生产价格。
 
-## Codex 配置
+本轮已完成jimeng-novel本机认证，但没有选择用户真实画布，也没有实际生成剧本或运行新增Codex审阅。图片、视频、配音、字幕和剪辑尚未接入。
 
-先在终端运行 `codex --version` 与 `codex login status`。如果没有登录，请由用户在自己的终端执行 `codex login` 并完成认证，再回到工作台刷新工具检测。
+## 配置jimeng-novel
 
-工作台复用本机 Codex 的认证，不要求将 API 密钥写进项目。调用失败会显示真实错误，不会填入示例扩写。创作构思会通过本机 Codex 提交给其模型服务；预算上限是项目计划字段，当前阶段不代表 Codex 账户的自动扣费限制。
-
-Codex 使用只读沙箱执行独立的文字扩写任务。接口依据：[官方非交互模式文档](https://developers.openai.com/codex/noninteractive)。具体参数以已安装版本的 `codex exec --help` 为准。
-
-可通过环境变量指定工具可执行文件路径：`CODEX_BIN`、`DREAMINA_BIN`、`DREAMINA_CANVAS_BIN`、`FFMPEG_BIN`、`FFPROBE_BIN`。服务端端口使用 `PORT`；项目数据目录使用 `DATA_DIR`。例如：
+使用已核实的官方Windows x64发行ZIP，保留exe与配套runtime完整结构：
 
 ```powershell
-$env:CODEX_BIN = 'C:\path\to\codex.exe'
-$env:DATA_DIR = 'D:\AI视频\AI-Drama-Studio-data'
-node .\src\server.mjs
+.\scripts\setup-novel.ps1 -ArchivePath 'C:\实际路径\jimeng-novel-1.0.6-windows-amd64.zip'
+.\scripts\setup-novel.ps1 -CheckOnly
 ```
 
-## 数据与开发
+工具保存在Git忽略的 `.local/jimeng-novel-1.0.6/`。也可将 `JIMENG_NOVEL_BIN` 指向有相邻runtime的原生程序绝对路径。适配器只读检查版本和登录状态，不会自动发起授权。需要登录时，在本人终端执行该完整发行目录的 `jimeng-novel login`，完成本次官方网页授权后用 `status -j`核实，不复用过期挑战。
 
-默认数据目录为项目根目录的 `data`。备份时停止服务，复制整个数据目录；恢复时将其放回原位或设置 `DATA_DIR`。数据、运行缓存、密钥和大型生成媒体均已排除在 Git 之外。不要将个人认证文件加入版本库。
+Codex继续使用本机认证与模型配置；未认证时执行 `codex login`。环境变量包括 `PORT`、`DATA_DIR`、`NODE_BIN`、`CODEX_BIN`、`JIMENG_NOVEL_BIN`，以及原有即梦/FFmpeg路径配置。真实画布ID来自即梦服务，本工作台项目UUID不能代替。
 
-工程使用原生 Node.js HTTP 服务与浏览器前端；核心代码独立编写。功能组织参考[火宝短剧](https://github.com/chatfire-AI/huobao-drama)的项目、创作、分镜、生产流程划分，没有复制其业务源码或资源。
+## 数据与验证
 
-接口实测与能力边界见 `docs/tool-inspection.md`，开发验证结果见 `docs/validation.md`，后续任务见 `docs/next-stage.md`。这些记录以本机实际执行结果为准；即梦本阶段只读取帮助和状态，没有提交图片或视频生成任务。
+默认data目录仍在项目根目录，原项目不迁移。新增 `data/scripts/`保存输入/绑定/版本，`data/script-jobs/`保存即梦任务和回执，`data/script-reviews/`保存独立审阅；私有运行文件在 `data/runtime/`。停止服务后备份整个data目录。个人数据、授权材料、完整工具包、缓存和媒体均不进Git。
 
-许可为 MIT，见 `LICENSE`。
+不消耗真实模型或生成额度的验证：
+
+```powershell
+node --test tests/*.test.mjs
+node tests/script-browser-smoke.mjs
+```
+
+浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。
+
+[第二阶段实现与验收](docs/stage2.md) · [CLI适配边界](docs/novel-adapter.md) · [独立审阅](docs/script-review.md) · [官方公开契约](docs/jimeng-cli-audit-2026-11-15/script-cli-report.md) · [历史验收](docs/validation.md) · [下一阶段](docs/next-stage.md)。
+
+功能组织参考[火宝短剧](https://github.com/chatfire-AI/huobao-drama)公开项目说明，核心代码独立编写，未复制其业务源码或资源。

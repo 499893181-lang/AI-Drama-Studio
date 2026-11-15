@@ -79,7 +79,7 @@ if ($CheckOnly) {
 $env:PORT = "$Port"
 Push-Location -LiteralPath $studioRoot
 try {
-    Write-Host 'AI-Drama-Studio · 故事立项工作台'
+    Write-Host 'AI-Drama-Studio · 故事与剧本工作台'
     Write-Host "启动地址：http://127.0.0.1:$Port"
     Write-Host '按 Ctrl+C 停止；关闭后项目仍保存在本机 data 目录。'
     & $studioNodePath (Join-Path $studioRoot 'src\server.mjs')

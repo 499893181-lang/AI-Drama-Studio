@@ -1,0 +1,49 @@
+{
+  "checkedAt": "2026-11-15T05:24:05.170Z",
+  "timezone": "Asia/Shanghai",
+  "version": "0.2.0",
+  "login": {
+    "tool": "jimeng-novel",
+    "version": "1.0.6",
+    "installedWithRuntime": true,
+    "successfulOfficialAuthorization": true,
+    "statusRecheckedLoggedIn": true
+  },
+  "softwareAdaptation": {
+    "implemented": true,
+    "isolatedTests": {
+      "total": 58,
+      "pass": 58,
+      "fail": 0
+    },
+    "browserFixturePassed": true,
+    "fixtureOnlyCalls": {
+      "submit": 0,
+      "query": 0,
+      "review": 1,
+      "verify": 1
+    },
+    "liveReadOnlyBrowserPassed": true,
+    "applicationExceptions": 0
+  },
+  "realScriptGeneratedThisRound": false,
+  "realOutlineSubmittedThisRound": false,
+  "newRealCodexReviewRunThisRound": false,
+  "mediaGeneratedThisRound": false,
+  "productionCost": {
+    "status": "unknown",
+    "label": "费用待确认",
+    "canSubmit": false
+  },
+  "realCanvasSelectedOrBoundThisRound": false,
+  "originalProjectCount": 2,
+  "originalPhaseOneDataHashCheck": {
+    "unchanged": true,
+    "files": 8
+  },
+  "notes": [
+    "真实认证成功不等于剧本业务生成已验收。",
+    "浏览器夹具中的review/verify不是实际模型或用户画布操作。",
+    "生产费用待确认，未自动提交或开放人工报价绕过。"
+  ]
+}

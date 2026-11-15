@@ -1,0 +1,23 @@
+{
+  "startedAt": "2026-11-15T05:18:51.627Z",
+  "isolatedFixturesOnly": true,
+  "realGenerationOrReviewInvoked": false,
+  "checks": [
+    "从已保存创作说明整理输入并显示未知费用",
+    "通过显式按钮保存并核对画布绑定（隔离适配器）",
+    "费用未知时按钮禁用、后端拒绝、重复准备复用原request-id，零生成调用",
+    "轮询保留未保存剧本与未保存输入",
+    "人工修改另存新版本，历史稿完整保留；独立报告与稿件分开显示（隔离报告）",
+    "上游改变后旧剧本和独立报告均标记需要复核，不冒充有效审阅",
+    "独立服务重启后稿件、报告、原request-id与过期状态恢复",
+    "真实Chrome无未处理页面异常"
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-15T05:18:58.634Z",
+  "calls": {
+    "submit": 0,
+    "query": 0,
+    "review": 1,
+    "verify": 1
+  }
+}

@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { Store, AppError, validId, now } from './store.mjs';
 import { CodexJobs } from './codex.mjs';
 import { inspectTools } from './tools.mjs';
+import { ScriptService } from './scripts.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -26,6 +27,7 @@ async function readJson(request) {
 export function createStudio(options = {}) {
   const store = new Store(options.dataDir ?? process.env.DATA_DIR ?? path.join(repoRoot, 'data'));
   const jobs = new CodexJobs(store);
+  const scripts = new ScriptService(store, options.scriptOptions);
   let report = null, inspection = null;
   const withRuntimeEvidence = value => {
     const result = structuredClone(value);
@@ -60,7 +62,8 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.1.0', phase: 'story-initiation', now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.2.0', phase: 'script-development', supportedPhases: ['story-initiation', 'script'], now: now() }); return; }
+      if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
       if (url.pathname === '/api/tools' && method === 'GET') { json(response, await getTools()); return; }
       if (url.pathname === '/api/tools/refresh' && method === 'POST') { json(response, await getTools(true)); return; }
       if (segments[0] === 'api' && segments[1] === 'projects') {
@@ -70,6 +73,19 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'script') {
+          if (segments.length === 4 && method === 'GET') { json(response, await scripts.view(id)); return; }
+          if (segments.length === 4 && method === 'PUT') { scripts.workspace.update(id, await readJson(request)); json(response, await scripts.view(id)); return; }
+          if (segments.length === 5 && method === 'POST') {
+            const input = await readJson(request);
+            if (segments[4] === 'sync') { scripts.workspace.sync(id, input.revision); json(response, await scripts.view(id)); return; }
+            if (segments[4] === 'verify-binding') { await scripts.verifyBinding(id, input.revision); json(response, await scripts.view(id)); return; }
+            if (segments[4] === 'versions') { scripts.workspace.addVersion(id, input); json(response, await scripts.view(id), 201); return; }
+            if (segments[4] === 'activate') { scripts.workspace.activate(id, input.revision, input.versionId); json(response, await scripts.view(id)); return; }
+            if (segments[4] === 'prepare') { json(response, await scripts.prepare(id, input), 201); return; }
+            if (segments[4] === 'reviews') { json(response, scripts.startReview(id, input), 202); return; }
+          }
+        }
         if (segments.length === 3) {
           if (method === 'GET') { json(response, store.read('projects', id)); return; }
           if (method === 'PUT') { json(response, store.update(id, await readJson(request))); return; }
@@ -104,6 +120,21 @@ export function createStudio(options = {}) {
           job.appliedAt = now(); store.write('jobs', job); json(response, project); return;
         }
       }
+      if (segments[0] === 'api' && segments[1] === 'script-tasks' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, store.read('script-jobs', id)); return; }
+        if (segments.length === 4 && method === 'POST') {
+          const input = await readJson(request);
+          if (segments[3] === 'submit') { json(response, await scripts.submit(id, input), 202); return; }
+          if (segments[3] === 'query') { json(response, await scripts.query(id)); return; }
+          if (segments[3] === 'adopt') { const task = store.read('script-jobs', id); scripts.adopt(id, input.revision); json(response, await scripts.view(task.projectId)); return; }
+        }
+      }
+      if (segments[0] === 'api' && segments[1] === 'script-reviews' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, store.read('script-reviews', id)); return; }
+        if (segments.length === 4 && segments[3] === 'cancel' && method === 'POST') { await readJson(request); json(response, scripts.reviewer.cancel(id)); return; }
+      }
       if (segments[0] === 'api') throw new AppError('接口不存在。', 404);
       if (method !== 'GET' && method !== 'HEAD') throw new AppError('不支持的请求方法。', 405);
       const relative = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');
@@ -120,7 +151,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, getTools, close: () => { jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, getTools, close: () => { scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {
