@@ -162,9 +162,9 @@ export function createNovelAdapter({ repoRoot = defaultRepoRoot, rootDir = path.
   const runtimeRoot = path.join(path.resolve(rootDir), 'runtime');
   const executable = () => resolveNovelExecutable({ repoRoot, bin });
   const requireExecutable = () => { const found = executable(); if (!found) throw new AppError('待配置：未找到带配套runtime的jimeng-novel；请配置完整发行目录或JIMENG_NOVEL_BIN。', 503); return found; };
-  const invokeReadOnly = async args => {
+  const invokeReadOnly = async (args, { timeout = 20000 } = {}) => {
     const binary = requireExecutable();
-    const result = await runner(binary, args, { cwd: path.dirname(binary), timeout: 20000 });
+    const result = await runner(binary, args, { cwd: path.dirname(binary), timeout });
     return { ...result, json: parseNovelJson(result.stdout) };
   };
   const invokeScript = async ({ args, input, fallbackIds, onReceipt, signal }) => {
@@ -219,8 +219,11 @@ export function createNovelAdapter({ repoRoot = defaultRepoRoot, rootDir = path.
       const args = ['canvas', 'get', '--project-id', binding.projectId];
       if (binding.teamId) args.push('--team-id', binding.teamId);
       args.push('-j', '--full');
-      const receipt = await invokeReadOnly(args);
-      if (receipt.exitCode !== 0 || receipt.timedOut || receipt.json?.status !== 'success' || receipt.json?.data?.projectId !== binding.projectId) throw new AppError(`即梦画布未通过真实访问校验：${textError(receipt.json?.error || receipt.stderr || '没有匹配的项目ID回执')}。`, 409);
+      const receipt = await invokeReadOnly(args, { timeout: 60000 });
+      fs.mkdirSync(runtimeRoot, { recursive: true });
+      const readDir = fs.mkdtempSync(path.join(runtimeRoot, 'novel-binding-'));
+      fs.writeFileSync(path.join(readDir, 'receipt.json'), JSON.stringify({ command: args, ...receipt }, null, 2), 'utf8');
+      if (receipt.exitCode !== 0 || receipt.timedOut || receipt.json?.status !== 'success' || receipt.json?.data?.projectId !== binding.projectId) throw new AppError(`即梦画布未通过真实访问校验：${receipt.timedOut ? '本次画布读取超过60秒限时，未收到完整回执；原始记录已保留，可只读重查' : textError(receipt.json?.error || receipt.error || receipt.stderr || '没有匹配的项目ID回执')}。`, 409);
       return { verified: true, projectId: binding.projectId, teamId: binding.teamId, title: typeof receipt.json.data.name === 'string' ? receipt.json.data.name : null, verifiedAt: new Date().toISOString() };
     },
     async submit({ kind, binding: value, input, requestId, onReceipt, signal }) {

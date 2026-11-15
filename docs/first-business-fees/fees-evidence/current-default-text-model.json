@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-15T07:04:39.759Z",
+  "command": "jimeng-novel model describe --model-id script_bird -j --full",
+  "exitCode": 0,
+  "status": "success",
+  "model": {
+    "commands": [
+      "script outline",
+      "script episode"
+    ],
+    "firstFrame": false,
+    "inputCapabilities": {},
+    "inputConfig": null,
+    "lastFrame": false,
+    "modelFlag": "--model-key",
+    "modelId": "script_bird",
+    "name": "DreamScript",
+    "parameterConfig": {
+      "need_available_combinations": false
+    },
+    "referenceLimits": {},
+    "references": {},
+    "scene": "web_novel_script",
+    "type": "text",
+    "usages": [
+      "reference"
+    ]
+  },
+  "scriptUnitPriceFieldsPresent": false,
+  "accountAndSpaceIdentifiersExcluded": true
+}

@@ -1,0 +1,24 @@
+Command: jimeng-novel credit get --help
+Exit: 0
+jimeng-novel credit get — 查询积分余额；在绑定的项目目录里还给出本项目已记录的实扣合计
+
+用法: jimeng-novel credit get [选项]
+
+参数:
+  --team-id <string>
+      仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定
+  -j, --json
+      输出 JSON 信封 {status,data,error,context}
+  --jq <表达式>
+      对 JSON 信封执行 jq（字符串结果原样输出），如 --jq '.data.items[].key'
+  --full
+      不截断长文本和长列表
+
+返回: balance、project{deductedTotal,runs,ledger}
+
+说明:
+  - 余额按当前个人空间或团队成员账户查询，可能包含该账户在别处的消费；本项目的花费看 project.deductedTotal（生成结算后写入当前账号及空间的项目账本，每个任务只记一次）
+  - 服务端没有按画布查消费记录的接口
+
+示例:
+  jimeng-novel credit get

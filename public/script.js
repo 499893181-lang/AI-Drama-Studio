@@ -3,7 +3,7 @@ const app = $('#script-app');
 const esc = (value = '') => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const clone = value => structuredClone(value);
 const time = value => value ? new Date(value).toLocaleString('zh-CN', { hour12: false }) : '尚无记录';
-const state = { projects: [], project: null, ws: null, input: {}, binding: {}, inputDirty: false, draftBody: '', draftDirty: false, kind: 'script', selectedId: null, parentId: null, tasks: [], reviews: [], tool: null, cost: null, error: '', busy: false, poll: null };
+const state = { projects: [], project: null, ws: null, input: {}, binding: {}, limits: { credits: null }, inputDirty: false, draftBody: '', draftDirty: false, kind: 'script', selectedId: null, parentId: null, tasks: [], reviews: [], tool: null, cost: null, costs: {}, error: '', busy: false, poll: null };
 const sections = [['synopsis', '故事梗概'], ['background', '背景'], ['characters', '人物关系'], ['conflict', '核心冲突'], ['emotion', '情绪发展'], ['ending', '结局']];
 const criteriaNames = { user_requirements: '用户指定内容', motivation: '人物动机', logic: '剧情逻辑', duration: '目标时长', continuity: '场景连续性', production: '制作难度' };
 const statusLabels = { prepared: '任务已准备', awaiting_confirmation: '等待确认', awaiting_cost: '费用待确认', submitting: '正在提交', queued: '等待启动', running: '运行中', succeeded: '真实任务成功', failed: '任务失败', interrupted: '上次运行中断', uncertain: '结果待核实', cancelled: '已取消' };
@@ -46,7 +46,8 @@ async function canLeave() {
 }
 function setWorkspace(ws, { keepDraft = false } = {}) {
   state.ws = ws; state.input = clone(ws.input || {}); state.binding = clone(ws.binding || { projectId: '', teamId: '' }); state.inputDirty = false;
-  state.tasks = ws.tasks || []; state.reviews = ws.reviews || []; state.tool = ws.tool || state.tool; state.cost = ws.costEstimate || state.cost;
+  state.limits = clone(ws.spendingLimits || { credits: null });
+  state.tasks = ws.tasks || []; state.reviews = ws.reviews || []; state.tool = ws.tool || state.tool; state.cost = ws.costEstimate || state.cost; state.costs = ws.costEstimates || { script: state.cost };
   const versions = ws.versions || [];
   if (!versions.some(version => version.id === state.selectedId)) state.selectedId = state.kind === 'outline' ? ws.activeOutlineId : ws.activeScriptId;
   if (!state.selectedId) state.selectedId = [...versions].reverse().find(version => version.kind === state.kind)?.id || null;
@@ -60,6 +61,7 @@ function render() {
   document.body.classList.add('script-page');
   app.innerHTML = `<div class="layout">${projectSidebar()}<main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>剧本</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions"><a class="ghost-button" href="/" data-action="return">返回故事立项</a><button class="secondary-button" data-action="reload" data-testid="script-refresh">刷新状态</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">让创作说明成为可拍摄的故事</div><h1>剧本与独立审阅</h1><p>即梦生成候选，Codex 独立检查，最终稿由你决定。</p></div><span class="stage-badge">第二阶段 · 剧本</span></div><div class="script-route-steps"><span>已保存创作说明</span><span>→</span><strong>即梦剧本候选</strong><span>→</span><strong>Codex 独立审阅</strong><span>→</span><span>人工修改与版本保存</span></div><div id="script-error"></div>${state.project && state.ws ? workspaceView() : `<div class="script-empty"><strong>${state.projects.length ? '请选择一个故事项目' : '故事还没有开始'}</strong>先在故事立项中保存项目和创作说明，再进入剧本阶段。<p><a href="/" data-action="return">前往故事立项</a></p></div>`}<p class="footer-note">图片、视频、配音和剪辑留待后续阶段。本页面不以文本节点保存冒充即梦 Agent 改稿。</p></div></main></div>`;
   if (state.kind === 'outline' && selected()) $('.script-editor-toolbar')?.insertAdjacentHTML('beforeend', '<button class="secondary-button" data-action="outline-to-summary" data-testid="outline-to-summary">填入本集梗概</button>');
+  $('#script-input-form')?.insertAdjacentHTML('beforeend', `<div class="form-group"><label for="script-credit-cap">积分预算上限（可选，独立于人民币预算）</label><input id="script-credit-cap" data-spend="credits" data-testid="script-credit-cap" type="number" min="0" max="1000000000" step="any" value="${state.limits.credits === null ? '' : esc(state.limits.credits)}" placeholder="尚未设定"><p class="script-panel-note">设置上限不等于同意付费。只有取得本次明确费用并再次确认后才可提交；人民币与积分不换算。</p></div>`);
   renderError(); renderRuntime(); setBusy(state.busy); dirtyIndicators();
 }
 function workspaceView() {
@@ -92,13 +94,21 @@ function renderRuntime() {
   const tool = $('#novel-tool-status');
   if (tool) tool.innerHTML = `${pill(state.tool?.installed ? '工具已配置' : '工具待配置', state.tool?.installed ? 'good' : 'warn')} ${pill(state.tool?.loggedIn ? '已确认登录' : '登录待完成', state.tool?.loggedIn ? 'good' : 'warn')} ${state.tool?.version ? `<span class="hint">${esc(state.tool.version)}</span>` : ''}<p>${esc(state.tool?.message || '以真实工具检查结果为准。')}</p>`;
   const estimate = state.cost || { status: 'unknown', label: '费用待确认', canSubmit: false };
-  const label = $('#script-cost-label'); if (label) label.textContent = estimate.status === 'unknown' || !estimate.canSubmit ? '费用待确认' : estimate.label || `${estimate.amount} ${estimate.currency || ''}`;
-  const cost = $('#script-cost-detail'); if (cost) cost.innerHTML = `<p>${esc(estimate.basis || '公开契约尚未提供可核验的剧本报价，本轮不自动提交。')}</p>${estimate.canSubmit ? '<p>请逐次核对任务费用及预算依据后再提交。</p>' : '<p><strong>提交已锁定。</strong> 可以整理输入、准备任务、人工保存与审阅。</p>'}`;
+  const costs = { outline: state.costs.outline || { status: 'unknown', canSubmit: false }, script: state.costs.script || estimate };
+  const label = $('#script-cost-label'); if (label) label.textContent = Object.values(costs).every(value => value.status === 'known' && value.canSubmit) ? '分动作费用已核对' : '费用待确认';
+  const cost = $('#script-cost-detail'); if (cost) cost.innerHTML = ['outline', 'script'].map(kind => priceMarkup(costs[kind], kind)).join('') + `<p>积分预算上限：${state.ws.spendingLimits?.credits === null || state.ws.spendingLimits?.credits === undefined ? '未设定' : esc(state.ws.spendingLimits.credits)}。积分与人民币分别核对，不推算兑换率。</p>`;
   const binding = $('#script-binding-status'); if (binding) binding.innerHTML = state.inputDirty ? '输入或绑定有未保存修改；校验前会先保存。' : state.ws.binding?.verified ? `<strong>真实绑定已校验</strong>${state.ws.binding.title ? ` · ${esc(state.ws.binding.title)}` : ''}` : '尚未校验真实画布。保存编号不等于校验成功。';
   const stale = $('#script-stale-banner'); if (stale) stale.innerHTML = staleBanner();
   const tasks = $('#script-tasks'); if (tasks) tasks.innerHTML = taskCards();
   const reviews = $('#script-reviews'); if (reviews) reviews.innerHTML = reviewCards();
   setBusy(state.busy);
+}
+function priceMarkup(quote, kind) {
+  const known = quote?.status === 'known' && quote.canSubmit;
+  const expiry = quote?.validity?.kind === 'not_stated' ? '官方未注明有效期，仅代表本次检查；后续须重新核验' : quote?.expiresAt ? `官方有效期至${time(quote.expiresAt)}` : '有效期未确认';
+  const sources = (quote?.sources || []).map(source => `<li>${/^https:\/\//i.test(source.url || '') ? `<a href="${esc(source.url)}" target="_blank" rel="noopener">${esc(source.title)}</a>` : esc(source.title || source.command || '官方来源')}：${esc(source.excerpt || source.summary || '')}</li>`).join('');
+  const metering = quote?.metering?.basis === 'output_characters' ? '<p>计量规则：按产出字数；每字单价与计费币种待确认；不支持总价预检。计量单位“字”不等于价格单位。</p>' : '';
+  return `<section class="script-price-evidence" data-price-kind="${esc(kind)}"><p><strong>${labelKind(kind)}：${esc(known ? quote.label || `${quote.amount} ${quote.unit || quote.currency}` : '费用待确认')}</strong></p><p>${esc(quote?.basis || '未取得适用于本次CLI动作的可核验价格；网页免费权益不能直接视为CLI免费。')}</p>${metering}<p>渠道：${esc(quote?.channel || 'jimeng-novel-cli')}；计价单位：${esc(quote?.unit || quote?.currency || '未确认')}；${esc(expiry)}。</p>${quote?.checkedAt ? `<p>检查时间：${esc(time(quote.checkedAt))}</p>` : ''}${quote?.conditions?.length ? `<ul>${quote.conditions.map(condition => `<li>${esc(condition)}</li>`).join('')}</ul>` : ''}${sources ? `<details><summary>查看费用来源</summary><ul>${sources}</ul></details>` : ''}${known ? `<p>证据标识：${esc(quote.evidenceId || quote.officialQuoteId || '旧提供方记录')}；本地证据标识不等于官方报价编号。</p>` : '<p>本动作提交已锁定；可以整理输入、保存待提交任务与人工稿。</p>'}</section>`;
 }
 function receiptPreview(receipts) {
   const text = JSON.stringify(receipts, (key, value) => /token|cookie|authorization|device.?code|user.?code/i.test(key) ? '[已隐藏]' : value, 2);
@@ -109,7 +119,7 @@ function taskCards() {
   return [...state.tasks].reverse().map(task => {
     const validBody = task.status === 'succeeded' && typeof task.body === 'string' && task.body.trim();
     const canSubmit = task.cost?.canSubmit === true && task.cost?.status !== 'unknown' && ['prepared', 'awaiting_confirmation', 'awaiting_cost'].includes(task.status) && !task.stale;
-    return `<article class="script-task" data-task-id="${esc(task.id)}"><div class="script-task-header"><h3>${labelKind(task.kind)}任务</h3>${pill(statusLabels[task.status] || task.status, task.status === 'succeeded' ? 'good' : task.status === 'failed' ? 'bad' : 'warn')}</div>${task.stale ? '<p>上游或输入已变更：需要复核，旧任务不得直接采用。</p>' : ''}<p>${esc(task.error || task.message || (task.cost?.canSubmit ? '请核对费用后明确提交。' : '费用待确认；没有因准备任务而提交生成。'))}</p><div class="script-task-ids"><code>request-id：${esc(task.requestId || '尚无')}</code><code>thread_id：${esc(task.threadId || '尚未收到')}</code><code>run_id：${esc(task.runId || '尚未收到')}</code></div>${validBody ? `<details><summary>查看真实返回候选正文</summary><div class="script-candidate-preview">${esc(task.body)}</div></details>` : ''}<div class="script-action-row"><button class="primary-button" data-submit-task="${esc(task.id)}" ${!canSubmit ? 'disabled' : ''} title="${canSubmit ? '确认费用后提交此任务' : '费用未知或任务状态不允许提交'}">${canSubmit ? '确认费用并提交' : '费用待确认 · 禁止提交'}</button><button class="secondary-button" data-query-task="${esc(task.id)}" ${!task.threadId || !task.runId ? 'disabled' : ''}>查询原任务</button>${validBody ? `<button class="secondary-button" data-adopt-task="${esc(task.id)}" ${task.stale ? 'disabled' : ''}>采用${labelKind(task.kind)}候选</button>` : ''}</div>${task.receipts?.length ? `<details class="script-receipts"><summary>查看保留的任务回执</summary><pre>${esc(receiptPreview(task.receipts))}</pre></details>` : ''}</article>`;
+    return `<article class="script-task" data-task-id="${esc(task.id)}"><div class="script-task-header"><h3>${labelKind(task.kind)}任务</h3>${pill(statusLabels[task.status] || task.status, task.status === 'succeeded' ? 'good' : task.status === 'failed' ? 'bad' : 'warn')}</div>${task.stale ? '<p>上游或输入已变更：需要复核，旧任务不得直接采用。</p>' : ''}<p>${esc(task.error || task.message || (task.cost?.canSubmit ? '请核对费用后明确提交。' : '费用待确认；没有因准备任务而提交生成。'))}</p>${priceMarkup(task.cost, task.kind)}<div class="script-task-ids"><code>request-id：${esc(task.requestId || '尚无')}</code><code>thread_id：${esc(task.threadId || '尚未收到')}</code><code>run_id：${esc(task.runId || '尚未收到')}</code></div>${validBody ? `<details><summary>查看真实返回候选正文</summary><div class="script-candidate-preview">${esc(task.body)}</div></details>` : ''}<div class="script-action-row"><button class="primary-button" data-submit-task="${esc(task.id)}" ${!canSubmit ? 'disabled' : ''} title="${canSubmit ? '确认费用后提交此任务' : '费用未知或任务状态不允许提交'}">${canSubmit ? '确认费用并提交' : '费用待确认 · 禁止提交'}</button><button class="secondary-button" data-query-task="${esc(task.id)}" ${!task.threadId || !task.runId ? 'disabled' : ''}>查询原任务</button>${validBody ? `<button class="secondary-button" data-adopt-task="${esc(task.id)}" ${task.stale ? 'disabled' : ''}>采用${labelKind(task.kind)}候选</button>` : ''}</div>${task.receipts?.length ? `<details class="script-receipts"><summary>查看保留的任务回执</summary><pre>${esc(receiptPreview(task.receipts))}</pre></details>` : ''}</article>`;
   }).join('');
 }
 function reviewCards() {
@@ -154,7 +164,7 @@ async function saveInput({ quiet = false } = {}) {
   const form = $('#script-input-form'); if (form && !form.reportValidity()) return false;
   setBusy(true);
   try {
-    const ws = await api(projectPath(''), { revision: state.ws.revision, input: state.input, binding: { projectId: state.binding.projectId || '', teamId: state.binding.teamId || '' } }, 'PUT');
+    const ws = await api(projectPath(''), { revision: state.ws.revision, input: state.input, binding: { projectId: state.binding.projectId || '', teamId: state.binding.teamId || '' }, spendingLimits: state.limits }, 'PUT');
     setWorkspace(ws, { keepDraft: true }); render(); if (!quiet) toast('剧本输入与绑定已保存'); return true;
   } catch (error) { failure(error); return false; }
   finally { setBusy(false); }
@@ -170,7 +180,7 @@ async function refreshWorkspace({ project = false, silent = false } = {}) {
     state.project = currentProject;
   }
   if (state.inputDirty || state.draftDirty) {
-    state.tasks = ws.tasks || []; state.reviews = ws.reviews || []; state.tool = ws.tool || state.tool; state.cost = ws.costEstimate || state.cost;
+    state.tasks = ws.tasks || []; state.reviews = ws.reviews || []; state.tool = ws.tool || state.tool; state.cost = ws.costEstimate || state.cost; state.costs = ws.costEstimates || { script: state.cost };
     state.ws.upstreamStale = ws.upstreamStale;
     state.ws.versions = ws.versions || state.ws.versions;
     const view = $('#script-version-view'); if (view) view.innerHTML = versionView();
@@ -298,6 +308,7 @@ app.addEventListener('input', event => {
   const el = event.target;
   if (el.dataset.input) { state.input[el.dataset.input] = ['episode_num', 'current_episode'].includes(el.dataset.input) ? Number(el.value) : el.value; state.inputDirty = true; }
   if (el.dataset.binding) { state.binding[el.dataset.binding] = el.value; state.inputDirty = true; }
+  if (el.dataset.spend === 'credits') { state.limits.credits = el.value === '' ? null : Number(el.value); state.inputDirty = true; }
   if (el.id === 'script-draft') { state.draftBody = el.value; state.draftDirty = true; }
   dirtyIndicators();
 });

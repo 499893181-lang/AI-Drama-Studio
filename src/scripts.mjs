@@ -1,20 +1,21 @@
 import { randomUUID } from 'node:crypto';
 import { AppError, now } from './store.mjs';
 import { ScriptWorkspace, scriptSourceHash, scriptInputHash, scriptReviewHash, novelInput } from './script-store.mjs';
-import { createNovelAdapter, scriptCostEstimate } from './novel.mjs';
+import { createNovelAdapter } from './novel.mjs';
+import { createScriptPricing, scriptQuoteFingerprint, assertScriptSpending } from './pricing.mjs';
 import { ScriptReviewJobs } from './script-review.mjs';
 import { redact } from './tools.mjs';
 
 const terminal = new Set(['succeeded', 'failed']);
 const pending = new Set(['prepared', 'awaiting_cost', 'submitting', 'running', 'interrupted', 'uncertain']);
 const safeMessage = value => redact(String(value ?? '')).slice(0, 2500);
-const quoteFingerprint = value => JSON.stringify({ status: value?.status, amount: value?.amount, currency: value?.currency, basis: value?.basis, quoteId: value?.quoteId, expiresAt: value?.expiresAt, canSubmit: value?.canSubmit });
+const quoteFingerprint = scriptQuoteFingerprint;
 
 export class ScriptService {
   constructor(store, options = {}) {
     this.store = store; this.workspace = new ScriptWorkspace(store);
     this.adapter = options.adapter ?? createNovelAdapter({ rootDir: store.root });
-    this.quoteProvider = options.quoteProvider ?? scriptCostEstimate;
+    this.quoteProvider = options.quoteProvider ?? createScriptPricing({ rootDir: store.root, ...options.pricingOptions });
     this.reviewer = options.reviewer ?? new ScriptReviewJobs(store, options.reviewOptions);
     this.active = new Map(); this.timers = new Map(); this.closed = false; this.toolCache = null;
     for (const task of store.list('script-jobs').values) {
@@ -33,8 +34,9 @@ export class ScriptService {
     this.toolCache = { at: Date.now(), value }; return value;
   }
   async view(id) {
-    const project = this.workspace.project(id);
-    return { ...this.workspace.view(id), costEstimate: await this.quoteProvider(project), tool: await this.inspect() };
+    const project = this.workspace.project(id), workspace = this.workspace.get(id);
+    const [outline, script] = await Promise.all(['outline', 'script'].map(kind => this.quoteProvider(project, { kind, workspace })));
+    return { ...this.workspace.view(id), costEstimate: script, costEstimates: { outline, script }, tool: await this.inspect() };
   }
   assertCurrent(task) {
     const workspace = this.workspace.get(task.projectId), project = this.workspace.project(task.projectId);
@@ -53,7 +55,7 @@ export class ScriptService {
     this.workspace.check(workspace, revision);
     if (!project.creativeBrief || workspace.sourceHash !== scriptSourceHash(project)) throw new AppError('请先保存创作说明，再重新整理剧本输入。', 409);
     const input = novelInput(workspace, kind), inputHash = scriptInputHash(workspace, project);
-    const cost = await this.quoteProvider(project);
+    const cost = await this.quoteProvider(project, { kind, workspace });
     this.workspace.check(this.workspace.get(id), revision);
     if (scriptSourceHash(this.workspace.project(id)) !== scriptSourceHash(project)) throw new AppError('准备费用期间上游已改变，请重新整理输入。', 409);
     const existing = this.store.list('script-jobs').values.find(task => task.projectId === id && task.kind === kind && task.inputHash === inputHash && pending.has(task.status));
@@ -73,21 +75,18 @@ export class ScriptService {
     if (confirm !== true) throw new AppError('提交前必须明确确认本次费用。', 409);
     if (!['prepared', 'awaiting_cost'].includes(task.status) || task.submittedAt) throw new AppError('此任务已提交或结果不确定。请查询原任务，不要重新提交。', 409);
     const initial = this.assertCurrent(task);
-    const freshCost = await this.quoteProvider(initial.project);
+    const freshCost = await this.quoteProvider(initial.project, { kind: task.kind, workspace: initial.workspace });
     // An earlier submit may have finished while the quote provider was awaited.
     task = this.store.read('script-jobs', id);
     if (!['prepared', 'awaiting_cost'].includes(task.status) || task.submittedAt) throw new AppError('此任务已提交或结果不确定。请查询原任务，不要重新提交。', 409);
     const { workspace, project } = this.assertCurrent(task);
-    if (freshCost.status !== 'known' || freshCost.canSubmit !== true || typeof freshCost.amount !== 'number' || !Number.isFinite(freshCost.amount) || freshCost.amount < 0 || freshCost.currency !== 'CNY' || !freshCost.basis || !freshCost.quoteId) throw new AppError('费用待确认：未取得适用于剧本任务的可核验人民币报价，工作台不会提交。', 409);
     if (quoteFingerprint(task.cost) !== quoteFingerprint(freshCost)) throw new AppError('费用依据已变化，请重新准备任务并确认。', 409);
-    if (freshCost.expiresAt && (!Number.isFinite(new Date(freshCost.expiresAt).getTime()) || new Date(freshCost.expiresAt).getTime() <= Date.now())) throw new AppError('本次费用依据已过期或有效期不正确，请重新核对。', 409);
-    if (project.budgetCap === null) throw new AppError('请先在立项页面设置预算上限，并重新整理剧本输入。', 409);
-    const reserved = this.store.list('script-jobs').values.filter(item => item.projectId === project.id && item.submittedAt).reduce((sum, item) => sum + (item.cost?.amount ?? 0), 0);
-    if (reserved + freshCost.amount > project.budgetCap) throw new AppError('本次费用与已预留费用合计超过项目预算，未提交。', 409);
+    const spending = assertScriptSpending({ quote: freshCost, project, workspace, tasks: this.store.list('script-jobs').values });
     if (!workspace.binding.verified || !workspace.binding.projectId || task.binding.projectId !== workspace.binding.projectId || task.binding.teamId !== workspace.binding.teamId) throw new AppError('请先验证真实即梦画布与空间绑定。', 409);
     if ([...this.active.values()].some(run => run.task.projectId === task.projectId) || this.store.list('script-jobs').values.some(other => other.id !== id && other.projectId === task.projectId && other.submittedAt && !terminal.has(other.status))) throw new AppError('本项目存在运行中或结果不确定的任务，请先查询原任务。', 409);
     // Persist the idempotency key and submission intent before any external command.
     task.status = 'submitting'; task.submittedAt = now();
+    task.spending = spending;
     this.event(task, 'submit.intent', '本次费用已明确确认，准备调用真实即梦剧本工具。');
     const run = { task, controller: new AbortController(), queries: 0 };
     this.active.set(id, run);

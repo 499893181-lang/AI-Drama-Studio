@@ -1,10 +1,15 @@
 {
   "name": "ai-drama-studio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Windows 本地 AI 短剧故事立项工作台",
   "type": "module",
-  "engines": { "node": ">=22" },
-  "scripts": { "start": "node src/server.mjs", "test": "node --test tests/*.test.mjs" },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
   "license": "MIT"
 }

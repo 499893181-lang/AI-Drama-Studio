@@ -62,7 +62,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.2.0', phase: 'script-development', supportedPhases: ['story-initiation', 'script'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.2.1', phase: 'script-development', supportedPhases: ['story-initiation', 'script'], now: now() }); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
       if (url.pathname === '/api/tools' && method === 'GET') { json(response, await getTools()); return; }
       if (url.pathname === '/api/tools/refresh' && method === 'POST') { json(response, await getTools(true)); return; }

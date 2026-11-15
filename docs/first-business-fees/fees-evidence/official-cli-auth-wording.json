@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-15T06:58:18.011Z",
+  "sourceUrl": "https://lf3-lv-buz.vlabstatic.com/obj/image-lvweb-buz/ies/dreamina/web/jimeng/upload/locales/zh-Hans.a5502ed0b365b0035e191315f6be9a6b.js",
+  "sourceSha256": "23570f236fb0b463f205cdcd258745a0f1a6e410a0261bac3542ac96dc5ee8bc",
+  "context": "Official Chinese resources actually loaded by the public novel_cli authorization page; keys are public UI wording, not a current-account quotation.",
+  "texts": {
+    "dreamina_novel_cli_sync_and_credits_notice": "授权后，通过即梦短剧CLI进行的操作将同步至网页端；创建生成任务产生的积分消耗与网页端一致，以平台规则及实际消耗记录为准。",
+    "dreamina_cli_beta_membership_notice": "内测期间仅限会员使用",
+    "novel_benefit_credit_text": "{freePrefix}按 {minChargeCnt} {unitText} {creditUnitPrice} 积分扣除",
+    "novel_benefit_free_prefix": "限免用完后",
+    "novel_benefit_limit_free_count": "{num, plural, other {限免{quotaAll}次（不扣积分），已用{usedCount}次}}"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "checkedAt": "2026-11-15T07:04:39.749Z",
+  "source": "https://bytedance.larkoffice.com/wiki/M9ejwOcQwizqezkUhJEc4hc7nxf",
+  "title": "即梦短剧CLI - 飞书云文档",
+  "readMethod": "Official linked command guide, anonymous browser, actual DOM read with scrolling through the rendered article.",
+  "sections": [
+    {
+      "heading": "6. 积分与报价",
+      "anchor": "doxcnoS0M1IxQ4qn51A6fabEsFd",
+      "text": "模型报价还支持 --type、--resolution、--duration、--count、--references、--reference-seconds，具体用法见帮助。未知报价不计入合计，不表示免费。最终扣费以任务结果为准；本地项目记录不是完整服务端账单。剧本、转写和超分不支持此接口的总价预检报价。"
+    },
+    {
+      "heading": "8. 剧本",
+      "anchor": "doxcnLOMI9XBuzxtM6YjtnDQaqh",
+      "text": "单集还支持 --world-setting、--plot-positioning、--history-summary、--previous-script、--future-summary、--requirement、--stage-content、--stage-episode-range、--stage-sequence。剧本按产出字数计费，无总价预检报价。查询超时后优先使用返回的任务标识执行 script result。"
+    }
+  ],
+  "interpretation": "Script outline and episode are in this section. Billing is output-word-count based; exact rates, account-specific CLI free entitlement and up-front total are not given. Unknown quote is explicitly not free."
+}

@@ -1,0 +1,58 @@
+{
+  "checkedAt": "2026-11-15T07:04:39.758Z",
+  "command": "jimeng-novel model list --type text -j --full",
+  "exitCode": 0,
+  "status": "success",
+  "models": [
+    {
+      "isDefault": true,
+      "key": "script_bird",
+      "kind": "text",
+      "modelId": "script_bird",
+      "name": "DreamScript",
+      "scene": "web_novel_script"
+    },
+    {
+      "isDefault": false,
+      "key": "glm52",
+      "kind": "text",
+      "modelId": "glm52",
+      "name": "GLM 5.2",
+      "scene": "web_novel_script"
+    },
+    {
+      "isDefault": false,
+      "key": "minimax_2.7",
+      "kind": "text",
+      "modelId": "minimax_2.7",
+      "name": "Minimax 2.7",
+      "scene": "web_novel_script"
+    },
+    {
+      "isDefault": false,
+      "key": "doubao_seed_2.0_lite",
+      "kind": "text",
+      "modelId": "doubao_seed_2.0_lite",
+      "name": "Doubao-Seed-2.0-lite",
+      "scene": "web_novel_script"
+    },
+    {
+      "isDefault": false,
+      "key": "guanxing_language_model_2.5_pro",
+      "kind": "text",
+      "modelId": "guanxing_language_model_2.5_pro",
+      "name": "观星语言模型 2.5 pro",
+      "scene": "web_novel_script"
+    },
+    {
+      "isDefault": false,
+      "key": "guanxing_language_model_3.5_flash",
+      "kind": "text",
+      "modelId": "guanxing_language_model_3.5_flash",
+      "name": "观星语言模型3.5 flash",
+      "scene": "web_novel_script"
+    }
+  ],
+  "accountAndSpaceIdentifiersExcluded": true,
+  "catalogVisibilityIsNotFreePricing": true
+}

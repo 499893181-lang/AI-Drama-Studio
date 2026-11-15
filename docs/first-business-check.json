@@ -1,0 +1,179 @@
+{
+  "checkedAt": "2026-11-15T07:12:44.833Z",
+  "timezone": "Asia/Shanghai",
+  "version": "0.2.1",
+  "canvas": {
+    "name": "AI-Drama-Studio_首次试跑",
+    "createdAfterPaginatedExactNameCheck": true,
+    "pagesChecked": 1,
+    "realAccessVerified": true,
+    "workbenchBound": true,
+    "projectIdSha256": "6b26fbefbca6a367ebde27c9c5f3859950a8e33f21946f2258b3ce1685ef8712",
+    "originalNodeCount": 0
+  },
+  "input": {
+    "existingSavedCreativeBriefUsed": true,
+    "targetDurationSeconds": 30,
+    "formerDurationSeconds": 45,
+    "originalProjectSnapshotRetainedPrivately": true,
+    "unrelatedOriginalFilesUnchanged": 6
+  },
+  "fee": {
+    "outline": {
+      "status": "unknown",
+      "kind": "outline",
+      "channel": "jimeng-novel-cli",
+      "label": "费用待确认",
+      "billingType": null,
+      "amount": null,
+      "currency": null,
+      "unit": null,
+      "basis": "官方指南说明剧本按产出字数计费且不支持总价预检；尚未明确script outline在当前账号CLI渠道的每字单价、计费币种及免费权益，不能计算本次总价。网页免费、余额或媒体节点估价不能代替该依据。",
+      "metering": {
+        "basis": "output_characters",
+        "unit": "字",
+        "unitRate": null,
+        "prequoteAvailable": false
+      },
+      "sources": [
+        {
+          "type": "official_policy",
+          "url": "https://bytedance.larkoffice.com/wiki/M9ejwOcQwizqezkUhJEc4hc7nxf",
+          "title": "即梦短剧CLI官方指南，第6节及第8节",
+          "summary": "剧本按产出字数计费且不支持总价预检；未知报价不代表免费。",
+          "observedDate": "2026-11-15"
+        }
+      ],
+      "conditions": [
+        "仅针对jimeng-novel CLI的script outline，不推广网页权益或另一剧本动作。",
+        "当前仍缺每字单价、计费币种与账号适用条件，不能据计量规则推算人民币、积分或免费。"
+      ],
+      "checkedAt": null,
+      "validity": {
+        "kind": "not_stated",
+        "expiresAt": null
+      },
+      "evidenceId": null,
+      "officialQuoteId": null,
+      "canSubmit": false
+    },
+    "episode": {
+      "status": "unknown",
+      "kind": "script",
+      "channel": "jimeng-novel-cli",
+      "label": "费用待确认",
+      "billingType": null,
+      "amount": null,
+      "currency": null,
+      "unit": null,
+      "basis": "官方指南说明剧本按产出字数计费且不支持总价预检；尚未明确script episode在当前账号CLI渠道的每字单价、计费币种及免费权益，不能计算本次总价。网页免费、余额或媒体节点估价不能代替该依据。",
+      "metering": {
+        "basis": "output_characters",
+        "unit": "字",
+        "unitRate": null,
+        "prequoteAvailable": false
+      },
+      "sources": [
+        {
+          "type": "official_policy",
+          "url": "https://bytedance.larkoffice.com/wiki/M9ejwOcQwizqezkUhJEc4hc7nxf",
+          "title": "即梦短剧CLI官方指南，第6节及第8节",
+          "summary": "剧本按产出字数计费且不支持总价预检；未知报价不代表免费。",
+          "observedDate": "2026-11-15"
+        }
+      ],
+      "conditions": [
+        "仅针对jimeng-novel CLI的script episode，不推广网页权益或另一剧本动作。",
+        "当前仍缺每字单价、计费币种与账号适用条件，不能据计量规则推算人民币、积分或免费。"
+      ],
+      "checkedAt": null,
+      "validity": {
+        "kind": "not_stated",
+        "expiresAt": null
+      },
+      "evidenceId": null,
+      "officialQuoteId": null,
+      "canSubmit": false
+    },
+    "outcome": "unknown; no generation authorized or submitted"
+  },
+  "scriptTask": {
+    "state": "awaiting_cost",
+    "submitted": false,
+    "requestIdSha256": "398f5442a83829cf3218cfe93734aafeadc078cc0907bb67021154332713e02c",
+    "originalRequestPersisted": true,
+    "remoteThreadOrRunCreated": false
+  },
+  "realReview": {
+    "invokedCount": 1,
+    "status": "succeeded",
+    "verdict": "REVISE",
+    "source": "existing isolated UI acceptance manually edited text; not Jimeng output",
+    "jimengGenerated": false,
+    "reportSaved": true,
+    "currentVersionBindingValid": true,
+    "reportSha256": "c644991a307ffdb53d9c4e021c7f5440e1b36e403c3d13367ee7ab21e3f53fac",
+    "criteria": [
+      {
+        "id": "user_requirements",
+        "verdict": "REVISE"
+      },
+      {
+        "id": "motivation",
+        "verdict": "REVISE"
+      },
+      {
+        "id": "logic",
+        "verdict": "REVISE"
+      },
+      {
+        "id": "duration",
+        "verdict": "REVISE"
+      },
+      {
+        "id": "continuity",
+        "verdict": "PASS"
+      },
+      {
+        "id": "production",
+        "verdict": "REVISE"
+      }
+    ],
+    "issues": [
+      {
+        "id": "I01",
+        "severity": "major"
+      },
+      {
+        "id": "I02",
+        "severity": "major"
+      },
+      {
+        "id": "I03",
+        "severity": "major"
+      },
+      {
+        "id": "I04",
+        "severity": "major"
+      },
+      {
+        "id": "I05",
+        "severity": "minor"
+      }
+    ],
+    "estimatedDurationSeconds": null,
+    "usage": {
+      "input_tokens": 20842,
+      "cached_input_tokens": 0,
+      "cache_write_input_tokens": 0,
+      "output_tokens": 4780,
+      "reasoning_output_tokens": 3022
+    }
+  },
+  "verification": {
+    "isolatedTestsPassed": 72,
+    "liveBrowserReadOnlyPassed": true,
+    "browserExceptions": 0,
+    "mediaGenerated": false
+  }
+}

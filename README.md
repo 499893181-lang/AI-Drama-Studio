@@ -1,6 +1,6 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.2.0保留故事立项，新增剧本输入、任务适配、不可变稿件版本与Codex独立审阅。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.2.1保留故事立项，新增剧本输入、任务适配、不可变稿件版本与Codex独立审阅。
 
 公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。网页版调试先读[调试入口](docs/CHATGPT_CONTEXT.md)与[源码索引](llms.txt)。GitHub提供代码和文档；本机服务、个人项目和认证不会随仓库公开。
 
@@ -24,9 +24,9 @@ node .\src\server.mjs
 - 稿件版本：分别查看大纲、即梦候选、人工稿，编辑保存为新版本，保留历史并可切换活动版本。没有已验证的即梦Agent定向改稿接口，人工保存不冒充Agent修改。
 - 独立审阅：用户点击后新开真实Codex会话，检查用户要求、人物动机、逻辑、时长、连续性和制作难度，报告独立保存。输入或活动稿变化后旧稿/报告显示需要复核。
 
-**费用边界：当前官方公开剧本契约没有可核验的报价。生产配置始终显示“费用待确认”，服务端禁止提交真实剧本任务；没有开放手填价格绕过。** 准备任务仅保存输入与request-id，不消耗生成额度。项目人民币预算、账号余额及图像/视频节点估价均不能代替剧本报价。隔离测试中的已知零费用夹具不是生产价格。
+**费用边界：官方说明剧本按产出字数计费且不支持总价预检，当前仍缺本账号CLI每字费率或免费凭证，因此显示“费用待确认”，服务端禁止提交。** 报价模块支持有真实依据的免费、积分和人民币，分别记录渠道、来源、单位、条件与有效期；积分和人民币分别设预算，不推汇率，不造官方quoteId。 准备任务仅保存输入与request-id，不消耗生成额度。项目人民币预算、账号余额及图像/视频节点估价均不能代替剧本报价。隔离测试中的已知零费用夹具不是生产价格。
 
-本轮已完成jimeng-novel本机认证，但没有选择用户真实画布，也没有实际生成剧本或运行新增Codex审阅。图片、视频、配音、字幕和剪辑尚未接入。
+最新首次业务验收已创建并验证独立测试画布、绑定30秒测试项目，并对明确标为非即梦来源的既有手工测试文本完成一次真实Codex独立审阅，结论REVISE（5项问题）。费用未知，仍未提交即梦大纲或剧本生成。详见[首次真实业务验收](docs/first-business.md)和[费用依据](docs/first-business-fees/fees-report.md)。图片、视频、配音、字幕和剪辑尚未接入。
 
 ## 配置jimeng-novel
 
@@ -54,6 +54,6 @@ node tests/script-browser-smoke.mjs
 
 浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。
 
-[第二阶段实现与验收](docs/stage2.md) · [CLI适配边界](docs/novel-adapter.md) · [独立审阅](docs/script-review.md) · [官方公开契约](docs/jimeng-cli-audit-2026-11-15/script-cli-report.md) · [历史验收](docs/validation.md) · [下一阶段](docs/next-stage.md)。
+[报价证据与单位预算](docs/pricing.md) · [第二阶段实现与验收](docs/stage2.md) · [CLI适配边界](docs/novel-adapter.md) · [独立审阅](docs/script-review.md) · [官方公开契约](docs/jimeng-cli-audit-2026-11-15/script-cli-report.md) · [历史验收](docs/validation.md) · [下一阶段](docs/next-stage.md)。
 
 功能组织参考[火宝短剧](https://github.com/chatfire-AI/huobao-drama)公开项目说明，核心代码独立编写，未复制其业务源码或资源。

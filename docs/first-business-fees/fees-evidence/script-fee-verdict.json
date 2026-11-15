@@ -1,0 +1,59 @@
+{
+  "checkedAt": "2026-11-15T07:04:39.760Z",
+  "channel": "jimeng-novel CLI / web_novel_script",
+  "defaultModel": "script_bird",
+  "operations": [
+    {
+      "operation": "script outline",
+      "feeStatus": "unknown_total",
+      "billingRule": "按产出字数计费（官方命令文档）",
+      "settlementUnit": "credits",
+      "settlementUnitBasis": "官方novel_cli授权文案说明积分消耗与网页端一致；未提供每字积分费率。",
+      "amount": null,
+      "unitPrice": null,
+      "meteringUnit": "官方原文“产出字数”，计数字符规则未公开",
+      "source": "https://bytedance.larkoffice.com/wiki/M9ejwOcQwizqezkUhJEc4hc7nxf",
+      "conditions": [
+        "适用于官方jimeng-novel剧本命令渠道",
+        "本轮查询的当前登录账号及默认空间未返回专属免费权益"
+      ],
+      "validFrom": null,
+      "expiresAt": null,
+      "validityNote": "未取得具体价格或免费权益的生效/到期时间，不虚构有效期。",
+      "officialQuoteId": null,
+      "cliFreeUseConfirmed": false,
+      "canSubmit": false,
+      "missingEvidence": [
+        "当前账号适用于CLI及指定script操作的免费额度/条件/有效期，或明确单价/计量规则",
+        "生成前可确认的本次总价或用户可批准的明确费用上限（官方说明无总价预检）"
+      ]
+    },
+    {
+      "operation": "script episode",
+      "feeStatus": "unknown_total",
+      "billingRule": "按产出字数计费（官方命令文档）",
+      "settlementUnit": "credits",
+      "settlementUnitBasis": "官方novel_cli授权文案说明积分消耗与网页端一致；未提供每字积分费率。",
+      "amount": null,
+      "unitPrice": null,
+      "meteringUnit": "官方原文“产出字数”，计数字符规则未公开",
+      "source": "https://bytedance.larkoffice.com/wiki/M9ejwOcQwizqezkUhJEc4hc7nxf",
+      "conditions": [
+        "适用于官方jimeng-novel剧本命令渠道",
+        "本轮查询的当前登录账号及默认空间未返回专属免费权益"
+      ],
+      "validFrom": null,
+      "expiresAt": null,
+      "validityNote": "未取得具体价格或免费权益的生效/到期时间，不虚构有效期。",
+      "officialQuoteId": null,
+      "cliFreeUseConfirmed": false,
+      "canSubmit": false,
+      "missingEvidence": [
+        "当前账号适用于CLI及指定script操作的免费额度/条件/有效期，或明确单价/计量规则",
+        "生成前可确认的本次总价或用户可批准的明确费用上限（官方说明无总价预检）"
+      ]
+    }
+  ],
+  "websitePromotionNotAppliedToCli": true,
+  "noScriptOrMediaSubmitted": true
+}

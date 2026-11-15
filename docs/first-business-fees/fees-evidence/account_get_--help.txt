@@ -1,0 +1,15 @@
+Command: jimeng-novel account get --help
+Exit: 0
+jimeng-novel account get — 查看当前账号
+
+用法: jimeng-novel account get [选项]
+
+参数:
+  --team-id <string>
+      仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定
+  -j, --json
+      输出 JSON 信封 {status,data,error,context}
+  --jq <表达式>
+      对 JSON 信封执行 jq（字符串结果原样输出），如 --jq '.data.items[].key'
+  --full
+      不截断长文本和长列表

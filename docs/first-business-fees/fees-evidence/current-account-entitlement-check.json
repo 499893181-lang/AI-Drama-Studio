@@ -1,0 +1,34 @@
+{
+  "checkedAt": "2026-11-15T07:04:39.757Z",
+  "scope": "Current authenticated jimeng-novel account and its default space; no account/space identifiers or balances retained.",
+  "checks": [
+    {
+      "command": "jimeng-novel account get -j --full",
+      "exitCode": 0,
+      "status": "success",
+      "returnedDataFieldNames": [
+        "avatar_url",
+        "description",
+        "is_new_user",
+        "name",
+        "sec_uid",
+        "team_id"
+      ],
+      "scriptPriceOrFreeEntitlementFields": []
+    },
+    {
+      "command": "jimeng-novel credit get -j --full",
+      "exitCode": 0,
+      "status": "success",
+      "returnedDataFieldNames": [
+        "balance",
+        "team_id",
+        "unit"
+      ],
+      "scriptPriceOrFreeEntitlementFields": []
+    }
+  ],
+  "identityAndBalanceValuesExcluded": true,
+  "accountSpecificScriptFreeAccessConfirmed": false,
+  "reason": "These public commands expose identity and balance, not a script-specific free quota, unit price, conditions or validity."
+}

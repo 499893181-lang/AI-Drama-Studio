@@ -62,14 +62,22 @@ export class ScriptWorkspace {
   project(id) { return this.store.read('projects', id); }
   get(id) {
     const project = this.project(id);
-    if (fs.existsSync(this.store.file('scripts', id))) return this.store.read('scripts', id);
-    return { id, revision: 0, sourceHash: scriptSourceHash(project), sourceProjectRevision: project.revision, input: organizeScriptInput(project), binding: { projectId: '', teamId: '', verified: false, title: null, verifiedAt: null }, versions: [], activeOutlineId: null, activeScriptId: null, inputHistory: [], createdAt: now(), updatedAt: now() };
+    if (fs.existsSync(this.store.file('scripts', id))) {
+      const value = this.store.read('scripts', id);
+      return { ...value, spendingLimits: value.spendingLimits ?? { credits: null } };
+    }
+    return { id, revision: 0, sourceHash: scriptSourceHash(project), sourceProjectRevision: project.revision, input: organizeScriptInput(project), binding: { projectId: '', teamId: '', verified: false, title: null, verifiedAt: null }, spendingLimits: { credits: null }, versions: [], activeOutlineId: null, activeScriptId: null, inputHistory: [], createdAt: now(), updatedAt: now() };
   }
   check(workspace, revision) { if (workspace.revision !== revision) throw new AppError('剧本页面已在其他窗口更新，请先刷新核对；当前手稿未被覆盖。', 409); }
   save(value) { return this.store.write('scripts', { ...value, revision: value.revision + 1, updatedAt: now() }); }
   update(id, body) {
     const previous = this.get(id); this.check(previous, body.revision);
     const next = { ...previous };
+    if (body.spendingLimits !== undefined) {
+      const credits = body.spendingLimits?.credits;
+      if (credits !== null && (typeof credits !== 'number' || !Number.isFinite(credits) || credits < 0 || credits > 1000000000)) throw new AppError('积分预算上限须为非负有限数，或留空。');
+      next.spendingLimits = { credits };
+    }
     if (body.input !== undefined) next.input = validateInput(body.input);
     if (body.binding !== undefined) {
       if (!body.binding || typeof body.binding !== 'object') throw new AppError('即梦项目绑定格式不正确。');

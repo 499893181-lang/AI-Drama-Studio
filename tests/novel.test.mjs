@@ -64,8 +64,12 @@ test('绑定必须由真实访问回执中的相同projectId确认，默认空�
   assert.equal(binding.projectId, 'cloud-project-123');
   assert.equal(binding.teamId, '');
   assert.ok(!f.calls[0].args.includes('--team-id'));
+  assert.equal(f.calls[0].options.timeout, 60000, '画布网络读取使用独立60秒限时，避免真实SDK接近20秒时误失败');
   const bad = fixture(t, () => envelope('success', { projectId: 'another-canvas', name: 'wrong' }));
   await assert.rejects(() => bad.adapter.verifyBinding({ projectId: 'cloud-project-123', teamId: '' }), error => error.status === 409);
+  const timeout = fixture(t, () => ({ stdout: '', stderr: 'fixture informational space notice', exitCode: null, timedOut: true }));
+  await assert.rejects(() => timeout.adapter.verifyBinding({ projectId: 'cloud-project-123', teamId: '' }), error => error.status === 409 && /超.*60秒|超过60秒/.test(error.message));
+  assert.ok(fs.readdirSync(path.join(timeout.root, 'data/runtime')).some(name => name.startsWith('novel-binding-')), '失败访问原始回执保存在私有runtime');
 });
 
 test('单集submit使用公开参数、持久幂等键和私有UTF8输入文件', async t => {

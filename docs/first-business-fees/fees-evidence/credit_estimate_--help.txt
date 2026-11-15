@@ -1,0 +1,57 @@
+Command: jimeng-novel credit estimate --help
+Exit: 0
+jimeng-novel credit estimate — 报价：按节点（--key 可重复 / --all-pending）逐项价格 + 合计 + 余额；或按模型参数单项报价
+
+用法: jimeng-novel credit estimate [选项]
+
+参数:
+  --project-id <string>
+      画布 ID；不传时从当前目录向上找 .jimeng/config.json（jimeng-novel init 写入）
+  --key <string>（可重复）
+      节点 key，可多个：--key a --key b、--key a b、--key a,b 都行；与 --node-id 二选一
+  --node-id <string>（可重复）
+      节点 ID，可多个，写法同 --key（可用 --key 代替）
+  --all-pending
+      所有还没有成功产物、或配置在上次生成后改过的图片/视频/音频节点
+  --model-id <string>（可重复）
+      按模型报价，不用建节点；可给多个模型（--model-id a b 或 a,b）出对比表，同一组参数
+  --model <string>（可重复）
+      同 --model-id
+  --type <image|video|audio>
+      可不传（类型由模型决定）；写了也不影响报价
+  --param <string>（可重复）
+      按模型报价的参数 k=v，写法同 node create：duration、resolution、count、ratio、taskType 等；编辑用 taskType=edit，--reference-seconds 提供参考视频总秒数，多视频另用 sourceSeconds=<最长视频秒数>；一个值里用逗号列多个（duration=11,14,10,9）就按所有组合逐行报价，每个模型再给合计（重复的值照算，适合一段一个时长）；模型数 × 组合数最多 60
+  --resolution <string>
+      按模型报价时的分辨率
+  --duration <int>
+      视频秒数
+  --count <int>
+      图片张数
+  --effort <string>
+      档位
+  --references <int>
+      参考视频个数（不是参考图）
+  --reference-seconds <string>
+      参考视频总秒数
+  --team-id <string>
+      仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定
+  -j, --json
+      输出 JSON 信封 {status,data,error,context}
+  --jq <表达式>
+      对 JSON 信封执行 jq（字符串结果原样输出），如 --jq '.data.items[].key'
+  --full
+      不截断长文本和长列表
+
+返回: items[{key,nodeId,modelId,estimatedCredits,priceStatus}]、total、unknownCount、balance、runCommand
+
+说明:
+  - 只用服务端价格；算不出的项标为未知，不计入合计
+  - 不扣费，也不设闸：确认后执行输出末行的 node run 命令
+  - 比较模型价格不用建临时节点：credit estimate --model a,b,c --param duration=<秒> --param resolution=<值>，一次出对比表；按分镜每段时长比总价：--model a,b --param duration=11,14,10,9（每个模型逐段一行，末行合计）
+  - transcribe（语音转文字）、upscale（视频超分）不在这里报价：服务端估价接口不支持，以这两个命令输出的实扣为准
+
+示例:
+  jimeng-novel credit estimate --key cast/<角色>.<造型> --key E01/S01
+  jimeng-novel credit estimate --all-pending
+  jimeng-novel credit estimate --model <模型A>,<模型B>,<模型C> --param duration=15 --param resolution=720p
+  jimeng-novel credit estimate --model <模型A>,<模型B> --param duration=11,14,10,9 --param resolution=720p

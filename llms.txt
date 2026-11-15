@@ -43,3 +43,10 @@
 - [官方CLI适配](src/novel.mjs)
 - [独立Codex审阅](src/script-review.mjs)
 - [剧本页面逻辑](public/script.js)
+
+## 首次真实业务验收0.2.1
+
+- [真实画布绑定、30秒输入与REVISE审阅](docs/first-business.md)
+- [官方文字剧本费用核验与脱敏证据](docs/first-business-fees/fees-report.md)
+- [真实业务验收机器记录](docs/first-business-check.json)
+- [多单位费用证据和预算模块](src/pricing.mjs)
