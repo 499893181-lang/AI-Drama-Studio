@@ -1,8 +1,10 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.5.1保留立项、即梦文字适配、本机Codex剧本与分镜、实体来源证据和图片版本，修复自动出图的故障期中断、附件证据分层及诊断展示。严格单次调用无法保证，原生自动提交继续关闭，手工流程可用。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.6.0新增即梦单镜头视频工作台：选用图片绑定、参数与费用准备、原任务查询下载、视频候选与人工版本。已完成隔离验收，真实视频提交保持关闭；原立项、文字创作和手工图片功能保留。
 
-0.5.1[本轮无新增生成验收](docs/image-contract-v061-acceptance.md)：215/215回归通过；故障立即请求异步中断，不能保证拦住已开始调用。实际Schema允许`inputImages`缺省、无default；会话、工具本地读取及远端使用分别记录。原DATA_DIR中499份文件Hash不变，仅追加独立诊断，原失败任务与1/1保持。四项状态分别显示已有真实产物、保护未验证、参考未验证、候选未通过，未新增模型turn或图片。
+0.6.0[本轮验收](docs/video-v07-acceptance.md)：252/252回归及真实Chrome通过，测试视频明确TEST FIXTURE / NOT AI，0真实视频/图片/模型调用。实际CLI直连未登录、canvas已登录；direct报价未知、无原生静音参数，分别显示，不冒充免费或已接通真实生成。[视频使用说明](docs/video-workbench-v07.md) · [CLI核查](docs/jimeng-video-cli-v07.md) · [待确认的单镜真实验收方案](docs/video-real-acceptance-plan-v07.md)。
+
+0.5.1[历史无新增生成验收](docs/image-contract-v061-acceptance.md)：215/215回归通过；故障立即请求异步中断，不能保证拦住已开始调用。实际Schema允许`inputImages`缺省、无default；会话、工具本地读取及远端使用分别记录。原DATA_DIR中499份文件Hash不变，仅追加独立诊断，原失败任务与1/1保持。四项状态分别显示已有真实产物、保护未验证、参考未验证、候选未通过，未新增模型turn或图片。
 
 公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。网页版调试先读[调试入口](docs/CHATGPT_CONTEXT.md)与[源码索引](llms.txt)。GitHub提供代码和文档；本机服务、个人项目和认证不会随仓库公开。
 
@@ -25,6 +27,8 @@ node .\src\server.mjs
 0.4.0[历史验收](docs/image-workbench-acceptance.md)：134/134测试通过；真实Chrome验证三镜头图片绑定、单镜换图、参考及输入变更需复核、实际ZIP、旧版保留和重启恢复。该轮测试图片均明确标注非AI生成，未发起模型或图像生成任务。
 
 ## 当前功能
+
+- 单镜视频：从当前有效且人工检查选用的镜头图准备任务，绑定图片/分镜版本、审核/选择ID及实际Hash；独立积分费用与预算门槛、先落提交意图、原ID查询和下载恢复。FFprobe核验实际文件并预览，候选/检查/选用分开；重做留旧版、源变需复核。真实生成未验收、本轮关闭，canvas媒体导入仅检测未验证。
 
 - 图片工作台：逐镜实际提示词、导演规则、实体版本引用；PNG/JPEG/静态WebP上传、预览、文件Hash/尺寸/来源声明；人工检查和选用分开，单镜换图追加版本，旧文件和选择历史保留。导出JSON及含实际参考图片的ZIP，下载和执行前重新核对目标、来源分镜、当前审核、版本及实际文件Hash；审核撤销使下游图与旧包需复核。官方账号自动任务保留提示词、输入快照、附件与调用记录，失败图可下载但不冒充成功候选。费用待确认，不切换付费API。
 - 来源保护：新增实体自报 `source=user` 需可定位输入证据；无充分证据保持待确认，AI补充保留说明。采用和下游核对快照与实体Hash，历史原文保留，不补造证据；待确认候选须显式确认保存，不能因此变为用户事实锁。
@@ -65,6 +69,7 @@ node tests/creative-browser-smoke.mjs
 node tests/image-browser-smoke.mjs
 node tests/auto-image-browser-smoke.mjs
 node tests/auto-image-failure-browser.mjs
+node tests/video-browser-smoke.mjs
 ```
 
 浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。

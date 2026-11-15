@@ -10,6 +10,7 @@ import { CreativeService } from './creative-jobs.mjs';
 import { ImageWorkspace } from './image-store.mjs';
 import { inspectImageCapabilities } from './image-capabilities.mjs';
 import { ImageGenerationJobs } from './image-jobs.mjs';
+import { VideoService } from './video-jobs.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -28,6 +29,21 @@ async function readJson(request) {
   try { const value = JSON.parse((await body(request)).toString('utf8')); if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error(); return value; }
   catch (error) { if (error instanceof AppError) throw error; throw new AppError('请求不是有效的 JSON 对象。'); }
 }
+function sendVideo(request, response, file) {
+  const bytes = file.bytes ?? fs.readFileSync(file.path), size = bytes.length;
+  const headers = { 'Content-Type': file.mimeType, 'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(file.name ?? 'video.mp4')}`, 'Accept-Ranges': 'bytes', 'Cache-Control': 'no-store' };
+  let start = 0, end = size - 1, status = 200;
+  if (request.headers.range) {
+    const range = /^bytes=(\d*)-(\d*)$/.exec(request.headers.range);
+    if (!range || !range[1] && !range[2]) { response.writeHead(416, { ...headers, 'Content-Range': `bytes */${size}`, 'Content-Length': 0 }); response.end(); return; }
+    if (range[1]) { start = Number(range[1]); end = range[2] ? Math.min(Number(range[2]), size - 1) : size - 1; }
+    else { const suffix = Number(range[2]); start = Math.max(0, size - suffix); end = size - 1; if (suffix < 1) start = size; }
+    if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end) || start < 0 || start >= size || end < start) { response.writeHead(416, { ...headers, 'Content-Range': `bytes */${size}`, 'Content-Length': 0 }); response.end(); return; }
+    status = 206; headers['Content-Range'] = `bytes ${start}-${end}/${size}`;
+  }
+  response.writeHead(status, { ...headers, 'Content-Length': end - start + 1 });
+  response.end(request.method === 'HEAD' ? undefined : bytes.subarray(start, end + 1));
+}
 export function createStudio(options = {}) {
   const store = new Store(options.dataDir ?? process.env.DATA_DIR ?? path.join(repoRoot, 'data'));
   const jobs = new CodexJobs(store);
@@ -35,6 +51,7 @@ export function createStudio(options = {}) {
   const creative = new CreativeService(store, options.creativeOptions);
   const images = new ImageWorkspace(store, { creativeWorkspace: creative.workspace, ...options.imageOptions });
   const imageGeneration = new ImageGenerationJobs(store, { images, ...options.imageGenerationOptions });
+  const videos = new VideoService(store, { images, ...options.videoOptions });
   let imageReport = null, imageInspection = null;
   const getImageCapabilities = () => {
     if (imageReport && Date.now() - Date.parse(imageReport.checkedAt) < 60000) return Promise.resolve(imageReport);
@@ -75,7 +92,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.5.1', phase: 'image-contract-diagnostics', supportedPhases: ['story-initiation', 'script', 'creative', 'images'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.6.0', phase: 'jimeng-single-shot-video', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/creative/knowledge' && method === 'GET') { json(response, creative.catalog()); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
@@ -88,6 +105,19 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'videos') {
+          if (segments.length === 4 && method === 'GET') { json(response, await videos.view(id)); return; }
+          if (segments.length === 5 && method === 'POST') {
+            const input = await readJson(request);
+            if (segments[4] === 'prepare') { json(response, await videos.prepare(id, input), 201); return; }
+            if (segments[4] === 'review') { json(response, await videos.review(id, input)); return; }
+            if (segments[4] === 'select') { json(response, await videos.select(id, input)); return; }
+          }
+        }
+        if (segments[3] === 'video-assets' && segments.length === 5 && ['GET', 'HEAD'].includes(method)) {
+          if (!validId(segments[4])) throw new AppError('视频标识不正确。');
+          sendVideo(request, response, await videos.file(id, segments[4])); return;
+        }
         if (segments[3] === 'images') {
           if (segments.length === 4 && method === 'GET') { json(response, images.view(id)); return; }
           if (segments.length === 5 && segments[4] === 'generation' && method === 'GET') { json(response, await imageGeneration.view(id)); return; }
@@ -216,6 +246,17 @@ export function createStudio(options = {}) {
           if (segments[3] === 'cancel') { json(response, imageGeneration.cancel(id)); return; }
         }
       }
+      if (segments[0] === 'api' && segments[1] === 'video-tasks' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, videos.read(id)); return; }
+        if (segments.length === 4 && method === 'POST') {
+          const input = await readJson(request);
+          if (segments[3] === 'submit') { json(response, await videos.submit(id, input), 202); return; }
+          if (segments[3] === 'query') { json(response, await videos.query(id)); return; }
+          if (segments[3] === 'download') { json(response, await videos.download(id)); return; }
+          if (segments[3] === 'cancel') { json(response, await videos.cancel(id)); return; }
+        }
+      }
       if (segments[0] === 'api') throw new AppError('接口不存在。', 404);
       if (method !== 'GET' && method !== 'HEAD') throw new AppError('不支持的请求方法。', 405);
       const relative = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');
@@ -232,7 +273,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, images, imageGeneration, getTools, getImageCapabilities, close: () => { imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, images, imageGeneration, videos, getTools, getImageCapabilities, close: () => { videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {
