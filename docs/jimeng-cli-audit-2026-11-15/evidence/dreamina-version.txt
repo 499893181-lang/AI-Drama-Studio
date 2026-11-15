@@ -1,0 +1,7 @@
+Command: dreamina version
+Exit: 0
+{
+  "version": "1.4.22",
+  "commit": "db0e56a8c2dc2c4cbb240f7f789cb834a62ffff5",
+  "build_time": "2026-10-28T03:55:10Z"
+}

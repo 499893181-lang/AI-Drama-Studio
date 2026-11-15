@@ -1,0 +1,10 @@
+Command: jimeng-novel login --help
+Exit: 0
+通过浏览器授权登录即梦
+
+Usage:
+  jimeng-novel login [flags]
+
+Flags:
+  -h, --help               help for login
+      --timeout duration   等待网页授权的最长时间，例如 5m (default 10m0s)

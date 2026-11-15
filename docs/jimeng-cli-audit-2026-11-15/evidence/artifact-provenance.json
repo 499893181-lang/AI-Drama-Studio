@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-15",
+  "officialInstallPage": "https://jimeng.jianying.com/ai-tool/install?from_page=banner",
+  "officialInstaller": "https://jimeng.jianying.com/novel-cli",
+  "guide": "https://bytedance.larkoffice.com/wiki/FVTwwm0bGiishxkKOoScdHR2nsg",
+  "artifactUrl": "https://lf3-static.bytednsdoc.com/obj/eden-cn/psj_slcvu_hupthlyk/ljhwZthlaukjlkulzlp/jimeng-novel/release/packages/toutiao.capcut_business.dreamina_novel_cli_1.0.0.192.tar.gz",
+  "archiveVersion": "1.0.0.192",
+  "programVersion": "1.0.6",
+  "commit": "5893c6a792725ef5fc1b8425e118c3e6d73db641",
+  "windowsZipSha256": "03c09473269c14f2c73a553ad9a89525c7860d431e016d39b71506571e2cb7c9",
+  "manifestSha256Matches": true,
+  "installedGlobally": false,
+  "generatedMedia": false,
+  "submittedScript": false
+}

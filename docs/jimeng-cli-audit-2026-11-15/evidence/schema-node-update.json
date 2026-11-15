@@ -1,0 +1,339 @@
+{
+  "context": {
+    "command": "schema get",
+    "projectId": null,
+    "teamId": null
+  },
+  "data": {
+    "command": "node update",
+    "errors": [
+      {
+        "code": "GUARD_REJECTED",
+        "when": "节点还在生成中；先 node result"
+      },
+      {
+        "code": "TARGET_NOT_FOUND",
+        "when": "key 不存在；新建用 node create"
+      }
+    ],
+    "examples": [
+      "jimeng-novel node update --key E01/S01 --prompt-file shots/E01.md#S01",
+      "jimeng-novel node update --key cast/<角色>.<造型> --param ratio=<值>",
+      "jimeng-novel node update --node-id <nodeId> --key <key>"
+    ],
+    "flags": [
+      {
+        "name": "project-id",
+        "type": "string",
+        "help": "画布 ID；不传时从当前目录向上找 .jimeng/config.json（jimeng-novel init 写入）"
+      },
+      {
+        "name": "key",
+        "type": "string",
+        "help": "节点 key（项目内唯一的可读标识，图如 cast/<角色>.<造型>，片段如 E01/S01）"
+      },
+      {
+        "name": "node-id",
+        "type": "string",
+        "help": "节点 ID（可用 --key 代替）"
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "enum": [
+          "image",
+          "video",
+          "audio",
+          "text",
+          "role",
+          "scene"
+        ],
+        "help": "节点类型；create 新建时必填，已存在的 key 不能改类型"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "help": "节点显示名；默认等于 key"
+      },
+      {
+        "name": "model",
+        "type": "string",
+        "help": "模型 key（model list 查看）"
+      },
+      {
+        "name": "prompt",
+        "type": "string",
+        "help": "提示词原文，原样提交；用 {{别名}} 引用 --ref 的别名"
+      },
+      {
+        "name": "prompt-file",
+        "type": "string",
+        "help": "从 md 文件读提示词：<路径>#<小节标题> 取该标题下的正文（到下一个同级或更高级标题为止），不带 # 取全文"
+      },
+      {
+        "name": "ref",
+        "type": "list",
+        "help": "参考：<别名>=file:<本地路径> | <别名>=node:<key> | <别名>=resource:<assetId>，可重复；file: 自动上传并等待就绪，按内容哈希缓存；本 CLI 下载过的文件直接复用服务端原图（不重新上传，也不带下载件上的「AI生成」角标）；合并规则见下方说明"
+      },
+      {
+        "name": "clear-refs",
+        "type": "bool",
+        "help": "清空节点上的全部参考（含首尾帧）；不用为去掉参考而删节点重建"
+      },
+      {
+        "name": "no-ref",
+        "type": "bool",
+        "help": "同 --clear-refs（旧写法）"
+      },
+      {
+        "name": "first-frame",
+        "type": "string",
+        "help": "视频首帧：file:<路径> | node:<key> | resource:<assetId>（首尾帧不能和 --ref 混用）"
+      },
+      {
+        "name": "last-frame",
+        "type": "string",
+        "help": "视频尾帧，写法同 --first-frame，需同时给首帧"
+      },
+      {
+        "name": "param",
+        "type": "list",
+        "help": "模型参数 k=v，可重复，原样透传：图片/视频节点支持 ratio、resolution、duration（秒，编辑可省略或 -1）、count、taskType；音频节点的参数全部写进音频参数表"
+      },
+      {
+        "name": "input",
+        "type": "string",
+        "help": "JSON 对象（高级入口，字段见 schema get）"
+      },
+      {
+        "name": "input-file",
+        "type": "string",
+        "help": "从文件读取 --input 的 JSON"
+      },
+      {
+        "name": "team-id",
+        "type": "string",
+        "help": "仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定"
+      }
+    ],
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "appearance": {
+          "additionalProperties": false,
+          "properties": {
+            "assetId": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": null,
+          "type": "object"
+        },
+        "assetId": {
+          "type": "string"
+        },
+        "audioParameters": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Audio nodes only; keys/values from model describe parameterConfig; replaces the parameter map",
+          "properties": {
+            "target_language": {
+              "type": "string"
+            },
+            "task_type": {
+              "enum": [
+                "reference",
+                "separate",
+                "dubbing"
+              ]
+            }
+          },
+          "type": "object"
+        },
+        "description": {
+          "type": "string"
+        },
+        "generation": {
+          "additionalProperties": false,
+          "properties": {
+            "count": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "draft": {
+              "type": "boolean"
+            },
+            "draftTaskId": {
+              "type": "string"
+            },
+            "duration": {
+              "anyOf": [
+                {
+                  "minimum": 1
+                },
+                {
+                  "const": -1
+                }
+              ],
+              "type": "integer"
+            },
+            "modelId": {
+              "type": "string"
+            },
+            "prompt": {
+              "type": "string"
+            },
+            "ratio": {
+              "type": "string"
+            },
+            "references": {
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "ref": {
+                    "pattern": "^(node|resource):.+$",
+                    "type": "string"
+                  },
+                  "usage": {
+                    "enum": [
+                      "reference",
+                      "firstFrame",
+                      "lastFrame"
+                    ]
+                  }
+                },
+                "required": [
+                  "ref"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "resolution": {
+              "type": "string"
+            },
+            "seed": {
+              "type": "integer"
+            },
+            "taskType": {
+              "type": "string"
+            }
+          },
+          "required": null,
+          "type": "object"
+        },
+        "name": {
+          "type": "string"
+        },
+        "position": {
+          "additionalProperties": false,
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          },
+          "required": null,
+          "type": "object"
+        },
+        "size": {
+          "additionalProperties": false,
+          "properties": {
+            "height": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "width": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          },
+          "required": null,
+          "type": "object"
+        },
+        "sources": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "assetId": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "assetId",
+              "name"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "text": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "text",
+            "image",
+            "video",
+            "audio",
+            "role",
+            "scene"
+          ]
+        },
+        "viewName": {
+          "type": "string"
+        },
+        "voice": {
+          "additionalProperties": false,
+          "properties": {
+            "assetId": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "mode": {
+              "enum": [
+                "description",
+                "preset",
+                "resource"
+              ]
+            },
+            "voiceId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "type": "object"
+        }
+      },
+      "required": null,
+      "type": "object"
+    },
+    "notes": [
+      "参考合并规则：--ref/--first-frame/--last-frame 任一出现，就用本次传的整体替换节点原有的全部参考（含首尾帧），要保留的旧参考也要一并再传；三者都不传则参考原样保留；--clear-refs 清空"
+    ],
+    "returns": "nodeId、key、config、state",
+    "summary": "修改节点（只改传了的字段）",
+    "usesProject": true
+  },
+  "error": null,
+  "status": "success"
+}

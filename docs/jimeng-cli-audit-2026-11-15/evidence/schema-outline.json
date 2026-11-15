@@ -1,0 +1,148 @@
+{
+  "context": {
+    "command": "schema get",
+    "projectId": null,
+    "teamId": null
+  },
+  "data": {
+    "command": "script outline",
+    "errors": null,
+    "examples": [
+      "jimeng-novel script outline --episode-num 10 --idea-file <文件.md> --wait 120 --out <文件.md>"
+    ],
+    "flags": [
+      {
+        "name": "project-id",
+        "type": "string",
+        "help": "画布 ID；不传时从当前目录向上找 .jimeng/config.json（jimeng-novel init 写入）"
+      },
+      {
+        "name": "input",
+        "type": "string",
+        "help": "JSON 对象（高级入口，字段见 schema get）"
+      },
+      {
+        "name": "input-file",
+        "type": "string",
+        "help": "从文件读取 --input 的 JSON"
+      },
+      {
+        "name": "request-id",
+        "type": "string",
+        "help": "幂等键：同一个 request-id 重复提交只会找到原任务"
+      },
+      {
+        "name": "wait",
+        "type": "int",
+        "help": "最多等待的秒数；不传只查一次；到期仍未完成返回 status=running（exit 0），再执行同一条命令即可，不要重新提交。建议值（2026-11-05 实测，提交到完成）：图片 120（n=59，p50 39s、p90 71s、max 136s）；视频 480（n=51，p50 221s、p90 319s、max 414s；seedance2.0_vision 最慢）。工具单次超时比这短时，按自己的超时给值，未完成就再跑 node result，或放进后台任务"
+      },
+      {
+        "name": "out",
+        "type": "string",
+        "help": "成功后把结果正文写进这个 md 文件；从不覆盖：已有文件内容不同（比如你改过）就先移到同目录 old/<名>.<序号>.md，输出里写明"
+      },
+      {
+        "name": "episode-num",
+        "type": "int",
+        "help": "字段 episode_num（服务端必填）"
+      },
+      {
+        "name": "idea",
+        "type": "string",
+        "help": "创意或故事梗概；与 ref_content 至少一个非空"
+      },
+      {
+        "name": "idea-file",
+        "type": "string",
+        "help": "从文件读取 --idea"
+      },
+      {
+        "name": "model-key",
+        "type": "string",
+        "help": "剧本模型 key；留空用 script_bird"
+      },
+      {
+        "name": "ref-content",
+        "type": "string",
+        "help": "参考文本，如小说片段或补充设定"
+      },
+      {
+        "name": "ref-content-file",
+        "type": "string",
+        "help": "从文件读取 --ref-content"
+      },
+      {
+        "name": "script-localization",
+        "type": "string",
+        "enum": [
+          "cn",
+          "i18n"
+        ],
+        "help": "字段 script_localization"
+      },
+      {
+        "name": "team-id",
+        "type": "string",
+        "help": "仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定"
+      }
+    ],
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "episode_num": {
+          "maximum": 100,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "idea": {
+          "description": "创意或故事梗概；与 ref_content 至少一个非空",
+          "type": "string"
+        },
+        "model_key": {
+          "description": "剧本模型 key；留空用 script_bird",
+          "type": "string"
+        },
+        "ref_content": {
+          "description": "参考文本，如小说片段或补充设定",
+          "type": "string"
+        },
+        "script_localization": {
+          "enum": [
+            "cn",
+            "i18n"
+          ]
+        }
+      },
+      "required": [
+        "episode_num"
+      ],
+      "type": "object"
+    },
+    "notes": null,
+    "returns": "thread_id、run_id、requestId；带 --wait 时同 script result",
+    "scriptFlags": {
+      "--episode-num": {
+        "field": "episode_num",
+        "type": "integer"
+      },
+      "--idea": {
+        "field": "idea",
+        "fileFlag": "--idea-file"
+      },
+      "--model-key": {
+        "field": "model_key"
+      },
+      "--ref-content": {
+        "field": "ref_content",
+        "fileFlag": "--ref-content-file"
+      },
+      "--script-localization": {
+        "field": "script_localization"
+      }
+    },
+    "summary": "AI 生成分集大纲（剧本工具）",
+    "usesProject": true
+  },
+  "error": null,
+  "status": "success"
+}

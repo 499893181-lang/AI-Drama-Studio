@@ -1,0 +1,133 @@
+[
+  {
+    "path": "dreamina-canvas node create text",
+    "summary": "创建文本节点，不触发生成",
+    "flags": [
+      {
+        "name": "x",
+        "type": "number",
+        "required": false,
+        "description": "节点左上角 X；组内为父组相对坐标；与 --y 成组提供",
+        "constraints": "finite; requires y; node left; parent-local when grouped"
+      },
+      {
+        "name": "y",
+        "type": "number",
+        "required": false,
+        "description": "节点左上角 Y；组内为父组相对坐标；与 --x 成组提供",
+        "constraints": "finite; requires x; node top; parent-local when grouped"
+      },
+      {
+        "name": "project-id",
+        "type": "string",
+        "required": false,
+        "description": "项目 UUID；省略时使用当前项目",
+        "constraints": "UUID"
+      },
+      {
+        "name": "node-id",
+        "type": "string",
+        "required": false,
+        "description": "稳定 node_id；省略时生成",
+        "constraints": "canonical Node ID; generated when omitted"
+      },
+      {
+        "name": "update-id",
+        "type": "string",
+        "required": false,
+        "description": "稳定更新 UUID；省略时生成",
+        "constraints": "UUID"
+      },
+      {
+        "name": "dry-run",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "只做本地校验并输出计划；不连接服务端、不写草稿、不报价或扣分",
+        "constraints": "local validation only; no runtime, network, draft write, credit estimate, approval, journal, dispatch, or credit side effects"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "文本节点标题；必填",
+        "constraints": "at most 512 UTF-16 code units"
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": false,
+        "description": "Markdown 正文；必填"
+      },
+      {
+        "name": "import-kind",
+        "type": "string",
+        "required": false,
+        "description": "节点导入类别：local_upload（挂本地上传登记的资源）或 external_generated（外部平台生成产物导入）；与 resource upload 的登记意图同一套词汇",
+        "constraints": "local_upload | external_generated; may stand alone; required by resource-id"
+      }
+    ]
+  },
+  {
+    "path": "dreamina-canvas node edit text",
+    "summary": "编辑文本节点，不触发生成",
+    "flags": [
+      {
+        "name": "x",
+        "type": "number",
+        "required": false,
+        "description": "节点左上角 X；组内为父组相对坐标；与 --y 成组提供",
+        "constraints": "finite; requires y; node left; parent-local when grouped"
+      },
+      {
+        "name": "y",
+        "type": "number",
+        "required": false,
+        "description": "节点左上角 Y；组内为父组相对坐标；与 --x 成组提供",
+        "constraints": "finite; requires x; node top; parent-local when grouped"
+      },
+      {
+        "name": "project-id",
+        "type": "string",
+        "required": false,
+        "description": "项目 UUID；省略时使用当前项目",
+        "constraints": "UUID"
+      },
+      {
+        "name": "node-id",
+        "type": "string",
+        "required": true,
+        "description": "要编辑的节点 node_id；必填",
+        "constraints": "canonical Node ID of the node to edit; required"
+      },
+      {
+        "name": "update-id",
+        "type": "string",
+        "required": false,
+        "description": "稳定更新 UUID；省略时生成",
+        "constraints": "UUID"
+      },
+      {
+        "name": "dry-run",
+        "type": "boolean",
+        "required": false,
+        "default": "false",
+        "description": "只做本地校验并输出计划；不连接服务端、不写草稿、不报价或扣分",
+        "constraints": "local validation only; no runtime, network, draft write, credit estimate, approval, journal, dispatch, or credit side effects"
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": false,
+        "description": "文本节点标题；按 flag 出现更新",
+        "constraints": "at most 512 UTF-16 code units"
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": false,
+        "description": "Markdown 正文；按 flag 出现更新"
+      }
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+Command: jimeng-novel script result --help
+Exit: 0
+jimeng-novel script result — 查剧本任务结果
+
+用法: jimeng-novel script result --thread-id <string> --run-id <string> [选项]
+
+参数:
+  --thread-id <string>
+      [必填] thread_id
+  --run-id <string>
+      [必填] run_id
+  --wait <int>
+      最多等待的秒数；不传只查一次；到期仍未完成返回 status=running（exit 0），再执行同一条命令即可，不要重新提交。建议值（2026-11-05 实测，提交到完成）：图片 120（n=59，p50 39s、p90 71s、max 136s）；视频 480（n=51，p50 221s、p90 319s、max 414s；seedance2.0_vision 最慢）。工具单次超时比这短时，按自己的超时给值，未完成就再跑 node result，或放进后台任务
+  --out <string>
+      成功后把结果正文写进这个 md 文件；从不覆盖：已有文件内容不同（比如你改过）就先移到同目录 old/<名>.<序号>.md，输出里写明
+  --team-id <string>
+      仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定
+  -j, --json
+      输出 JSON 信封 {status,data,error,context}
+  --jq <表达式>
+      对 JSON 信封执行 jq（字符串结果原样输出），如 --jq '.data.items[].key'
+  --full
+      不截断长文本和长列表

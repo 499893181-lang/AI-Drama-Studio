@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-11-15",
+  "installation": "https://jimeng.jianying.com/ai-tool/install?from_page=banner",
+  "installer": "https://jimeng.jianying.com/novel-cli",
+  "guide": "https://bytedance.larkoffice.com/wiki/FVTwwm0bGiishxkKOoScdHR2nsg",
+  "guideReadResult": "web retrieval unavailable; no claim to have read this guide",
+  "publicInstallCardSource": "https://lf3-lv-buz.vlabstatic.com/obj/image-lvweb-buz/ies/dreamina/web/jimeng/static/js/async/CliInstall.8d2ca38ad2.js",
+  "sourceMeaning": "official installation card advertises creative CLI via /novel-cli; extracted public URL and command facts only, did not invoke internal business API",
+  "readmeSource": "Official Windows distribution README.md",
+  "noGlobalInstall": true,
+  "noScriptSubmission": true,
+  "noMediaSubmission": true
+}

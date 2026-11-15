@@ -1,0 +1,9 @@
+Command: jimeng-novel status --help
+Exit: 0
+查看即梦登录状态，必要时由 SDK 刷新凭据
+
+Usage:
+  jimeng-novel status [flags]
+
+Flags:
+  -h, --help   help for status

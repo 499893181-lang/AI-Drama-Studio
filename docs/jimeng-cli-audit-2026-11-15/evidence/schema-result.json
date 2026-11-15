@@ -1,0 +1,47 @@
+{
+  "context": {
+    "command": "schema get",
+    "projectId": null,
+    "teamId": null
+  },
+  "data": {
+    "command": "script result",
+    "errors": null,
+    "examples": null,
+    "flags": [
+      {
+        "name": "thread-id",
+        "type": "string",
+        "required": true,
+        "help": "thread_id"
+      },
+      {
+        "name": "run-id",
+        "type": "string",
+        "required": true,
+        "help": "run_id"
+      },
+      {
+        "name": "wait",
+        "type": "int",
+        "help": "最多等待的秒数；不传只查一次；到期仍未完成返回 status=running（exit 0），再执行同一条命令即可，不要重新提交。建议值（2026-11-05 实测，提交到完成）：图片 120（n=59，p50 39s、p90 71s、max 136s）；视频 480（n=51，p50 221s、p90 319s、max 414s；seedance2.0_vision 最慢）。工具单次超时比这短时，按自己的超时给值，未完成就再跑 node result，或放进后台任务"
+      },
+      {
+        "name": "out",
+        "type": "string",
+        "help": "成功后把结果正文写进这个 md 文件；从不覆盖：已有文件内容不同（比如你改过）就先移到同目录 old/<名>.<序号>.md，输出里写明"
+      },
+      {
+        "name": "team-id",
+        "type": "string",
+        "help": "仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定"
+      }
+    ],
+    "notes": null,
+    "returns": "",
+    "summary": "查剧本任务结果",
+    "usesProject": false
+  },
+  "error": null,
+  "status": "success"
+}

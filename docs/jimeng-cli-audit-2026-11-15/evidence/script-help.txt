@@ -1,0 +1,10 @@
+Command: jimeng-novel script --help
+Exit: 0
+jimeng-novel script <动作>
+
+动作:
+  outline    AI 生成分集大纲（剧本工具）
+  episode    AI 生成单集剧本（剧本工具）
+  result     查剧本任务结果
+
+详细用法: jimeng-novel script <动作> --help

@@ -1,0 +1,315 @@
+{
+  "context": {
+    "command": "schema get",
+    "projectId": null,
+    "teamId": null
+  },
+  "data": {
+    "command": "script episode",
+    "errors": null,
+    "examples": [
+      "jimeng-novel script episode --current-episode 1 --story-engine-file <文件.md> --characters-file <文件.md> --current-episode-summary-file <文件.md> --wait 120 --out <文件.md>"
+    ],
+    "flags": [
+      {
+        "name": "project-id",
+        "type": "string",
+        "help": "画布 ID；不传时从当前目录向上找 .jimeng/config.json（jimeng-novel init 写入）"
+      },
+      {
+        "name": "input",
+        "type": "string",
+        "help": "JSON 对象（高级入口，字段见 schema get）"
+      },
+      {
+        "name": "input-file",
+        "type": "string",
+        "help": "从文件读取 --input 的 JSON"
+      },
+      {
+        "name": "request-id",
+        "type": "string",
+        "help": "幂等键"
+      },
+      {
+        "name": "wait",
+        "type": "int",
+        "help": "最多等待的秒数；不传只查一次；到期仍未完成返回 status=running（exit 0），再执行同一条命令即可，不要重新提交。建议值（2026-11-05 实测，提交到完成）：图片 120（n=59，p50 39s、p90 71s、max 136s）；视频 480（n=51，p50 221s、p90 319s、max 414s；seedance2.0_vision 最慢）。工具单次超时比这短时，按自己的超时给值，未完成就再跑 node result，或放进后台任务"
+      },
+      {
+        "name": "out",
+        "type": "string",
+        "help": "成功后把剧本正文写进这个 md 文件；从不覆盖：已有文件内容不同（比如你改过）就先移到同目录 old/<名>.<序号>.md，输出里写明"
+      },
+      {
+        "name": "characters",
+        "type": "string",
+        "help": "字段 characters（服务端必填）"
+      },
+      {
+        "name": "characters-file",
+        "type": "string",
+        "help": "从文件读取 --characters"
+      },
+      {
+        "name": "current-episode",
+        "type": "int",
+        "help": "字段 current_episode（服务端必填）"
+      },
+      {
+        "name": "current-episode-summary",
+        "type": "string",
+        "help": "字段 current_episode_summary（服务端必填）"
+      },
+      {
+        "name": "current-episode-summary-file",
+        "type": "string",
+        "help": "从文件读取 --current-episode-summary"
+      },
+      {
+        "name": "future-summary",
+        "type": "string",
+        "help": "后续最多三集梗概，按「第N集 摘要」逐行"
+      },
+      {
+        "name": "future-summary-file",
+        "type": "string",
+        "help": "从文件读取 --future-summary"
+      },
+      {
+        "name": "history-summary",
+        "type": "string",
+        "help": "截止上一集的剧情回顾"
+      },
+      {
+        "name": "history-summary-file",
+        "type": "string",
+        "help": "从文件读取 --history-summary"
+      },
+      {
+        "name": "model-key",
+        "type": "string",
+        "help": "剧本模型 key；留空用 script_bird"
+      },
+      {
+        "name": "plot-positioning",
+        "type": "string",
+        "help": "剧情定位：卖点、受众期待、情绪与调性"
+      },
+      {
+        "name": "plot-positioning-file",
+        "type": "string",
+        "help": "从文件读取 --plot-positioning"
+      },
+      {
+        "name": "previous-script",
+        "type": "string",
+        "help": "上一集剧本原文，第 1 集留空"
+      },
+      {
+        "name": "previous-script-file",
+        "type": "string",
+        "help": "从文件读取 --previous-script"
+      },
+      {
+        "name": "requirement",
+        "type": "string",
+        "help": "本集额外要求，如时长、字数、场数"
+      },
+      {
+        "name": "requirement-file",
+        "type": "string",
+        "help": "从文件读取 --requirement"
+      },
+      {
+        "name": "script-localization",
+        "type": "string",
+        "enum": [
+          "cn",
+          "i18n"
+        ],
+        "help": "字段 script_localization"
+      },
+      {
+        "name": "stage-content",
+        "type": "string",
+        "help": "字段 stage_content"
+      },
+      {
+        "name": "stage-content-file",
+        "type": "string",
+        "help": "从文件读取 --stage-content"
+      },
+      {
+        "name": "stage-episode-range",
+        "type": "string",
+        "help": "如 1-5"
+      },
+      {
+        "name": "stage-sequence",
+        "type": "int",
+        "help": "字段 stage_sequence"
+      },
+      {
+        "name": "story-engine",
+        "type": "string",
+        "help": "故事引擎：主线、目标、阻碍、代价（服务端必填）"
+      },
+      {
+        "name": "story-engine-file",
+        "type": "string",
+        "help": "从文件读取 --story-engine"
+      },
+      {
+        "name": "world-setting",
+        "type": "string",
+        "help": "字段 world_setting"
+      },
+      {
+        "name": "world-setting-file",
+        "type": "string",
+        "help": "从文件读取 --world-setting"
+      },
+      {
+        "name": "team-id",
+        "type": "string",
+        "help": "仅本次使用的空间；0 为个人。已有对象沿用原空间，新操作用账号默认；仅使用目录默认项目时校验目录绑定"
+      }
+    ],
+    "inputSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "characters": {
+          "type": "string"
+        },
+        "current_episode": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "current_episode_summary": {
+          "type": "string"
+        },
+        "future_summary": {
+          "description": "后续最多三集梗概，按「第N集 摘要」逐行",
+          "type": "string"
+        },
+        "history_summary": {
+          "description": "截止上一集的剧情回顾",
+          "type": "string"
+        },
+        "model_key": {
+          "description": "剧本模型 key；留空用 script_bird",
+          "type": "string"
+        },
+        "plot_positioning": {
+          "description": "剧情定位：卖点、受众期待、情绪与调性",
+          "type": "string"
+        },
+        "previous_script": {
+          "description": "上一集剧本原文，第 1 集留空",
+          "type": "string"
+        },
+        "requirement": {
+          "description": "本集额外要求，如时长、字数、场数",
+          "type": "string"
+        },
+        "script_localization": {
+          "enum": [
+            "cn",
+            "i18n"
+          ]
+        },
+        "stage_content": {
+          "type": "string"
+        },
+        "stage_episode_range": {
+          "description": "如 1-5",
+          "type": "string"
+        },
+        "stage_sequence": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "story_engine": {
+          "description": "故事引擎：主线、目标、阻碍、代价",
+          "type": "string"
+        },
+        "world_setting": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "current_episode",
+        "story_engine",
+        "characters",
+        "current_episode_summary"
+      ],
+      "type": "object"
+    },
+    "notes": null,
+    "returns": "",
+    "scriptFlags": {
+      "--characters": {
+        "field": "characters",
+        "fileFlag": "--characters-file"
+      },
+      "--current-episode": {
+        "field": "current_episode",
+        "type": "integer"
+      },
+      "--current-episode-summary": {
+        "field": "current_episode_summary",
+        "fileFlag": "--current-episode-summary-file"
+      },
+      "--future-summary": {
+        "field": "future_summary",
+        "fileFlag": "--future-summary-file"
+      },
+      "--history-summary": {
+        "field": "history_summary",
+        "fileFlag": "--history-summary-file"
+      },
+      "--model-key": {
+        "field": "model_key"
+      },
+      "--plot-positioning": {
+        "field": "plot_positioning",
+        "fileFlag": "--plot-positioning-file"
+      },
+      "--previous-script": {
+        "field": "previous_script",
+        "fileFlag": "--previous-script-file"
+      },
+      "--requirement": {
+        "field": "requirement",
+        "fileFlag": "--requirement-file"
+      },
+      "--script-localization": {
+        "field": "script_localization"
+      },
+      "--stage-content": {
+        "field": "stage_content",
+        "fileFlag": "--stage-content-file"
+      },
+      "--stage-episode-range": {
+        "field": "stage_episode_range"
+      },
+      "--stage-sequence": {
+        "field": "stage_sequence",
+        "type": "integer"
+      },
+      "--story-engine": {
+        "field": "story_engine",
+        "fileFlag": "--story-engine-file"
+      },
+      "--world-setting": {
+        "field": "world_setting",
+        "fileFlag": "--world-setting-file"
+      }
+    },
+    "summary": "AI 生成单集剧本（剧本工具）",
+    "usesProject": true
+  },
+  "error": null,
+  "status": "success"
+}

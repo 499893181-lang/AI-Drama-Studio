@@ -1,0 +1,4 @@
+Command: jimeng-novel status -j
+Exit: 0
+{"logged_in":false}
+Note: --help states SDK may refresh credentials if present. No login or content task was started.

@@ -1,0 +1,52 @@
+Command: jimeng-novel --help
+Exit: 0
+jimeng-novel — 即梦短剧画布 CLI
+
+从零到成片（命令地图；key 约定：图 cast/<角色>.<造型>，片段 E01/S01）:
+  jimeng-novel init --title <标题>                        # 在当前目录绑定一个新画布
+  jimeng-novel model list --type image                    # 选模型；model describe 看参数和参考价
+  jimeng-novel node create --key cast/<角色>.<造型> --type image --model <模型> --prompt-file cast/<角色>.md#<造型>
+  jimeng-novel credit estimate --key cast/<角色>.<造型>    # 报总价和余额，用户同意后再提交
+  jimeng-novel node run --key cast/<角色>.<造型> --wait 120 --out cast/
+  jimeng-novel node create --key E01/S01 --type video --model <模型> --prompt-file shots/E01.md#S01 --ref <角色>=file:cast/<角色>.<造型>.png --param duration=5
+  jimeng-novel node run --key E01/S01 --key E01/S02 --wait 480 --out out/E01/
+  jimeng-novel node result --key E01/S01 --key E01/S02 --wait 480 --out out/E01/   # 未完成就再执行这一条
+  jimeng-novel canvas get                                 # 画布概览：所有节点的状态和当前资产
+  jimeng-novel frames out/E01/ --every 1                  # 审片：抽帧拼成带时间码的一张图
+  jimeng-novel compose --clip out/E01/S01.mp4 --clip out/E01/S02.mp4 --srt out/E01.srt --out out/E01.mp4   # 本地合成成片
+
+输出: 默认文本（末行「下一步:」给可复制命令）；-j/--json 输出 {status,data,error,context}；--jq <表达式> 直接取字段；
+      JIMENG_NOVEL_FORMAT=json|text 设默认；长文本/长列表默认截断并注明，--full 看全量。
+空间: space list 查看；space use <TEAM_ID> 保存默认，0 回个人；--team-id 仅本次。
+已有目录和任务沿用原空间；网页切换不影响 CLI；未知旧任务显式指定原空间。
+出错先看 error.hint；结果不确定时只查不重提。
+
+命令:
+  init               在当前目录绑定一个画布：新建（--title）或绑定已有（--project-id），写入 .jimeng/config.json
+  account            get
+  canvas             create | list | get | update | delete
+  credit             get | estimate
+  edge               create | update | delete
+  group              create | update | move | dissolve
+  layout             move | align | distribute | arrange | auto
+  model              list | describe
+  node               list | get | create | update | delete | run | result | reset | finalize | download
+  resource           upload | get | download
+  schema             get
+  script             outline | episode | result
+  space              list | use
+  watermark          查询账号 AIGC 水印，使用 on 开启或 off 关闭
+  compose            本地合成成片：拼接片段、统一编码/分辨率/帧率、加字幕（不花积分，不读创作文件）
+  transcribe         语音转文字：识别视频/音频里的台词，输出带时间戳的逐句文本，可写 SRT（服务端识别，计费规则待确认）
+  upscale            视频超分：把一段视频提升到更高分辨率（可选同时提帧率），下载到本地（服务端处理，扣积分）
+  frames             本地抽帧审片：从视频里取若干帧，拼成带文件名和时间码的一张图（竖屏横屏都行，不花积分）
+  generate-image     一次性生成图片（自动创建画布节点）
+  generate-video     一次性生成视频（自动创建画布节点）
+  generate-audio     一次性生成音频（自动创建画布节点）
+  query-result       查一次性生成任务；成功时下载
+  login              通过浏览器授权登录即梦
+  status             查看登录状态
+  logout             清除本机登录态
+  version            版本
+
+详细用法: jimeng-novel <命令> --help（加 -j 输出结构化说明）
