@@ -1,0 +1,131 @@
+{
+  "checkedAt": "2026-11-15T16:36:15.871Z",
+  "channel": "dreamina-canvas-node-video",
+  "cliVersion": "1.2.0",
+  "canvas": {
+    "projectId": "7f2bee13-2e6f-4097-9281-b814c3a314a2",
+    "nodeId": "node_ht5aaps7yz",
+    "webUrl": "https://jimeng.jianying.com/ai-tool/ai-canvas/7f2bee13-2e6f-4097-9281-b814c3a314a2",
+    "sourceNodeId": "node_agvq74dwqs",
+    "sourceResourceId": "3e74fdf2-d290-4979-a200-4968dea502be",
+    "draftVersion": 3
+  },
+  "input": {
+    "path": "docs/video-v07-evidence/TEST-FIXTURE-NOT-AI-input.png",
+    "sha256": "0a016af311df50b5b82ead4dc39292d03e8ed5eef738eac3197336de3c6b53ba",
+    "width": 1280,
+    "height": 720,
+    "source": "explicit test fixture / NOT AI generated",
+    "registeredResource": {
+      "resourceId": "3e74fdf2-d290-4979-a200-4968dea502be",
+      "downloadSha256": "679b92bc271603e46dd9eb2650d678129cf0d9bd279375159e1b2da012697e16",
+      "downloadSize": 4618,
+      "downloadRequestId": "202611160032292361F29F29BC52F1054B",
+      "equalsOriginalFileBytes": false,
+      "uploadReceiptHasHash": false,
+      "note": "Upload returned resourceId/mediaType only; downloadable registered resource is separately hashed. Byte difference is observed, cause not returned. This is not proof that a generation model used the reference."
+    }
+  },
+  "parameters": {
+    "mode": "first_last_frame",
+    "model": "seedance_2.0_vip",
+    "ratio": "16:9",
+    "resolution": "720p",
+    "durationSeconds": 5,
+    "outputCount": 1,
+    "references": [
+      {
+        "kind": "node",
+        "id": "node_agvq74dwqs"
+      }
+    ],
+    "audioMode": "mute_derivative",
+    "prompt": "保持首帧测试卡的文字和布局；固定机位，5秒内仅蓝色色块做轻微明暗变化。不新增人物、真实场景或额外字幕。本次是软件链路验收。"
+  },
+  "quote": {
+    "channel": "dreamina-canvas-node-video",
+    "status": "quoted_snapshot",
+    "amount": 70,
+    "currency": "CREDITS",
+    "unit": "maximum credits / this saved node run",
+    "expiresAt": null,
+    "officialQuoteId": null,
+    "cnyAmount": null,
+    "checkedAt": "2026-11-15T16:36:15.871Z",
+    "source": "actual dreamina-canvas node quote",
+    "projectId": "7f2bee13-2e6f-4097-9281-b814c3a314a2",
+    "nodeId": "node_ht5aaps7yz",
+    "planHash": "a3022abd3fbcad49d1ba604342aed90207c90dcacca99f1b38409960a858a2f0",
+    "canSubmit": false,
+    "raw": {
+      "schemaVersion": "1",
+      "ok": true,
+      "data": {
+        "consumptionSubject": {
+          "kind": "personal"
+        },
+        "items": [
+          {
+            "nodeId": "node_ht5aaps7yz",
+            "maxCredits": 70
+          }
+        ],
+        "totalMaxCredits": 70,
+        "draftVersion": 3,
+        "confirmable": true,
+        "confirmationRequired": true
+      },
+      "meta": {
+        "requestId": "202611160036145D1B464F0CD9065569DB"
+      }
+    },
+    "requestId": "202611160036145D1B464F0CD9065569DB",
+    "itemMaxCredits": 70,
+    "totalMaxCredits": 70,
+    "draftVersion": 3,
+    "confirmable": true,
+    "confirmationRequired": true,
+    "consumptionSubject": {
+      "kind": "personal"
+    },
+    "conditions": [
+      "只适用于此画布、此节点、此已保存草稿及当前账号上下文。",
+      "报价不是授权或最终结算；运行前须重新读取输入与节点并取得最新报价。",
+      "未返回有效期，不推算有效期；未验证实际运行准入。"
+    ],
+    "reason": "同节点运行前最大积分预估；不是实际扣费、人民币价格或direct渠道报价。"
+  },
+  "auth": {
+    "loggedIn": true,
+    "region": "cn",
+    "profile": "default",
+    "scope": "canvas only; snapshot"
+  },
+  "eligibility": {
+    "catalogModelDetected": true,
+    "nodeSavedAndReadBack": true,
+    "sameNodeQuoteSucceeded": true,
+    "generationAdmissionVerified": false,
+    "actualGenerationVerified": false,
+    "reason": "Model catalog, saving and quote do not prove permission/admission at future run."
+  },
+  "preparation": {
+    "videoStatus": "empty",
+    "resources": 0,
+    "realGenerationSubmissions": 0,
+    "confirmations": 0
+  },
+  "canSubmit": false,
+  "message": "Archived preparation/quote only; no credit authorization or generation.",
+  "referenceEvidence": {
+    "localFileHashedBeforeUpload": true,
+    "uploadedResourceRegistered": true,
+    "imageNodeHasOneSuccessfulBoundResource": true,
+    "videoDraftReferencesImageNode": true,
+    "upstreamConnectionReadBack": true,
+    "actualGenerationToolReferenceUse": "not_verified_no_generation_submitted",
+    "platformReferenceUseReceipt": null,
+    "nativeAudioDisableSupported": false,
+    "nativeAudioDisableEvidence": "Actual video help/schema and model flags expose no audio switch; text request is not a native control."
+  }
+}

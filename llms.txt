@@ -1,5 +1,7 @@
 # AI-Drama-Studio
 
+最新0.7.0：[真实画布准备与同节点报价](docs/canvas-video-channel-v08.md)、[本地时间轴与MP4导出](docs/local-timeline-v08.md)、[验收结果](docs/video-prep-v08-acceptance.md)、[可审核单镜方案](docs/video-real-acceptance-plan-v08.md)。实际最大预估70积分，100积分仅未授权计划。0生成/0消费确认，资格、视频下载、真实产物及扣费尚未验收。源代码canvas-video/timeline-store/timeline-jobs，页面video-channel/timeline。原507文件和图像1/1保持，自动出图关闭；测试成片不冒充AI结果。
+
 最新0.6.0：[单镜视频工作台](docs/video-workbench-v07.md)、[252项回归与浏览器验收](docs/video-v07-acceptance.md)、[本机即梦CLI/音频/画布契约](docs/jimeng-video-cli-v07.md)、[待确认真实验收方案](docs/video-real-acceptance-plan-v07.md)。0真实生成，自动出图保持关闭，视频报价未知不提交。核心video-store/video-jobs/video-media/dreamina-video和public/video，原数据与1/1不重置。
 
 历史0.5.1：[无新增生成验收](docs/image-contract-v061-acceptance.md)、[真实附件Schema与证据](docs/image-reference-contract-v061.md)、[故障中断与严格次数限制](docs/image-execution-faults-v061.md)、[脱敏检查记录](docs/image-contract-v061-evidence/check.json)。215回归通过；原1/1和失败任务保持，0新turn/图片，自动入口关闭。

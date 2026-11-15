@@ -4,6 +4,8 @@
 
 ## 当前开发方向：自有模型创作与规则库
 
+最新0.7.0见[视频准备与本地导出验收](video-prep-v08-acceptance.md)。真实canvas纯保存测试空节点并同节点报价：`seedance_2.0_vip`、5秒720p、最大预估70积分；未确认/未生成，不套direct，100积分仅未授权计划。视频下载Schema仍有类型口径缺口，模型实际准入/终态/参考使用/最终扣费未验收。[下一次单镜范围](video-real-acceptance-plan-v08.md)。新增`canvas-video.mjs`及只读渠道页、`timeline-{store,jobs}.mjs`与`public/timeline.*`，兼容MP4本地拼接/明确后处理静音；3段既有测试视频输出15秒并实播，非AI成片。原507文件及图像1/1未改，guard/账本保持not_checked，自动出图保持关闭。[时间轴使用](local-timeline-v08.md) · [真实渠道契约](canvas-video-channel-v08.md)。
+
 最新0.6.0见[视频独立验收](video-v07-acceptance.md)：252/252回归，新增当前图片→即梦视频准备→原ID查询/下载→候选检查选用的完整隔离流程。源码`src/video-{store,jobs,media}.mjs`、`src/dreamina-video.mjs`、`public/video.*`。真实提交硬关闭、未消耗积分；direct未登录/canvas已登录、费用未知/原生静音不支持分别展示。测试MP4不是真实即梦生成。原500文件及原图像1/1保持，自动出图及hook不扩展。[下次真实验收方案](video-real-acceptance-plan-v07.md)列实际素材/参数及建议100积分上限，未获授权且报价未知不能提交。
 
 历史0.5.1见[无新增生成验收](image-contract-v061-acceptance.md)：215项回归；事件期hook故障中断、分层附件证据、append-only诊断与四项状态。实际`inputImages`非必填且无default，缺省保持未知；若存在只证明该图像请求成功本地读取，不证明远端使用或画面符合。原失败任务与原1/1不改，严格单次无法保证，自动入口继续关闭。入口新增`src/codex-image-watchdog.mjs`、`src/image-evidence.mjs`、`src/image-diagnostics.mjs`；原始回执仍在原data，不根据夹具升为真实成功。

@@ -1,6 +1,8 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.6.0新增即梦单镜头视频工作台：选用图片绑定、参数与费用准备、原任务查询下载、视频候选与人工版本。已完成隔离验收，真实视频提交保持关闭；原立项、文字创作和手工图片功能保留。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.7.0新增画布视频准备/真实报价证据与本地时间轴、MP4拼接导出。已选视频版本、顺序、实测时长、来源、历史及失效检查持久保存；原立项、文字分镜、图片和单镜视频功能保留。真实生成提交仍关闭。
+
+0.7.0[本轮验收](docs/video-prep-v08-acceptance.md)：已登录canvas保存独立测试视频空草稿，同节点5秒720p报价最大预估70积分，0生成/0消费确认；资格、视频下载、真实产物与实际扣费未验收。direct认证与价格保持独立。[渠道与报价证据](docs/canvas-video-channel-v08.md) · [可审核单镜验收方案](docs/video-real-acceptance-plan-v08.md) · [本地时间轴说明](docs/local-timeline-v08.md)。100积分仅为未授权计划预算。主服务沿用原数据目录，原507文件Hash不变、图像原1/1不重置。
 
 0.6.0[本轮验收](docs/video-v07-acceptance.md)：252/252回归及真实Chrome通过，测试视频明确TEST FIXTURE / NOT AI，0真实视频/图片/模型调用。实际CLI直连未登录、canvas已登录；direct报价未知、无原生静音参数，分别显示，不冒充免费或已接通真实生成。[视频使用说明](docs/video-workbench-v07.md) · [CLI核查](docs/jimeng-video-cli-v07.md) · [待确认的单镜真实验收方案](docs/video-real-acceptance-plan-v07.md)。
 
@@ -27,6 +29,8 @@ node .\src\server.mjs
 0.4.0[历史验收](docs/image-workbench-acceptance.md)：134/134测试通过；真实Chrome验证三镜头图片绑定、单镜换图、参考及输入变更需复核、实际ZIP、旧版保留和重启恢复。该轮测试图片均明确标注非AI生成，未发起模型或图像生成任务。
 
 ## 当前功能
+
+- 本地时间轴：从当前人工检查选用的视频添加、排序、移除、保存不可变版本，绑定镜头版本和实际Hash；兼容H.264 MP4无损拼接，保留原音轨或明确后处理静音派生。FFprobe与浏览器检查输出；失败、取消、超时、重启不自动重导，不损坏原片。当前只验收明确TEST素材，不冒充AI成片。主服务[时间轴测试项目](http://127.0.0.1:4320/timeline.html?projectId=437306c6-d0b8-4b1b-86b4-6c259c89b006) · [只读报价页](http://127.0.0.1:4320/video-channel.html)。
 
 - 单镜视频：从当前有效且人工检查选用的镜头图准备任务，绑定图片/分镜版本、审核/选择ID及实际Hash；独立积分费用与预算门槛、先落提交意图、原ID查询和下载恢复。FFprobe核验实际文件并预览，候选/检查/选用分开；重做留旧版、源变需复核。真实生成未验收、本轮关闭，canvas媒体导入仅检测未验证。
 
@@ -70,6 +74,7 @@ node tests/image-browser-smoke.mjs
 node tests/auto-image-browser-smoke.mjs
 node tests/auto-image-failure-browser.mjs
 node tests/video-browser-smoke.mjs
+node tests/timeline-browser-smoke.mjs
 ```
 
 浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。
