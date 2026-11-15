@@ -69,7 +69,7 @@ function sidebar() {
 }
 function render() {
   const editing = Boolean(state.draft);
-  app.innerHTML = `<div class="layout">${sidebar()}<main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>故事立项</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions">${state.project ? '<button class="primary-button" data-action="open-creative" data-testid="open-creative">文字与分镜创作 →</button><button class="secondary-button" data-action="open-script" data-testid="open-script">即梦剧本</button>' : ''}<button class="ghost-button" data-action="tools" data-testid="check-tools">${svg('settings')}环境检测</button><button class="primary-button" data-action="new" data-testid="new-project">${svg('plus')}新建项目</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">每个好故事，都从一个想法开始</div><h1>故事立项工作台</h1><p>记录灵感，明确创作方向，让 Codex 帮你把构思变成故事。</p></div><span class="stage-badge">第一阶段 · 本地创作</span></div>${workflow()}${state.warnings.length ? `<div class="warning-box" role="alert">${state.warnings.map(esc).join('<br>')}</div>` : ''}${editing ? editor() : welcome()}<p class="footer-note">${svg('shield')}保存项目后可进入本机 Codex 文字与分镜创作；即梦剧本保留为可选渠道。</p></div></main></div>`;
+  app.innerHTML = `<div class="layout">${sidebar()}<main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>故事立项</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions">${state.project ? '<button class="primary-button" data-action="open-creative" data-testid="open-creative">文字与分镜创作 →</button><button class="secondary-button" data-action="open-images" data-testid="open-images">分镜图片</button><button class="secondary-button" data-action="open-script" data-testid="open-script">即梦剧本</button>' : ''}<button class="ghost-button" data-action="tools" data-testid="check-tools">${svg('settings')}环境检测</button><button class="primary-button" data-action="new" data-testid="new-project">${svg('plus')}新建项目</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">每个好故事，都从一个想法开始</div><h1>故事立项工作台</h1><p>记录灵感，明确创作方向，让 Codex 帮你把构思变成故事。</p></div><span class="stage-badge">第一阶段 · 本地创作</span></div>${workflow()}${state.warnings.length ? `<div class="warning-box" role="alert">${state.warnings.map(esc).join('<br>')}</div>` : ''}${editing ? editor() : welcome()}<p class="footer-note">${svg('shield')}保存项目后可进入本机 Codex 文字与分镜创作；即梦剧本保留为可选渠道。</p></div></main></div>`;
   if (editing) { bindForm(); renderJob(); }
 }
 function welcome() {
@@ -237,6 +237,12 @@ app.addEventListener('click', async event => {
   if (action === 'expand') await expand();
   if (action === 'apply') await applyExpansion();
   if (action === 'cancel-job') await cancelJob();
+  if (action === 'open-images') {
+    if (state.busy) { toast('当前操作尚未结束，请稍候。'); return; }
+    if (!state.project || !await confirmDiscard()) return;
+    state.dirty = false;
+    location.href = `/images.html?projectId=${encodeURIComponent(state.project.id)}`;
+  }
   if (action === 'open-creative') {
     if (state.busy) { toast('当前操作尚未结束，请稍候。'); return; }
     if (!state.project || !await confirmDiscard()) return;

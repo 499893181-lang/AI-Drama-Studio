@@ -4,6 +4,8 @@
 
 ## 当前开发方向：自有模型创作与规则库
 
+软件0.4.0新增 [分镜图片工作台](image-workbench.md) 和 [官方图像能力只读核查](image-tools-check.md)：`src/image-store.mjs`、`src/image-files.mjs`、`src/image-capabilities.mjs`、`public/images.*`。只执行手工导出、实际文件导入和人工选用，未接自动出图。`src/entity-provenance.mjs`修复模型新增实体来源自报漏洞，输入证据与快照分别核对；历史缺证据记录保持待确认，原文不改。测试图片不证明真实AI生成，最新验收以本分支独立记录为准。
+
 [三手册与Huobao整合说明](creative-knowledge-v04.md)更新目标路线：自有ChatGPT／Codex负责剧本、分镜和独立审阅，图像及即梦画布／无对白视频单独接入。既有即梦文字工具仍可选，其报价缺口不应阻断未来的Codex文字流程。下文历史“即梦剧本→即梦分镜”路线不再作为默认开发方向。
 
 本分支工作台0.3.0将既有规则核心接入 `public/creative.*` 和HTTP路由，提供本机Codex剧本、分镜候选、独立审阅与人工采用。后端见 `src/creative-jobs.mjs`、`src/creative-store.mjs`、`src/creative-runner.mjs`；[使用与边界](creative-workbench.md)。15位导演、17个作品级预设和90条显式扩展仍由 `knowledge/creative/` 提供。即梦文字费用不会阻断Codex；正式四岗位guard/账本与媒体保持未接入。验收以本分支独立记录为准，不能复用历史成功。

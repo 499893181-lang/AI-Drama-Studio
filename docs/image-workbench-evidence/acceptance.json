@@ -1,0 +1,815 @@
+{
+  "checkedAt": "2026-11-15T09:57:09.916Z",
+  "baseCommit": "f1e2c382bcb9c66f0543b5d15f8ba92dc8aa31c3",
+  "branch": "codex/image-workbench-v05-20261115",
+  "softwareVersion": "0.4.0",
+  "environment": {
+    "os": "Windows",
+    "node": "v24.22.1"
+  },
+  "tests": {
+    "baseline": 105,
+    "total": 134,
+    "passed": 134,
+    "skipped": 0,
+    "sourceNew": 13,
+    "imageStorageNew": 13,
+    "imageHttpAndCapabilitiesNew": 3
+  },
+  "sourceValidationCases": {
+    "snapshot": {
+      "source": {
+        "idea": "阴天傍晚，独居老人穿灰蓝长衫在家中等女儿的平安消息。"
+      },
+      "instructions": "仅使用已指定事实。",
+      "entities": []
+    },
+    "results": {
+      "forgedUser": {
+        "schemaVersion": "0.5.0",
+        "inputSnapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534",
+        "entries": [
+          {
+            "entityId": "CHAR-99",
+            "version": "v1",
+            "entityHash": "39306bb87dfab00f10c059ee717d5a730dfc02b7486a6a1b4a153cff81212bb2",
+            "declaredSource": "user",
+            "resolvedSource": "pending",
+            "status": "pending_confirmation",
+            "reason": "新增实体自报用户来源，但缺少唯一可定位的输入证据，待人工确认。",
+            "evidence": [],
+            "inputSnapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534",
+            "bindingValid": true
+          }
+        ],
+        "pendingCount": 1
+      },
+      "exactUserExtraction": {
+        "schemaVersion": "0.5.0",
+        "inputSnapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534",
+        "entries": [
+          {
+            "entityId": "CHAR-99",
+            "version": "v1",
+            "entityHash": "bd228e798b5a30a54c2e504526ac2e15062d8bc9daee1194caa3364ece2bbfbd",
+            "declaredSource": "user",
+            "resolvedSource": "user",
+            "status": "verified_user_input",
+            "reason": "完整实体描述与允许的用户输入摘录逐字一致；仅验证字符来源，不宣称理解语义。",
+            "evidence": [
+              {
+                "entityId": "CHAR-99",
+                "version": "v1",
+                "path": "source.idea",
+                "start": 5,
+                "end": 9,
+                "quote": "独居老人",
+                "snapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534"
+              }
+            ],
+            "inputSnapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534",
+            "bindingValid": true
+          }
+        ],
+        "pendingCount": 0
+      },
+      "aiAddition": {
+        "schemaVersion": "0.5.0",
+        "inputSnapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534",
+        "entries": [
+          {
+            "entityId": "CHAR-99",
+            "version": "v1",
+            "entityHash": "0abe98cf67e73b2fd9cd8c92f6310c72b5bc8226f59c0c53fa03ec3310948ee8",
+            "declaredSource": "ai",
+            "resolvedSource": "ai",
+            "status": "ai_addition",
+            "reason": "模型明确声明为AI补充，并在addedSettings保留逐项说明；不认定为用户事实。",
+            "evidence": [],
+            "inputSnapshotHash": "b0906b8df0e473853a058641bbebb35895f7262458a5689a5313eefa76b72534",
+            "bindingValid": true
+          }
+        ],
+        "pendingCount": 0
+      }
+    },
+    "note": "Deterministic software examples, not model output or semantic review."
+  },
+  "imageBrowser": {
+    "startedAt": "2026-11-15T09:51:08.202Z",
+    "fixturesOnly": true,
+    "testImages": "PNG pixels explicitly say TEST FIXTURE / NOT AI",
+    "realModelOrMediaInvoked": false,
+    "checks": [
+      "真实Chrome显示三镜头、人物/场景版本、画面提示词与导演规则；费用待确认、手工出图及正式阶段未接入分开说明",
+      "通过实际文件控件上传并预览带像素标记的测试PNG；人物与场景各自人工检查后选用，Hash/格式/尺寸与来源声明真实保存",
+      "真实提示词任务包与ZIP包含两份选定参考及Hash，attached=false且官网未发送；仅文字实体引用不冒充图片附加",
+      "三镜头实际图片各自绑定当前分镜版本，检查后人工选用；第一镜关联实际导出的任务包，其他手工上传明确未验证模型输入",
+      "仅第二镜换图；前后镜选用不变，旧图可读取，两个图片版本与替换历史保留",
+      "人物参考换版使受影响分镜图需复核；旧参考、旧图及选用历史均保留",
+      "保存输入改变后旧图片全部明确需复核；重启恢复7份实际文件、Hash、旧版、人工检查与选择历史，0页面异常"
+    ],
+    "passed": true,
+    "consoleExceptions": 0,
+    "finishedAt": "2026-11-15T09:51:22.463Z",
+    "assetCount": 7,
+    "selectionCount": 7
+  },
+  "codecsBrowser": {
+    "at": "2026-11-15T09:50:14.651Z",
+    "isolatedTestFixtures": true,
+    "modelOrMediaGenerationCalls": 0,
+    "codecs": [
+      {
+        "status": 201,
+        "asset": {
+          "id": "fe196fdb-60e5-49b2-8cac-dd30a240531e",
+          "format": "jpeg",
+          "width": 160,
+          "height": 90,
+          "mimeType": "image/jpeg",
+          "source": {
+            "kind": "test",
+            "description": "明确TEST FIXTURE / NOT AI像素，真实Chrome Canvas编码，仅软件验收。"
+          }
+        },
+        "decodedWidth": 160,
+        "decodedHeight": 90,
+        "downloadedSize": 3070
+      },
+      {
+        "status": 201,
+        "asset": {
+          "id": "40c21414-5484-491b-a12b-ec266376a533",
+          "format": "webp",
+          "width": 160,
+          "height": 90,
+          "mimeType": "image/webp",
+          "source": {
+            "kind": "test",
+            "description": "明确TEST FIXTURE / NOT AI像素，真实Chrome Canvas编码，仅软件验收。"
+          }
+        },
+        "decodedWidth": 160,
+        "decodedHeight": 90,
+        "downloadedSize": 1982
+      }
+    ],
+    "consoleExceptions": 0,
+    "passed": true
+  },
+  "localAcceptance": {
+    "projectId": "68ce2862-81b7-4e64-be29-1c10aee653da",
+    "page": "http://127.0.0.1:4319/images.html?projectId=68ce2862-81b7-4e64-be29-1c10aee653da",
+    "checks": [
+      "人物/场景参考与三镜头实际PNG导入、预览字节核对、人工检查选用通过；ZIP实际含两张参考图但未发送",
+      "只换SHOT-02图片，旧版文件与选用记录保留，其他两镜选用不变",
+      "人物参考版本变化使依赖的镜头图片需复核，原文件保留",
+      "上游输入改变后旧图片明确需复核，未覆盖原稿或旧图片"
+    ],
+    "beforeChange": {
+      "assetCount": 6,
+      "selectedShots": 3,
+      "selectionHistory": 6,
+      "oldImagePreserved": true,
+      "otherShotsUnchanged": true,
+      "browser": {
+        "realBrowser": true,
+        "consoleExceptions": 0,
+        "threeShotCards": true,
+        "decodedTestImage": true
+      }
+    },
+    "packets": [
+      {
+        "id": "6a41b664-c576-4308-a2f5-d134e1e8ef8f",
+        "shotId": "SHOT-01",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "binding": {
+          "sourceVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+          "sourceHash": "685ebf17890b546c6c3299257705b20c7606ea5d229d094227e6ebd4f0d1fe82",
+          "targetHash": "bb8d9a2595d45bd9d77ddb641d4d87a3d774f0ff38505f9a37a84139c4a72564",
+          "references": [
+            {
+              "role": "character",
+              "targetId": "CHAR-01",
+              "targetVersion": "v1",
+              "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+              "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+              "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+              "currentTargetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+              "fileStatus": "intact",
+              "actualSha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5"
+            },
+            {
+              "role": "scene",
+              "targetId": "SCENE-01",
+              "targetVersion": "v1",
+              "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+              "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+              "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+              "currentTargetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+              "fileStatus": "intact",
+              "actualSha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665"
+            }
+          ],
+          "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+          "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3"
+        },
+        "references": [
+          {
+            "id": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+            "entityId": "CHAR-01",
+            "entityVersion": "v1",
+            "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "filename": "references/01c9d367-523a-4b30-b6c8-fe7b286c72e4.png",
+            "mimeType": "image/png",
+            "width": 320,
+            "height": 180,
+            "source": {
+              "kind": "test",
+              "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号1，不代表AI结果。"
+            },
+            "includedInBundle": true,
+            "attached": false,
+            "attachmentState": "included_in_export_not_sent",
+            "downloadUrl": "/api/projects/68ce2862-81b7-4e64-be29-1c10aee653da/image-assets/01c9d367-523a-4b30-b6c8-fe7b286c72e4"
+          },
+          {
+            "id": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+            "entityId": "SCENE-01",
+            "entityVersion": "v1",
+            "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "filename": "references/837b25e0-d698-4e4e-aff4-e350beb0bf1a.png",
+            "mimeType": "image/png",
+            "width": 320,
+            "height": 180,
+            "source": {
+              "kind": "test",
+              "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号2，不代表AI结果。"
+            },
+            "includedInBundle": true,
+            "attached": false,
+            "attachmentState": "included_in_export_not_sent",
+            "downloadUrl": "/api/projects/68ce2862-81b7-4e64-be29-1c10aee653da/image-assets/837b25e0-d698-4e4e-aff4-e350beb0bf1a"
+          }
+        ],
+        "referenceManifest": [
+          {
+            "role": "character",
+            "targetId": "CHAR-01",
+            "targetVersion": "v1",
+            "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+            "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+            "currentTargetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+            "fileStatus": "intact",
+            "actualSha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "attached": false,
+            "includedInBundle": true,
+            "status": "included_in_export_not_sent"
+          },
+          {
+            "role": "scene",
+            "targetId": "SCENE-01",
+            "targetVersion": "v1",
+            "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+            "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+            "currentTargetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+            "fileStatus": "intact",
+            "actualSha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "attached": false,
+            "includedInBundle": true,
+            "status": "included_in_export_not_sent"
+          }
+        ],
+        "submitted": false,
+        "costStatus": "unknown"
+      },
+      {
+        "id": "70a273c9-f205-4148-aaab-173883c7d974",
+        "shotId": "SHOT-02",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "binding": {
+          "sourceVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+          "sourceHash": "685ebf17890b546c6c3299257705b20c7606ea5d229d094227e6ebd4f0d1fe82",
+          "targetHash": "6f4791c69ca2cf4c33277ac8fb81bbd897379a01c58f68c1ffe2e39272c9bf70",
+          "references": [
+            {
+              "role": "character",
+              "targetId": "CHAR-01",
+              "targetVersion": "v1",
+              "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+              "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+              "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+              "currentTargetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+              "fileStatus": "intact",
+              "actualSha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5"
+            },
+            {
+              "role": "scene",
+              "targetId": "SCENE-01",
+              "targetVersion": "v1",
+              "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+              "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+              "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+              "currentTargetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+              "fileStatus": "intact",
+              "actualSha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665"
+            }
+          ],
+          "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+          "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3"
+        },
+        "references": [
+          {
+            "id": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+            "entityId": "CHAR-01",
+            "entityVersion": "v1",
+            "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "filename": "references/01c9d367-523a-4b30-b6c8-fe7b286c72e4.png",
+            "mimeType": "image/png",
+            "width": 320,
+            "height": 180,
+            "source": {
+              "kind": "test",
+              "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号1，不代表AI结果。"
+            },
+            "includedInBundle": true,
+            "attached": false,
+            "attachmentState": "included_in_export_not_sent",
+            "downloadUrl": "/api/projects/68ce2862-81b7-4e64-be29-1c10aee653da/image-assets/01c9d367-523a-4b30-b6c8-fe7b286c72e4"
+          },
+          {
+            "id": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+            "entityId": "SCENE-01",
+            "entityVersion": "v1",
+            "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "filename": "references/837b25e0-d698-4e4e-aff4-e350beb0bf1a.png",
+            "mimeType": "image/png",
+            "width": 320,
+            "height": 180,
+            "source": {
+              "kind": "test",
+              "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号2，不代表AI结果。"
+            },
+            "includedInBundle": true,
+            "attached": false,
+            "attachmentState": "included_in_export_not_sent",
+            "downloadUrl": "/api/projects/68ce2862-81b7-4e64-be29-1c10aee653da/image-assets/837b25e0-d698-4e4e-aff4-e350beb0bf1a"
+          }
+        ],
+        "referenceManifest": [
+          {
+            "role": "character",
+            "targetId": "CHAR-01",
+            "targetVersion": "v1",
+            "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+            "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+            "currentTargetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+            "fileStatus": "intact",
+            "actualSha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "attached": false,
+            "includedInBundle": true,
+            "status": "included_in_export_not_sent"
+          },
+          {
+            "role": "scene",
+            "targetId": "SCENE-01",
+            "targetVersion": "v1",
+            "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+            "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+            "currentTargetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+            "fileStatus": "intact",
+            "actualSha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "attached": false,
+            "includedInBundle": true,
+            "status": "included_in_export_not_sent"
+          }
+        ],
+        "submitted": false,
+        "costStatus": "unknown"
+      },
+      {
+        "id": "fb289d76-8312-49fe-a0bb-4259f2c08113",
+        "shotId": "SHOT-03",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "binding": {
+          "sourceVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+          "sourceHash": "685ebf17890b546c6c3299257705b20c7606ea5d229d094227e6ebd4f0d1fe82",
+          "targetHash": "f4029dc3f346395ac5ba7df0bddaeb9535cb857236c08a8cfded47460cc1798d",
+          "references": [
+            {
+              "role": "character",
+              "targetId": "CHAR-01",
+              "targetVersion": "v1",
+              "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+              "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+              "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+              "currentTargetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+              "fileStatus": "intact",
+              "actualSha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5"
+            },
+            {
+              "role": "scene",
+              "targetId": "SCENE-01",
+              "targetVersion": "v1",
+              "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+              "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+              "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+              "currentTargetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+              "fileStatus": "intact",
+              "actualSha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665"
+            }
+          ],
+          "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+          "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3"
+        },
+        "references": [
+          {
+            "id": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+            "entityId": "CHAR-01",
+            "entityVersion": "v1",
+            "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "filename": "references/01c9d367-523a-4b30-b6c8-fe7b286c72e4.png",
+            "mimeType": "image/png",
+            "width": 320,
+            "height": 180,
+            "source": {
+              "kind": "test",
+              "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号1，不代表AI结果。"
+            },
+            "includedInBundle": true,
+            "attached": false,
+            "attachmentState": "included_in_export_not_sent",
+            "downloadUrl": "/api/projects/68ce2862-81b7-4e64-be29-1c10aee653da/image-assets/01c9d367-523a-4b30-b6c8-fe7b286c72e4"
+          },
+          {
+            "id": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+            "entityId": "SCENE-01",
+            "entityVersion": "v1",
+            "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "filename": "references/837b25e0-d698-4e4e-aff4-e350beb0bf1a.png",
+            "mimeType": "image/png",
+            "width": 320,
+            "height": 180,
+            "source": {
+              "kind": "test",
+              "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号2，不代表AI结果。"
+            },
+            "includedInBundle": true,
+            "attached": false,
+            "attachmentState": "included_in_export_not_sent",
+            "downloadUrl": "/api/projects/68ce2862-81b7-4e64-be29-1c10aee653da/image-assets/837b25e0-d698-4e4e-aff4-e350beb0bf1a"
+          }
+        ],
+        "referenceManifest": [
+          {
+            "role": "character",
+            "targetId": "CHAR-01",
+            "targetVersion": "v1",
+            "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+            "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+            "currentTargetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+            "fileStatus": "intact",
+            "actualSha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+            "attached": false,
+            "includedInBundle": true,
+            "status": "included_in_export_not_sent"
+          },
+          {
+            "role": "scene",
+            "targetId": "SCENE-01",
+            "targetVersion": "v1",
+            "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+            "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+            "currentTargetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+            "fileStatus": "intact",
+            "actualSha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+            "attached": false,
+            "includedInBundle": true,
+            "status": "included_in_export_not_sent"
+          }
+        ],
+        "submitted": false,
+        "costStatus": "unknown"
+      }
+    ],
+    "assets": [
+      {
+        "id": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+        "role": "character",
+        "targetId": "CHAR-01",
+        "targetVersion": "v1",
+        "version": 1,
+        "sha256": "07c6a84c8e4247466844c751aae16c81b811fd543168f399bf47c3f05a8349f5",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1024,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号1，不代表AI结果。"
+        },
+        "packetId": null,
+        "inputSnapshotHash": "3ae2053ba729f9be3eb45474c097d3bbb1f8db7db15bde1d65005b394c991153",
+        "stale": true,
+        "state": "needs_review"
+      },
+      {
+        "id": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+        "role": "scene",
+        "targetId": "SCENE-01",
+        "targetVersion": "v1",
+        "version": 1,
+        "sha256": "16f687341e0076360547add458ac57f71d36800c9c38f6e4897baaf1d1597665",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1024,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号2，不代表AI结果。"
+        },
+        "packetId": null,
+        "inputSnapshotHash": "73080c46144955f62468ff59eedcd6fc6d9ee9bfe049ac4dd2d3eabc5e2e160e",
+        "stale": true,
+        "state": "needs_review"
+      },
+      {
+        "id": "27b6c0d6-512f-4e50-af73-447e39a28b17",
+        "role": "shot",
+        "targetId": "SHOT-01",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "version": 1,
+        "sha256": "722fb8d181129f01549b840cc2fcab4939bb6890e6fcde7f5f21fa0dd08d8827",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1024,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号3，不代表AI结果。"
+        },
+        "packetId": "6a41b664-c576-4308-a2f5-d134e1e8ef8f",
+        "inputSnapshotHash": "c765faada94e42007ab750aec6af527373170bd2f3d71fa438c090718184e874",
+        "stale": true,
+        "state": "needs_review"
+      },
+      {
+        "id": "a282745a-f773-4065-b225-721ba7953372",
+        "role": "shot",
+        "targetId": "SHOT-02",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "version": 1,
+        "sha256": "43f77f0e06340ff4804f90a882faa28feb85ee6d7a6e23f4e88f332479145126",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1025,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号4，不代表AI结果。"
+        },
+        "packetId": "70a273c9-f205-4148-aaab-173883c7d974",
+        "inputSnapshotHash": "ca948bd0b379b14318ecc1291b0b5f9928c1791fec593caffae161be64b25910",
+        "stale": true,
+        "state": "needs_review"
+      },
+      {
+        "id": "38bbe0b4-fb0f-442e-9702-94ad4ceccbf5",
+        "role": "shot",
+        "targetId": "SHOT-03",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "version": 1,
+        "sha256": "8745e3906f244b2becee58ce9561c4fca3cd037d6455ad79c504ffd40b227c05",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1024,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号5，不代表AI结果。"
+        },
+        "packetId": "fb289d76-8312-49fe-a0bb-4259f2c08113",
+        "inputSnapshotHash": "3714ecdeba8598f0ada011106716e439519a22405eda1bb714c310c37bff14d5",
+        "stale": true,
+        "state": "needs_review"
+      },
+      {
+        "id": "0ac2c094-f9ee-4b3f-a953-846d688b971a",
+        "role": "shot",
+        "targetId": "SHOT-02",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "version": 2,
+        "sha256": "c8d4952ab376c364afe68e2179e24c479b0ab5c58c6cefb72748408ca115d386",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1024,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号6，不代表AI结果。"
+        },
+        "packetId": "70a273c9-f205-4148-aaab-173883c7d974",
+        "inputSnapshotHash": "ca948bd0b379b14318ecc1291b0b5f9928c1791fec593caffae161be64b25910",
+        "stale": true,
+        "state": "needs_review"
+      },
+      {
+        "id": "136e1839-1b4d-4147-b52c-9beed6ea3001",
+        "role": "character",
+        "targetId": "CHAR-01",
+        "targetVersion": "v1",
+        "version": 2,
+        "sha256": "c8829aefca05f19e255d368af774a88ef30bd3867fd2e5496ac63163450fc573",
+        "width": 320,
+        "height": 180,
+        "format": "png",
+        "size": 1025,
+        "source": {
+          "kind": "test",
+          "description": "TEST FIXTURE / NOT AI，明确的软件测试图片，编号7，不代表AI结果。"
+        },
+        "packetId": null,
+        "inputSnapshotHash": "3ae2053ba729f9be3eb45474c097d3bbb1f8db7db15bde1d65005b394c991153",
+        "stale": true,
+        "state": "needs_review"
+      }
+    ],
+    "selectionHistory": [
+      {
+        "id": "04b449f4-612a-43ac-8e13-a23e19812a61",
+        "key": "character:CHAR-01",
+        "role": "character",
+        "targetId": "CHAR-01",
+        "targetVersion": "v1",
+        "assetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+        "previousAssetId": null,
+        "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+        "referenceHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "createdAt": "2026-11-15T09:52:23.598Z"
+      },
+      {
+        "id": "0f00fb1a-7aad-4ac7-85fc-c46597007897",
+        "key": "scene:SCENE-01",
+        "role": "scene",
+        "targetId": "SCENE-01",
+        "targetVersion": "v1",
+        "assetId": "837b25e0-d698-4e4e-aff4-e350beb0bf1a",
+        "previousAssetId": null,
+        "targetHash": "b912764db76e7748b6fa49d0d6e21098a85482fb2939cd4ef6de66f279874bd8",
+        "referenceHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "createdAt": "2026-11-15T09:52:24.274Z"
+      },
+      {
+        "id": "dbae3e03-3e42-4670-a8ca-2cc7e177f809",
+        "key": "shot:SHOT-01",
+        "role": "shot",
+        "targetId": "SHOT-01",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "assetId": "27b6c0d6-512f-4e50-af73-447e39a28b17",
+        "previousAssetId": null,
+        "targetHash": "bb8d9a2595d45bd9d77ddb641d4d87a3d774f0ff38505f9a37a84139c4a72564",
+        "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+        "createdAt": "2026-11-15T09:52:25.267Z"
+      },
+      {
+        "id": "b01eb507-a33c-455a-b843-8cff16a252c5",
+        "key": "shot:SHOT-02",
+        "role": "shot",
+        "targetId": "SHOT-02",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "assetId": "a282745a-f773-4065-b225-721ba7953372",
+        "previousAssetId": null,
+        "targetHash": "6f4791c69ca2cf4c33277ac8fb81bbd897379a01c58f68c1ffe2e39272c9bf70",
+        "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+        "createdAt": "2026-11-15T09:52:26.228Z"
+      },
+      {
+        "id": "da4d2aa8-2ea1-4020-befe-30dfa88c6b7c",
+        "key": "shot:SHOT-03",
+        "role": "shot",
+        "targetId": "SHOT-03",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "assetId": "38bbe0b4-fb0f-442e-9702-94ad4ceccbf5",
+        "previousAssetId": null,
+        "targetHash": "f4029dc3f346395ac5ba7df0bddaeb9535cb857236c08a8cfded47460cc1798d",
+        "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+        "createdAt": "2026-11-15T09:52:27.278Z"
+      },
+      {
+        "id": "89746412-fc41-4442-9ecf-87b44f9a4d70",
+        "key": "shot:SHOT-02",
+        "role": "shot",
+        "targetId": "SHOT-02",
+        "targetVersion": "ca6702b2-f99b-4ded-82cd-00f350d657ce",
+        "assetId": "0ac2c094-f9ee-4b3f-a953-846d688b971a",
+        "previousAssetId": "a282745a-f773-4065-b225-721ba7953372",
+        "targetHash": "6f4791c69ca2cf4c33277ac8fb81bbd897379a01c58f68c1ffe2e39272c9bf70",
+        "referenceHash": "01e2a1a56590ecd34da0cda40e8c4ac5812492b90c88cd9b65160b98772fc05d",
+        "createdAt": "2026-11-15T09:52:28.115Z"
+      },
+      {
+        "id": "831fd157-3eb1-4b7f-8fce-7ba613f0ad25",
+        "key": "character:CHAR-01",
+        "role": "character",
+        "targetId": "CHAR-01",
+        "targetVersion": "v1",
+        "assetId": "136e1839-1b4d-4147-b52c-9beed6ea3001",
+        "previousAssetId": "01c9d367-523a-4b30-b6c8-fe7b286c72e4",
+        "targetHash": "899517689e45e34a7bbf0a9dbfcee94749819eca3347068d716b21045c918271",
+        "referenceHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "createdAt": "2026-11-15T09:52:30.136Z"
+      }
+    ],
+    "restore": {
+      "assets": 7,
+      "selectionHistory": 7,
+      "hashesMatched": true,
+      "browser": {
+        "realBrowser": true,
+        "consoleExceptions": 0,
+        "threeShotCards": true,
+        "decodedTestImage": true
+      }
+    },
+    "restoredAt": "2026-11-15T09:56:29.108Z"
+  },
+  "imageCapability": {
+    "checkedAt": "2026-11-15T09:52:29.015Z",
+    "mode": "manual_export_import",
+    "automaticSubmissionEnabled": false,
+    "codex": {
+      "installed": true,
+      "version": "0.167.0-alpha.4.1",
+      "loggedIn": true,
+      "imageGenerationFlagDetected": true,
+      "capabilityStatus": "command_detected_not_generation_verified",
+      "note": "本机CLI报告image_generation已开启，官方文档提供账号图像创作方式；工作台尚未验证自动执行、产物导出及本次费用，保留手工导出和导入。"
+    },
+    "evidence": [
+      {
+        "command": "codex --version",
+        "exitCode": 0,
+        "timedOut": false,
+        "output": "codex-cli 0.167.0-alpha.4.1"
+      },
+      {
+        "command": "codex login status",
+        "exitCode": 0,
+        "timedOut": false,
+        "output": "Logged in using ChatGPT"
+      },
+      {
+        "command": "codex features list",
+        "exitCode": 0,
+        "timedOut": false,
+        "output": "image_generation                         stable             true"
+      },
+      {
+        "command": "codex exec --help",
+        "exitCode": 0,
+        "timedOut": false,
+        "output": "  -i, --image <FILE>...\n          Optional image(s) to attach to the initial prompt"
+      }
+    ],
+    "officialSources": [
+      {
+        "title": "OpenAI官方图像创作说明",
+        "url": "https://learn.chatgpt.com/docs/image-generation",
+        "scope": "账号图像创作与额度说明；不等于已接通工作台图像API"
+      },
+      {
+        "title": "OpenAI官方API CLI",
+        "url": "https://developers.openai.com/api/docs/libraries/openai-cli",
+        "scope": "文档提供openai images generate；本轮未配置或调用API"
+      }
+    ],
+    "cost": {
+      "status": "unknown",
+      "label": "费用待确认",
+      "amount": null,
+      "unit": null,
+      "currency": null,
+      "note": "网页权益、Codex账号额度与API计费分别核实；登录或订阅不代表免费。本轮不执行生成。"
+    },
+    "formalStageStatus": "not_checked",
+    "mediaGenerationStatus": "not_generated"
+  },
+  "preservation": {
+    "existingDataFilesHashMatched": 24,
+    "originalWorkingTreesClean": true,
+    "originalDataAuthTasksVersionsNotMigrated": true
+  },
+  "formalStageStatus": "not_checked",
+  "mediaStatus": "imported_not_formally_verified",
+  "modelOrImageGenerationCalls": 0,
+  "jimengCanvasVideoVoiceEditingCalls": 0,
+  "privacy": "Only synthetic software-test story, explicitly labelled test-image metadata, allowlisted capability rows and hashes exported; no credentials, personal data or absolute local paths."
+}
