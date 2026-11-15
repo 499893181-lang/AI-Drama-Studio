@@ -56,4 +56,6 @@ node tests/script-browser-smoke.mjs
 
 [报价证据与单位预算](docs/pricing.md) · [第二阶段实现与验收](docs/stage2.md) · [CLI适配边界](docs/novel-adapter.md) · [独立审阅](docs/script-review.md) · [官方公开契约](docs/jimeng-cli-audit-2026-11-15/script-cli-report.md) · [历史验收](docs/validation.md) · [下一阶段](docs/next-stage.md)。
 
+后续软件设计输入见 [Huobao 功能拆解与已有账号接入设计](docs/huobao-breakdown-and-account-integration.md)，包含逐步制作流程、四岗位映射、免填 API Key 的账号与网页协作方案，以及分步开发和验收条件。文档已区分拆解时的初版快照与当前 0.2.1 工程，后续整合复用现有剧本、版本和独立审阅实现。
+
 功能组织参考[火宝短剧](https://github.com/chatfire-AI/huobao-drama)公开项目说明，核心代码独立编写，未复制其业务源码或资源。
