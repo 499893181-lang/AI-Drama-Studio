@@ -1,0 +1,59 @@
+{
+  "source_id": "C04",
+  "observation_revision": "2026-11-15-user-selected-deep-dive",
+  "observed_on": "2026-11-15",
+  "timezone": "Asia/Shanghai",
+  "new_unique_douyin_sources": 0,
+  "source": {
+    "author": "梵糕AI",
+    "title": "一条视频教会你ai漫剧运镜怎么做",
+    "modal_id": "7674982636925816083",
+    "observed_url": "https://www.douyin.com/search/%E6%98%AF%E6%9E%9D%E8%A3%95%E5%92%8C%20%E7%BB%86%E8%8A%82%20%E9%95%9C%E5%A4%B4?aid=058a711a-463d-4902-95bd-09240ba2ae74&modal_id=7674982636925816083&type=general",
+    "duration_display": "04:26",
+    "date_display": "8月18日",
+    "metrics_display": {"likes": "7578", "comments": "28", "favorites": "2980", "shares": "442", "views": null},
+    "selection_reason": "用户指定当前已打开作品，非万赞筛选结果"
+  },
+  "method": "关键时间点定位、屏内字幕及界面阅读；覆盖各章节，未连续完整观看、未据此分析音轨",
+  "observations": [
+    {"time": "00:02", "visible": "加冕场景成片，字幕提及围绕中心轴旋转"},
+    {"time": "00:30", "visible": "updream画布，新建预演台右键菜单"},
+    {"time": "00:46", "visible": "蓝色跪姿、红色站姿白模，参考视频信息4.0s/1920×1080"},
+    {"time": "00:58", "visible": "成片信息Seedance 2.5、参考图、参考视频、10.1s"},
+    {"time": "01:11", "visible": "预演台空场景，生成空间按钮"},
+    {"time": "01:23", "visible": "台阶平台场景白模、机位、预览窗"},
+    {"time": "01:40", "visible": "人物属性、移动坐标轴、两个人物"},
+    {"time": "01:58", "visible": "人物朝向旋转环"},
+    {"time": "02:09", "visible": "上方站姿、下方跪姿人物"},
+    {"time": "02:19", "visible": "机位选中、底部轨道、预览显示50mm"},
+    {"time": "02:24", "visible": "绘制路径，路径片段标识0–120"},
+    {"time": "02:31", "visible": "近闭合环形相机路径、密集关键帧"},
+    {"time": "02:43", "visible": "选中轨迹点、位置/水平/俯仰属性、预览窗"},
+    {"time": "02:54", "visible": "路径片段与相机朝向，机位预览"},
+    {"time": "03:01", "visible": "正在导出动画视频提示"},
+    {"time": "03:08", "visible": "参考视频回到节点画布"},
+    {"time": "03:21", "visible": "全能参考输入图像和白模视频，Seedance 2.5/16:9/10s/720P"},
+    {"time": "03:31", "visible": "提示词强调参考运镜及左右环绕和画面稳定"},
+    {"time": "03:41–03:42", "visible": "成片与白模并置，未做同时间轴定量对齐"},
+    {"time": "03:59", "visible": "完整节点链路"},
+    {"time": "04:21", "visible": "结尾节点画布及作者字幕"}
+  ],
+  "demonstrated_platform": "updream.cn",
+  "demonstrated_model_display": "Seedance 2.5",
+  "our_inferences": [
+    "把外观参考、主体动作轨和相机运动轨分开，减少互相矛盾的描述",
+    "先验证5秒小角度同侧弧线，再尝试完整环绕或复杂调度",
+    "用起落构图和场景地标定义方向，不只依赖顺/逆时针措辞"
+  ],
+  "official_cross_checks": [
+    {"id": "J1", "url": "https://jimeng.jianying.com/tutorials/drama-studio/director", "supports": "原生3D导演台、相机和主体关键帧、轨迹和动态参考输出"},
+    {"id": "J2", "url": "https://jimeng.jianying.com/tutorials/drama-studio/product-manual", "supports": "3D预演与Seedance生成分工；不将预演算力说明扩大为全流程免费"},
+    {"id": "J3", "url": "https://jimeng.jianying.com/tutorials/drama-studio/preview", "supports": "智能预演是分镜组规划，片段数>2、引用素材≤9"},
+    {"id": "J4", "url": "https://jimeng.jianying.com/tutorials/drama-studio/canvas", "supports": "短剧画布素材、节点及引用关系"},
+    {"id": "J5", "url": "https://jimeng.jianying.com/ai-tool/install?from_page=banner", "supports": "检索可读官网公开介绍全能画布CLI含3D功能；直接打开无可读正文，具体命令未核实"}
+  ],
+  "unverified": ["用户即梦账号实际入口与权限", "具体CLI命令与参数", "原教程白模4.0s到结果10.1s的重定时机制", "逐帧轨迹保真", "成功率、生成速度和费用优势", "本软件端到端接入"],
+  "generation_run": false,
+  "generation_credits_spent": 0,
+  "external_media_uploaded_to_repository": false
+}

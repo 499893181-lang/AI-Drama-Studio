@@ -1,0 +1,225 @@
+{
+  "template_version": "0.1",
+  "status": "planning_template_not_executed",
+  "existing_source_id": "C04",
+  "template_kind": "our_original_planning_schema_not_vendor_api",
+  "help": "我们的原创规划模板，不是厂商API请求或已执行任务；带TBD和null的字段须人工确认，不能直接执行。",
+  "execution": {
+    "allowed": false,
+    "help": "完成坐标、资产、导出能力与人工预演确认后，另行建立真实任务；本模板不带CLI命令。"
+  },
+  "exercise": {
+    "name": "5秒双人对话小弧线环绕",
+    "purpose": "在双人关系可读的情况下，测试小幅视差和相机路径是否保留。",
+    "duration_seconds": 5,
+    "duration_help": "设计目标，不能当作模型精确执行保证。",
+    "arc_degrees_range": [
+      30,
+      45
+    ],
+    "arc_help": "总环绕角只在30至45度内人工选择；不绕满圈，不跨过对话轴线。",
+    "test_scope": "首测只做相机小弧线，两人位置与姿态固定，不生成口型、对白或复杂动作。"
+  },
+  "scene": {
+    "scene_id": null,
+    "scene_revision": null,
+    "layout_reference_id": null,
+    "coordinate_system": {
+      "status": "TBD",
+      "units": null,
+      "up_axis": null,
+      "forward_axis": null,
+      "origin": null,
+      "handedness": null,
+      "help": "明确单位、轴向、原点和左右手系后再填写世界坐标；目前全部待定。"
+    },
+    "layout_help": "用空旷平地和简洁背景，先标两人固定站位、对话轴线、相机起中终机位与无障碍通道。",
+    "obstacles": [],
+    "obstacles_help": "本练习规划为无障碍；空列表不等于已完成碰撞检查。",
+    "path_clearance_status": "not_checked"
+  },
+  "entities": [
+    {
+      "entity_id": "person_A",
+      "role": "成年人物甲",
+      "asset_reference_id": null,
+      "asset_revision": null,
+      "proxy_id": null,
+      "world_position": null,
+      "world_rotation": null,
+      "screen_anchor": "screen_left",
+      "help": "在起幅与落幅均保持甲在画面左侧，站位与姿态固定；不因镜头运动改人脸或服装。"
+    },
+    {
+      "entity_id": "person_B",
+      "role": "成年人物乙",
+      "asset_reference_id": null,
+      "asset_revision": null,
+      "proxy_id": null,
+      "world_position": null,
+      "world_rotation": null,
+      "screen_anchor": "screen_right",
+      "help": "在起幅与落幅均保持乙在画面右侧，与甲面对面，站位与姿态固定。"
+    }
+  ],
+  "shot": {
+    "shot_id": null,
+    "aspect_ratio": null,
+    "framing": "双人中景，两人始终同时可见。",
+    "screen_anchor_definition": {
+      "screen_left": "以起始机位预览画面左边为左。",
+      "screen_right": "以起始机位预览画面右边为右。",
+      "help": "左右以已确认起始画面为依据，不用顺时针/逆时针代替路径；屏幕左右不能直接换算为世界坐标。"
+    },
+    "continuity_constraints": [
+      "甲左乙右，不交换画面顺序。",
+      "相机始终在对话轴线同一侧。",
+      "两人站位、朝向、服装及背景结构保持。",
+      "不增加遮挡物或额外人物。"
+    ]
+  },
+  "camera_track": {
+    "camera_id": "camera_1",
+    "projection": null,
+    "fov_or_focal_length": null,
+    "selected_arc_degrees": null,
+    "help": "先人工选择30至45度中的一个总环绕角；半径、坐标和镜头参数未确认，不提供虚构可执行值。",
+    "look_at": {
+      "target": "两人头部之间的中点",
+      "target_entity_ids": [
+        "person_A",
+        "person_B"
+      ],
+      "world_point": null,
+      "help": "视线始终关注两人之间；目标高度与世界点待白模确认。"
+    },
+    "path": {
+      "direction_from_start_view": "toward_screen_right_side",
+      "help": "从起始机位看向两人中点时，沿相机自身右手侧做小弧线；先在布局图上标出右侧终点再执行，禁止凭顺逆时针猜测。",
+      "anchors": [
+        {
+          "anchor_id": "camera_start",
+          "time_seconds": 0,
+          "screen_relative_label": "start_view",
+          "world_position": null,
+          "world_rotation": null,
+          "help": "起始机位：双人中景，甲左乙右；记录并确认起始画面。"
+        },
+        {
+          "anchor_id": "camera_middle",
+          "time_seconds": 2.5,
+          "screen_relative_label": "screen_right_mid_anchor",
+          "world_position": null,
+          "world_rotation": null,
+          "help": "右侧弧线中点：根据起始机位的右手方向在布局图上标记，同侧且无遮挡。"
+        },
+        {
+          "anchor_id": "camera_end",
+          "time_seconds": 5,
+          "screen_relative_label": "screen_right_end_anchor",
+          "world_position": null,
+          "world_rotation": null,
+          "help": "右侧弧线终点：累计环绕角30至45度，仍甲左乙右，双人同框；须人工预览确认。"
+        }
+      ],
+      "speed_profile": "缓慢均匀，起止轻柔。",
+      "interpolation": null,
+      "interpolation_help": "具体插值方式待编辑器能力核实，不直接映射任何厂商参数。"
+    }
+  },
+  "subject_tracks": [
+    {
+      "entity_id": "person_A",
+      "movement": "stationary",
+      "world_keyframes": null,
+      "action": "保持站位与朝向，无走动、转身或手势。",
+      "help": "主体轨与相机轨独立；人物位置/姿态确认后固定整个5秒。"
+    },
+    {
+      "entity_id": "person_B",
+      "movement": "stationary",
+      "world_keyframes": null,
+      "action": "保持站位与朝向，无走动、转身或手势。",
+      "help": "主体轨与相机轨独立；本次不加口型和表演动作。"
+    }
+  ],
+  "focus_track": {
+    "mode": "keep_both_readable",
+    "focus_target_ids": [
+      "person_A",
+      "person_B"
+    ],
+    "distance_keyframes": null,
+    "help": "两人均需可辨；首测不加入移焦，焦点计划与运动路径分开保存。"
+  },
+  "appearance_binding": {
+    "scene_reference_id": null,
+    "entity_reference_bindings": [
+      {
+        "entity_id": "person_A",
+        "reference_ids": []
+      },
+      {
+        "entity_id": "person_B",
+        "reference_ids": []
+      }
+    ],
+    "style_reference_id": null,
+    "help": "角色、场景与风格外观绑定独立于相机/主体轨；避免改运动时连带改脸、服装和环境。"
+  },
+  "original_copy_prompt": "原创5秒单镜练习：空旷、无障碍的平地上，两位成年人物面对面站定，甲始终在画面左侧，乙始终在画面右侧，均不走动、不转身、不做手势。双人中景起幅，相机看向两人头部之间的中点，从起始机位沿自身右手侧缓慢做30至45度的小弧线，并始终停留在对话轴线同一侧；终点仍保持甲左乙右、两人完整同框。速度缓慢均匀，起止轻柔，不同时推进、变焦或移焦，不添加人物或障碍。使用已确认的角色与场景参考，保持服装、人物身份和空间结构。先用白模确认起中终构图，再生成无对白素材。左右需以已标注起始画面和机位布局为准。",
+  "output_plan": {
+    "previs_clip_id": null,
+    "previs_export": {
+      "format": null,
+      "fps": null,
+      "resolution": null,
+      "file_path": null,
+      "sha256": null,
+      "status": "not_exported"
+    },
+    "generation": {
+      "provider": null,
+      "model": null,
+      "version": null,
+      "motion_reference_support": "unknown",
+      "input_mapping": null,
+      "job_id": null,
+      "result_ref": null,
+      "status": "not_submitted"
+    },
+    "help": "只记录实际确认的导出规格和模型能力；预演可导出不代表任意生成模型支持运动参考。"
+  },
+  "acceptance": {
+    "status": "not_tested",
+    "comparison_pair": {
+      "previs_clip_id": null,
+      "generated_clip_id": null
+    },
+    "check_times_seconds": [
+      0,
+      2.5,
+      5
+    ],
+    "checks": [
+      "起幅、中点、落幅均甲左乙右且双人可辨。",
+      "人物位置、姿态与身份保持，没有随相机漂移。",
+      "相机只做同侧30至45度小弧线，未穿人或穿过障碍。",
+      "前后景视差连续，背景不跟随相机旋转或变形。",
+      "无额外推拉、变焦、移焦或跳切。",
+      "预演与生成结果分别审阅；失败时先只改一个控制量。"
+    ],
+    "reviewer": null,
+    "review_result": null,
+    "failure_reason": null,
+    "help": "先人工检查白模，再同步对照生成结果；不把自动评分或一次偶然成功当作已验证能力。"
+  },
+  "provenance": {
+    "existing_source_id": "C04",
+    "source_modal_id": "7674982636925816083",
+    "observation_revision": "2026-11-15-user-selected-deep-dive",
+    "evidence_note_ref": "../evidence/c04-updream-previs-observations.json",
+    "design_is_our_inference": true,
+    "help": "C04仅作学习来源关联；本JSON字段、5秒练习和提示词为我们的规划，不宣称是updream接口或已运行效果。"
+  }
+}
