@@ -59,3 +59,8 @@ node tests/script-browser-smoke.mjs
 后续软件设计输入见 [Huobao 功能拆解与已有账号接入设计](docs/huobao-breakdown-and-account-integration.md)，包含逐步制作流程、四岗位映射、免填 API Key 的账号与网页协作方案，以及分步开发和验收条件。文档已区分拆解时的初版快照与当前 0.2.1 工程，后续整合复用现有剧本、版本和独立审阅实现。
 
 功能组织参考[火宝短剧](https://github.com/chatfire-AI/huobao-drama)公开项目说明，核心代码独立编写，未复制其业务源码或资源。
+
+## 创作研究资料
+
+[抖音150条作品学习与十五位导演预设手册](docs/research/2026-11-15-douyin-study/README.md)：三份Word、可检索文本版及来源记录，供后续提示词、运镜与风格数据库设计参考。资料归档不代表相关预设或媒体生成能力已经接入。
+

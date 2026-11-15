@@ -50,3 +50,13 @@
 - [官方文字剧本费用核验与脱敏证据](docs/first-business-fees/fees-report.md)
 - [真实业务验收机器记录](docs/first-business-check.json)
 - [多单位费用证据和预算模块](src/pricing.mjs)
+
+## 提示词 运镜与导演风格研究
+
+- [资料说明及三份Word](docs/research/2026-11-15-douyin-study/README.md)
+- [画面提示词与细节质感全文](docs/research/2026-11-15-douyin-study/01-image-prompt-handbook.md)
+- [运镜设计与连续性全文](docs/research/2026-11-15-douyin-study/02-camera-movement-handbook.md)
+- [十五位导演与45套分层模板全文](docs/research/2026-11-15-douyin-study/03-director-style-handbook.md)
+
+上述资料来自150条不同抖音作品的抽样浏览，另有档案馆补充；未完整播放全部视频，未开展生成效果实测，不能把研究预设视作已接入功能或精确复刻保证。
+
