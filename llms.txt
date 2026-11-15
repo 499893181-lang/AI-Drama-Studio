@@ -1,0 +1,30 @@
+# AI-Drama-Studio
+
+> Windows 本地中文 AI 短剧软件；当前只实现第一阶段“故事立项工作台”。本索引用于查找公开源代码与开发记录，不表示读取方已自动加载全部文件。
+
+## 调试入口
+
+- [代码调试上下文](docs/CHATGPT_CONTEXT.md)：当前范围、验证结果、未确认能力、文件索引与问题模板。
+- [启动说明](README.md)：Node.js 22+，无需 npm 运行依赖，Windows 本地启动。
+- [架构说明](docs/architecture.md)：持久化、接口、任务与边界。
+- [真实验收](docs/validation.md)：真实 Codex 扩写、人工修改保存与服务重启恢复；包含已发生的网络失败。
+- [下一阶段任务](docs/next-stage.md)：即梦剧本/分镜、Codex 审查、预算、媒体制作与导出。
+
+## 核心源代码
+
+- [HTTP 服务](src/server.mjs)
+- [项目存储与版本保护](src/store.mjs)
+- [真实 Codex 任务](src/codex.mjs)
+- [本机工具检测](src/tools.mjs)
+- [前端交互](public/app.js)
+- [页面](public/index.html)
+- [样式](public/styles.css)
+- [Windows 启动器](scripts/start.ps1)
+- [集成测试](tests/core.test.mjs)
+- [浏览器验收](tests/browser-smoke.mjs)
+
+## 阅读边界
+
+公开仓库只包含代码、测试和文档。本地 data、任务缓存、认证信息和大型媒体不随仓库上传；localhost 服务不能通过仓库链接远程操作。
+
+本阶段没有接入即梦创作或媒体生成。已有工具帮助不等同于已验证的自动剧本、自动分镜或无配音视频接口。预算是计划字段，不是账号扣费硬限制。模型及工具状态以实际运行结果为准。

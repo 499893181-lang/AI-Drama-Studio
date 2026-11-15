@@ -2,6 +2,14 @@
 
 Windows 本地运行的中文 AI 短剧故事立项工作台。当前版本只完成第一阶段：保存故事构思与制作要求，通过本机真实 Codex 扩写创作说明，再由用户编辑和保存。
 
+## 公开仓库与网页版调试
+
+公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。
+
+将[代码调试入口](docs/CHATGPT_CONTEXT.md)链接提供给网页版 ChatGPT，并按[源码索引](llms.txt)提供相关文件。入口含当前范围、真实验证、未完成能力和问题模板。若无法直接读取页面，可使用同一文件的 Raw 原始文本地址，或上传相关文件。给出仓库地址不代表模型已经读完所有源码。
+
+GitHub 公开的是源代码和文档；工作台仍在你的 Windows 本机运行，个人项目、认证与缓存没有上传。后续提交与同步方式见[发布记录](docs/publishing.md)。
+
 ## 启动
 
 需要 Node.js 22 或以上版本。项目不依赖 npm 包，不需要安装数据库。启动脚本优先使用 `NODE_BIN` 或 PATH 中的 Node.js；若没有独立安装，会自动发现并复用已安装 CodexPrimaryRuntime 中的 Node.js，不下载或复制运行时，也不修改全局 PATH。
