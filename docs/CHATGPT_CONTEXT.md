@@ -6,7 +6,7 @@
 
 [三手册与Huobao整合说明](creative-knowledge-v04.md)更新目标路线：自有ChatGPT／Codex负责剧本、分镜和独立审阅，图像及即梦画布／无对白视频单独接入。既有即梦文字工具仍可选，其报价缺口不应阻断未来的Codex文字流程。下文历史“即梦剧本→即梦分镜”路线不再作为默认开发方向。
 
-本分支新增 `src/creative-design.mjs`、`knowledge/creative/` 和 `scripts/preview-creative.mjs`，可离线列出15位导演的17个作品级预设、编译画面／运动提示词、构建镜头任务包并校验导入身份。它没有修改现有HTTP路由或工作台界面，没有调用真实模型、图像、视频、岗位guard或正式账本；工作台版本仍为0.2.1。实际功能边界与下一里程碑见上述整合说明。
+本分支工作台0.3.0将既有规则核心接入 `public/creative.*` 和HTTP路由，提供本机Codex剧本、分镜候选、独立审阅与人工采用。后端见 `src/creative-jobs.mjs`、`src/creative-store.mjs`、`src/creative-runner.mjs`；[使用与边界](creative-workbench.md)。15位导演、17个作品级预设和90条显式扩展仍由 `knowledge/creative/` 提供。即梦文字费用不会阻断Codex；正式四岗位guard/账本与媒体保持未接入。验收以本分支独立记录为准，不能复用历史成功。
 
 ## 首次真实业务验收（0.2.1）
 

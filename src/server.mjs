@@ -6,6 +6,7 @@ import { Store, AppError, validId, now } from './store.mjs';
 import { CodexJobs } from './codex.mjs';
 import { inspectTools } from './tools.mjs';
 import { ScriptService } from './scripts.mjs';
+import { CreativeService } from './creative-jobs.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -28,6 +29,7 @@ export function createStudio(options = {}) {
   const store = new Store(options.dataDir ?? process.env.DATA_DIR ?? path.join(repoRoot, 'data'));
   const jobs = new CodexJobs(store);
   const scripts = new ScriptService(store, options.scriptOptions);
+  const creative = new CreativeService(store, options.creativeOptions);
   let report = null, inspection = null;
   const withRuntimeEvidence = value => {
     const result = structuredClone(value);
@@ -62,7 +64,8 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.2.1', phase: 'script-development', supportedPhases: ['story-initiation', 'script'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.3.0', phase: 'creative-workbench', supportedPhases: ['story-initiation', 'script', 'creative'], now: now() }); return; }
+      if (url.pathname === '/api/creative/knowledge' && method === 'GET') { json(response, creative.catalog()); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
       if (url.pathname === '/api/tools' && method === 'GET') { json(response, await getTools()); return; }
       if (url.pathname === '/api/tools/refresh' && method === 'POST') { json(response, await getTools(true)); return; }
@@ -73,6 +76,17 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'creative') {
+          if (segments.length === 4 && method === 'GET') { json(response, creative.view(id)); return; }
+          if (segments.length === 4 && method === 'PUT') { json(response, creative.update(id, await readJson(request))); return; }
+          if (segments.length === 5 && segments[4] === 'export' && method === 'GET') { json(response, creative.export(id)); return; }
+          if (segments.length === 5 && method === 'POST') {
+            const input = await readJson(request);
+            if (segments[4] === 'tasks') { json(response, creative.start(id, input), 202); return; }
+            if (segments[4] === 'adopt') { json(response, creative.adopt(id, input)); return; }
+            if (segments[4] === 'versions') { json(response, creative.addVersion(id, input), 201); return; }
+          }
+        }
         if (segments[3] === 'script') {
           if (segments.length === 4 && method === 'GET') { json(response, await scripts.view(id)); return; }
           if (segments.length === 4 && method === 'PUT') { scripts.workspace.update(id, await readJson(request)); json(response, await scripts.view(id)); return; }
@@ -135,6 +149,11 @@ export function createStudio(options = {}) {
         if (segments.length === 3 && method === 'GET') { json(response, store.read('script-reviews', id)); return; }
         if (segments.length === 4 && segments[3] === 'cancel' && method === 'POST') { await readJson(request); json(response, scripts.reviewer.cancel(id)); return; }
       }
+      if (segments[0] === 'api' && segments[1] === 'creative-tasks' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, store.read('creative-jobs', id)); return; }
+        if (segments.length === 4 && segments[3] === 'cancel' && method === 'POST') { await readJson(request); json(response, creative.cancel(id)); return; }
+      }
       if (segments[0] === 'api') throw new AppError('接口不存在。', 404);
       if (method !== 'GET' && method !== 'HEAD') throw new AppError('不支持的请求方法。', 405);
       const relative = url.pathname === '/' ? 'index.html' : decodeURIComponent(url.pathname).replace(/^\/+/, '');
@@ -151,7 +170,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, getTools, close: () => { scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, getTools, close: () => { creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {

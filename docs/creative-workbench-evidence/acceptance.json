@@ -1,0 +1,559 @@
+{
+  "checkedAt": "2026-11-15T09:28:39.296Z",
+  "baseCommit": "0c938971219f61e54b4e3e15ea7e1df9880be61a",
+  "branch": "codex/creative-workbench-v04-20261115",
+  "environment": {
+    "os": "Windows",
+    "node": "v24.22.1",
+    "codex": "0.167.0-alpha.4.1",
+    "authentication": "Logged in using ChatGPT"
+  },
+  "isolatedTests": {
+    "baseline": 88,
+    "final": 105,
+    "passed": 105,
+    "skipped": 0
+  },
+  "isolatedChrome": {
+    "startedAt": "2026-11-15T09:24:40.505Z",
+    "isolatedFixturesOnly": true,
+    "realModelOrMediaInvoked": false,
+    "checks": [
+      "从已保存构思执行文字任务，独立隔离runner产生可见候选，未访问即梦报价",
+      "真实Chrome显示15导演/17预设数据、显式手册勾选默认关闭、三镜头三区编辑；两种预设规则差异可见，人物天气保持",
+      "生成分镜候选与独立审阅分别保存；模型PASS未自动采用或冒充正式岗位PASS",
+      "人工点击采用候选，人工修改另存不可变版本；轮询不覆盖未保存输入",
+      "人工剧本新版本成为实际分镜来源，继续生成绑定新版本而非旧候选",
+      "新要求使旧分镜和审阅过期，后端拒绝旧候选采用并保留人工稿",
+      "重启恢复原任务、原候选、人工版本及审阅过期状态；无重复调用，无未处理页面异常"
+    ],
+    "passed": true,
+    "finishedAt": "2026-11-15T09:24:52.212Z",
+    "modelFixtureCalls": 4
+  },
+  "realChrome": {
+    "checkedAt": "2026-11-15T09:27:29.929Z",
+    "page": "http://127.0.0.1:4318/creative.html?projectId=3e875522-d491-478d-acc1-4854643b9ff5",
+    "checks": [
+      "真实Chrome读取独立真实项目；15导演、17预设与手册默认关闭",
+      "同一真实剧本的3个镜头分别显示静态、摄影和后期编辑区",
+      "真实候选通过浏览器显式采用；追加剧本与分镜不可变版本",
+      "真实浏览器修改人工分镜备注并另存不可变版本；原始模型稿和审阅原文保留",
+      "人工编辑后旧分镜及审阅显示需复核"
+    ],
+    "submittedModelTasks": 0,
+    "savedVersionId": "f9c289be-af7b-4da1-88b8-91bb963b6fb5",
+    "consoleExceptions": 0
+  },
+  "realAcceptance": {
+    "projectId": "3e875522-d491-478d-acc1-4854643b9ff5",
+    "idea": "阴天傍晚，穿灰蓝长衫的独居老人给离家的女儿留一杯茶。收到她报平安的语音后，他把空椅子拉近桌边，温暖结尾。只有老人出镜。",
+    "targetSeconds": 30,
+    "shotCount": 3,
+    "styleComparison": {
+      "presets": [
+        "jia.platform.distance",
+        "anderson.budapest.order"
+      ],
+      "firstHash": "aa7d811f4bbf81d382c1157cd9e3798e38ef3a177c749a6a27cf63bdfd2702d9",
+      "secondHash": "5d0af1428da3b4a4c59d92b7ae041622d62ea9c40a2d55c2a0f4f7a03862a1a1",
+      "shots": 3,
+      "locksPreserved": true
+    },
+    "tasks": {
+      "script": {
+        "id": "8547c7c4-f9e6-47f5-bdb2-5859b32a64e5",
+        "kind": "script",
+        "status": "succeeded",
+        "threadId": "01a1de7e-7545-70d2-b6f2-b0c266550e30",
+        "requestId": "1f72e35f-58b3-4725-ab0b-e6f0e4cfb0be",
+        "inputHash": "d344ed36382e4fbe35af4892c84fcfbead1a8f23ef1ab5ac9b988dcba6a8d1bc",
+        "sourceHash": "cccc03d4b29b10d8bfd26675f44254b97a8bbf6304a91640dc77b162be0422dd",
+        "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3",
+        "inputRevision": 1,
+        "sourceProjectRevision": 1,
+        "exitCode": 0,
+        "turnCompleted": true,
+        "createdAt": "2026-11-15T09:16:31.301Z",
+        "updatedAt": "2026-11-15T09:18:21.344Z",
+        "finalTextSha256": "39cd4b9efbe4db526248f7b0dfe0bbe66cb1d94e64fc41d3f207bcda548fa420",
+        "stdoutSha256": "43370ace7c8b39d3516dcece16e44ae09e6ce710dc5f9de03e6200ea366f2caf",
+        "usage": {
+          "input_tokens": 20078,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3660,
+          "reasoning_output_tokens": 2070
+        },
+        "result": {
+          "body": "镜头1｜00:00—00:10｜留茶（10秒）\n全片16:9，仅老人出镜；地点始终为家中桌边，天气为阴天，时间为傍晚。00:00—00:04，穿灰蓝长衫的独居老人坐在桌边，将一杯茶缓缓推到空椅子前。00:04—00:08，他扶正茶杯，手指在杯壁上停留片刻。00:08—00:10，他望向空椅子，慢慢收回手。动作自然，保留等待中的停顿。\n\n镜头2｜00:10—00:20｜收到平安（10秒）\n阴天，傍晚，仍在家中桌边。00:10—00:12，桌边手机亮起，显示“女儿”和一条语音消息标识。【AI补充】手机使用现有物件，界面不出现人物照片或影像。00:12—00:18，老人点开消息，低头听着，原本微拢的眉头渐渐舒展。【AI补充】本段后期配音计划：女儿画外语音“爸，我平安到了。你照顾好自己。”当前仅保留文字计划，不制作声音。00:18—00:20，老人放下手机，轻轻点头。\n\n镜头3｜00:20—00:30｜把等待安放好（10秒）\n阴天，傍晚，仍在家中桌边。00:20—00:25，老人伸手扶住空椅子的椅背，将它缓缓拉近桌边，停在留好的茶杯前。00:25—00:28，他的手仍搭在椅背上，目光落向那杯茶。00:28—00:30，他嘴角浮起一点笑意，安静坐着，画面停留至结束。【AI补充】老人全程无台词，结尾茶杯仍留在空椅子前，以细微表情收束温暖情绪。",
+          "entities": [
+            {
+              "id": "CHAR-01",
+              "type": "character",
+              "version": "v1",
+              "description": "独居老人，灰蓝长衫。只有他出镜。",
+              "source": "user"
+            },
+            {
+              "id": "SCENE-01",
+              "type": "scene",
+              "version": "v1",
+              "description": "家中桌边，阴天傍晚。",
+              "source": "user"
+            },
+            {
+              "id": "PROP-01",
+              "type": "prop",
+              "version": "v1",
+              "description": "茶杯与空椅子。",
+              "source": "user"
+            },
+            {
+              "id": "PROP-02",
+              "type": "prop",
+              "version": "v1",
+              "description": "【AI补充】桌边手机，复用现有物件、不另购；显示“女儿”和语音消息标识，不显示人物照片或影像。",
+              "source": "ai"
+            }
+          ],
+          "addedSettings": [
+            "【AI补充】用桌边手机承载语音消息的接收与播放动作，复用现有物件，不新增采购；界面仅显示“女儿”和语音消息标识，不出现人物照片或影像。",
+            "【AI补充】女儿后期画外语音拟为：“爸，我平安到了。你照顾好自己。”本轮仅编写配音计划，不制作声音。",
+            "【AI补充】老人全程无台词，通过扶正茶杯、眉头舒展、轻轻点头和细微微笑表现情绪；结尾茶杯仍留在空椅子前。"
+          ],
+          "shotSeeds": [
+            {
+              "id": "SHOT-01",
+              "purpose": "建立老人给离家女儿留茶的日常动作与等待。",
+              "moment": "00:00—00:10，老人将茶留在空椅子前。",
+              "subject": "CHAR-01，老人，灰蓝长衫",
+              "action": "老人坐在家中桌边，将一杯茶推到空椅子前，扶正杯身，停顿片刻，再望向空椅子并收回手。",
+              "durationSeconds": 10,
+              "entityRefs": [
+                {
+                  "id": "CHAR-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "SCENE-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "PROP-01",
+                  "version": "v1"
+                }
+              ],
+              "weather": "阴天",
+              "timeOfDay": "傍晚"
+            },
+            {
+              "id": "SHOT-02",
+              "purpose": "以女儿报平安的语音消息，使老人的等待转为安心。",
+              "moment": "00:10—00:20，语音消息到达，老人听后放松。",
+              "subject": "CHAR-01，老人，灰蓝长衫",
+              "action": "手机显示女儿的语音消息，老人点开后低头听着，眉头逐渐舒展，随后放下手机并轻轻点头；女儿画外语音仅列入后期计划，当前不制作声音。",
+              "durationSeconds": 10,
+              "entityRefs": [
+                {
+                  "id": "CHAR-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "SCENE-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "PROP-02",
+                  "version": "v1"
+                }
+              ],
+              "weather": "阴天",
+              "timeOfDay": "傍晚"
+            },
+            {
+              "id": "SHOT-03",
+              "purpose": "用拉近空椅子的动作回应开场留茶，完成温暖结尾。",
+              "moment": "00:20—00:30，老人把空椅子拉近桌边。",
+              "subject": "CHAR-01，老人，灰蓝长衫",
+              "action": "老人扶住椅背，将空椅子缓缓拉近桌边，停在茶杯前；他手搭椅背，看着留下的茶，嘴角浮起一点笑意，安静停留至结束。",
+              "durationSeconds": 10,
+              "entityRefs": [
+                {
+                  "id": "CHAR-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "SCENE-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "PROP-01",
+                  "version": "v1"
+                }
+              ],
+              "weather": "阴天",
+              "timeOfDay": "傍晚"
+            }
+          ]
+        }
+      },
+      "storyboard": {
+        "id": "1692b630-79f9-41b6-bd22-7b2bf7bca8d5",
+        "kind": "storyboard",
+        "status": "succeeded",
+        "threadId": "01a1de82-7df1-77c1-bdc1-49dfd4eaa17e",
+        "requestId": "fb216e96-7af5-4f3f-81d7-28e48737de51",
+        "inputHash": "fee5f622cb748d7fc9c05c87e5e7d4b7bb38d36d5f4874e91faf2e74c73a02da",
+        "sourceHash": "cccc03d4b29b10d8bfd26675f44254b97a8bbf6304a91640dc77b162be0422dd",
+        "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3",
+        "inputRevision": 3,
+        "sourceProjectRevision": 1,
+        "exitCode": 0,
+        "turnCompleted": true,
+        "createdAt": "2026-11-15T09:20:55.832Z",
+        "updatedAt": "2026-11-15T09:24:47.799Z",
+        "finalTextSha256": "7a7420a0bd738e668a63663b328c34b1ff80a96c532e68e8c381f524df068713",
+        "stdoutSha256": "3ca2f7763e5a337c827f69b0028d6ef8d9c8d8db7d2877e6a6cf639a75a5a2ea",
+        "usage": {
+          "input_tokens": 34549,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 7742,
+          "reasoning_output_tokens": 3624
+        },
+        "result": {
+          "shots": [
+            {
+              "id": "SHOT-01",
+              "purpose": "建立老人给离家女儿留茶的日常动作与等待。",
+              "moment": "00:06，老人扶正茶杯后，手指仍贴着杯壁的单一瞬间。",
+              "subject": "CHAR-01，老人，灰蓝长衫",
+              "action": "老人坐在桌边，手指轻贴空椅子前的茶杯杯壁；肩膀微收，目光落在杯上，空椅子无人落座。",
+              "durationSeconds": 10,
+              "entityRefs": [
+                {
+                  "id": "CHAR-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "SCENE-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "PROP-01",
+                  "version": "v1"
+                }
+              ],
+              "weather": "阴天",
+              "timeOfDay": "傍晚",
+              "framing": "16:9横幅中景，包含老人上身、双手、茶杯和完整可辨的空椅背；画下沿保留桌面。",
+              "emotion": "安静等待；眉间轻拢，嘴唇自然闭合。",
+              "composition": "正面构图，以桌沿水平线确定视觉轴线。老人位于画左，空椅位于画右，茶杯对应空椅中心；先看扶杯的手，再看老人表情，最后读出空位。",
+              "foreground": "画面下沿的桌面建立观看距离，杯与手的轮廓不受遮挡。",
+              "midground": "老人、扶杯的手与空椅构成左右相邻的生活空间；椅背在老人伸手可及处。",
+              "background": "家中桌边原有室内背景保持简洁，承担空间边界，不增添装饰性陈设。",
+              "focus": "手指与茶杯为第一视觉落点，景深同时保留老人眉眼及空椅背的辨识度。",
+              "lighting": {
+                "source": "【AI补充】画外阴天傍晚的自然散射光。",
+                "direction": "【AI补充】从画左前侧进入，老人面部与杯壁受光方向一致。",
+                "softness": "【AI补充】柔和低反差，面部暗侧保留细节，杯壁无刺眼高光。"
+              },
+              "materials": [
+                "灰蓝长衫的织物质感",
+                "【AI补充】现有桌椅沿用原材质，保留自然表面纹理",
+                "【AI补充】现有茶杯仅保留柔和反光，不另指定款式"
+              ],
+              "palette": "【AI补充】光源保持阴天自然光的中性偏冷；成片低饱和，以锁定的灰蓝服装为色彩锚点，肤色保持自然。",
+              "avoid": [
+                "其他人物、人物照片或人物倒影入镜",
+                "雨景、夜景及服装改变",
+                "为强求对称改变人物与道具的可操作距离",
+                "夸张悲伤表情",
+                "静态画面叠加多个动作阶段"
+              ],
+              "camera": {
+                "motionId": "CAM_FIXED",
+                "start": "00:00，正面中景；老人坐在画左，手扶自己面前的茶杯，画右空椅与对应桌面清楚可见。",
+                "end": "00:10，同一构图；茶杯已停在空椅前，老人手已收回，目光朝向空椅。",
+                "path": {
+                  "mode": "none",
+                  "description": "相机全程无位移，朝向不变；桌沿及背景边界在画面中的位置保持稳定。"
+                },
+                "speed": "相机位移速度为零；主体动作按正常速度展开，持续10秒。",
+                "subjectMotion": "00:00—00:04，老人将茶杯缓缓推到空椅前；00:04—00:08，扶正杯身，指尖在杯壁停留；00:08—00:10，望向空椅并慢慢收回手。",
+                "environmentMotion": "室内背景静止，无额外环境动态。",
+                "viewpoint": "正面观察，机位接近老人坐姿眼高，保持桌沿水平。",
+                "stability": "固定支撑并锁定机位，无手持晃动。",
+                "focalChange": "固定焦距，镜内无光学或数字变焦。",
+                "focusPlan": {
+                  "start": "预置景深覆盖老人面部、手与茶杯的活动范围。",
+                  "transition": "茶杯移动及手指停顿期间保持焦点，不拉焦。",
+                  "end": "老人面部、留好的茶杯与空椅背保持可辨。"
+                }
+              },
+              "postSound": "仅后期备忘：可选杯底轻触桌面的细声。本轮保持静音，无对白、无旁白、无背景音乐，不制作声音。"
+            },
+            {
+              "id": "SHOT-02",
+              "purpose": "以女儿报平安的语音消息，使老人的等待转为安心。",
+              "moment": "00:17，老人低头听手机语音、眉间已舒展的单一瞬间。",
+              "subject": "CHAR-01，老人，灰蓝长衫",
+              "action": "老人低持手机，目光朝向屏幕，眉间舒展、下颌放松；屏幕只有“女儿”和语音消息标识，没有人物照片或影像。",
+              "durationSeconds": 10,
+              "entityRefs": [
+                {
+                  "id": "CHAR-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "SCENE-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "PROP-02",
+                  "version": "v1"
+                }
+              ],
+              "weather": "阴天",
+              "timeOfDay": "傍晚",
+              "framing": "16:9横幅中近景，老人头部、上身、双手与手机同框；下沿包含手机原先放置及落回的桌面区域。",
+              "emotion": "安心；眉间松开，嘴角保持克制，不以大笑表达。",
+              "composition": "延续正面视觉轴线，桌沿保持水平。老人眉眼位于上半幅，手机位于下半幅，两者形成明确的上下关系；先辨认语音消息，再读眉眼的放松。",
+              "foreground": "画面下沿保留桌边手机的落放区域，避免手与屏幕被裁切。",
+              "midground": "老人面部、双手与手机构成主要信息层，手机保持自然握持角度。",
+              "background": "沿用同一室内背景，茶杯与空椅处于本镜裁框之外，背景不出现其他人物。",
+              "focus": "老人眉眼为情绪落点；手机屏幕的“女儿”与语音标识处于可辨景深内。",
+              "lighting": {
+                "source": "【AI补充】沿用上一镜的阴天傍晚自然散射光；手机仅提供局部屏幕亮度。",
+                "direction": "【AI补充】自然光仍从画左前侧进入，手机亮度不改变面部主光方向。",
+                "softness": "【AI补充】面部光线柔和，控制屏幕反光与过曝，保留眉间细节。"
+              },
+              "materials": [
+                "灰蓝长衫的织物质感",
+                "【AI补充】现有手机屏幕的玻璃反光，机身沿用实物外观",
+                "【AI补充】桌面沿用上一镜的实际材质"
+              ],
+              "palette": "【AI补充】沿用上一镜的自然光色与低饱和调色；手机界面亮度克制，情绪转变由表情承担。",
+              "avoid": [
+                "女儿本人、照片、头像或视频影像出现",
+                "将语音消息改为视频通话",
+                "添加解释剧情的字幕或聊天文字",
+                "手机遮挡眉眼",
+                "屏幕过曝或为展示屏幕强扭手腕",
+                "镜内切入手机特写"
+              ],
+              "camera": {
+                "motionId": "CAM_FIXED",
+                "start": "00:10，正面略俯的中近景；老人眉间微拢，手机位于画面下方桌边，屏幕在此构图内亮起。",
+                "end": "00:20，同一构图；手机已放回桌边，老人眉间舒展，完成一次轻轻点头。",
+                "path": {
+                  "mode": "none",
+                  "description": "相机全程无位移，俯视角度固定；老人拿放手机时不跟随摇镜。"
+                },
+                "speed": "相机位移速度为零；主体动作按正常速度展开，持续10秒。",
+                "subjectMotion": "00:10—00:12，桌边手机亮起，显示“女儿”和语音消息标识；00:12—00:18，老人点开消息，拿起并低持手机，低头听着，眉头逐渐舒展；00:18—00:20，放下手机，轻轻点头。老人不说话。",
+                "environmentMotion": "室内背景静止；屏幕亮起及语音状态变化随手机动作发生，不出现人物影像。",
+                "viewpoint": "保持同一正面轴线，机位略高于老人坐姿眼高，以轻微俯角兼顾眉眼、桌面手机和双手。",
+                "stability": "固定支撑并锁定机位，无晃动。",
+                "focalChange": "固定焦距，镜内无光学或数字变焦。",
+                "focusPlan": {
+                  "start": "预置景深同时覆盖桌边手机和老人面部，屏幕标识可辨。",
+                  "transition": "手机拿起、低持与放回均处于预演确定的清晰范围内，保持焦点不变。",
+                  "end": "焦点保持，老人点头后的眉眼清晰，桌边手机仍可辨。"
+                }
+              },
+              "postSound": "【AI补充，沿用父剧本】仅保留后期文字计划：女儿画外语音拟为“爸，我平安到了。你照顾好自己。”当前10秒视频设计保持静音，无对白、无旁白、无背景音乐，不生成或播放声音。"
+            },
+            {
+              "id": "SHOT-03",
+              "purpose": "用拉近空椅子的动作回应开场留茶，完成温暖结尾。",
+              "moment": "00:29，空椅已靠近桌边，老人手搭椅背、嘴角微微上扬的单一瞬间。",
+              "subject": "CHAR-01，老人，灰蓝长衫",
+              "action": "老人安静坐着，一只手搭在靠近桌边的空椅背上，目光落向仍留在椅前的茶杯，嘴角带着一点笑意。",
+              "durationSeconds": 10,
+              "entityRefs": [
+                {
+                  "id": "CHAR-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "SCENE-01",
+                  "version": "v1"
+                },
+                {
+                  "id": "PROP-01",
+                  "version": "v1"
+                }
+              ],
+              "weather": "阴天",
+              "timeOfDay": "傍晚",
+              "framing": "16:9横幅中景，复用第一镜的取景范围，老人上身、搭在椅背的手、茶杯和空椅同时可见。",
+              "emotion": "温暖释然；肩膀放松，嘴角仅轻轻上扬。",
+              "composition": "恢复第一镜的正面构图与桌沿水平线，老人仍在画左、空椅仍在画右。椅子与桌边的间隙比开场缩小，茶杯位置保持；先看老人微笑，再沿搭椅背的手读到空椅和留茶。",
+              "foreground": "桌面与茶杯形成结尾的稳定锚点，杯子没有被收走。",
+              "midground": "老人、搭在椅背的手及靠近桌边的空椅构成连贯关系，空椅保持无人落座。",
+              "background": "原有室内背景与第一镜一致，保留安静的空间边界。",
+              "focus": "老人眼神、嘴角及搭椅背的手清楚可辨，茶杯与空椅保持在景深内。",
+              "lighting": {
+                "source": "【AI补充】沿用前两镜的阴天傍晚自然散射光。",
+                "direction": "【AI补充】仍从画左前侧进入，与第一镜的面部及杯壁受光一致。",
+                "softness": "【AI补充】保持柔和低反差，老人微笑处的细节可辨。"
+              },
+              "materials": [
+                "灰蓝长衫的织物质感",
+                "【AI补充】桌椅沿用第一镜的实际材质与表面纹理",
+                "【AI补充】茶杯沿用第一镜的外观及柔和反光"
+              ],
+              "palette": "【AI补充】保持全片统一的低饱和灰蓝与自然肤色，不通过新增暖光或突变调色制造结尾情绪。",
+              "avoid": [
+                "空椅出现人物或人形影像",
+                "老人起身或改变原有动作结局",
+                "拉椅时碰倒、遮住或收走茶杯",
+                "突然转晴、变成雨夜或改变服装",
+                "大幅笑容、哭泣及新增反转",
+                "结尾淡出挤占规定表演时长"
+              ],
+              "camera": {
+                "motionId": "CAM_FIXED",
+                "start": "00:20，回到第一镜的正面中景；茶杯仍在空椅前，老人坐在画左，空椅保留开场与桌边的间隙。",
+                "end": "00:30，同一构图；空椅已靠近桌边，老人手搭椅背、目光落在茶杯上，细微笑意保持至结束。",
+                "path": {
+                  "mode": "none",
+                  "description": "相机全程无位移、无摇转；桌沿及背景位置不变，椅子的靠近完全由主体动作形成。"
+                },
+                "speed": "相机位移速度为零；主体动作按正常速度展开，持续10秒，最后2秒安静停留。",
+                "subjectMotion": "00:20—00:25，老人保持坐姿，伸手扶住椅背，将空椅缓缓拉近桌边，停在留好的茶杯前；00:25—00:28，手仍搭在椅背，目光落向茶杯；00:28—00:30，嘴角浮起一点笑意，安静保持至结束。",
+                "environmentMotion": "室内背景静止，茶杯位置不变；空椅只按老人拉动的方向移动。",
+                "viewpoint": "复用第一镜的正面坐姿眼高机位，保持相同轴线与左右关系。",
+                "stability": "固定支撑并锁定机位，无晃动。",
+                "focalChange": "固定焦距，镜内无光学或数字变焦。",
+                "focusPlan": {
+                  "start": "复用第一镜的景深范围，覆盖老人、茶杯及空椅。",
+                  "transition": "椅子在预演确定的范围内靠近桌边，不跟焦、不拉焦。",
+                  "end": "老人微笑、搭椅背的手、茶杯与空椅均保持可辨，清晰状态停留至结束。"
+                }
+              },
+              "postSound": "仅后期备忘：可选椅脚轻微摩擦地面的细声。本轮保持静音，无对白、无旁白、无背景音乐，不制作声音。"
+            }
+          ],
+          "notes": "共3镜，按SHOT-01、SHOT-02、SHOT-03排序，每镜10秒，总计30秒。moment与action仅描述各镜选定的静态瞬间，完整动作时序独立记录于camera.subjectMotion。【AI补充】机位、构图位置、景深、光向、材质表现及调色均为本次文字设计建议；桌椅实际形制、室内采光与设备条件未提供附件，尚未核验，实施时沿用现有物件，不新增采购。PROP-02沿用effectiveEntities中的AI来源及v1版本。第二镜的景别和高度调整发生在镜间，三镜内部均为固定机位。正式拍摄前需预演推杯、手机拿放与坐姿拉椅，确认触及范围、屏幕可辨度和画框边界。落实compiled中的正面轴线、空间几何、统一色彩、单一静态瞬间与动作分轨；有序画面中的细小动作承担节奏，情绪服从生活观察与温暖结尾。女儿语音仅为后期文字计划，本轮全部静音。当前仅完成文字候选，未生成媒体或完成视觉验收。"
+        }
+      },
+      "review": {
+        "id": "8a32f153-32fc-4cbe-88d6-b3e89d3ea51e",
+        "kind": "review",
+        "status": "succeeded",
+        "threadId": "01a1de86-0dff-7e11-95ee-2e66b2587300",
+        "requestId": "adae3704-8c7f-4720-90ab-9ca4d1de34c3",
+        "inputHash": "a8c6bc1221aa5841514a5da603f8dbab539c157c3aec6d2968a6f36890ef7d64",
+        "sourceHash": "cccc03d4b29b10d8bfd26675f44254b97a8bbf6304a91640dc77b162be0422dd",
+        "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3",
+        "inputRevision": 3,
+        "sourceProjectRevision": 1,
+        "exitCode": 0,
+        "turnCompleted": true,
+        "createdAt": "2026-11-15T09:24:49.267Z",
+        "updatedAt": "2026-11-15T09:26:17.363Z",
+        "finalTextSha256": "fb4c52cd0c8e22299a9bab92389c6f7a97d43adbe2d160809ee0175479451150",
+        "stdoutSha256": "98253c426421228e090ad9b4776375152450d5e8332e63699861916b265b356a",
+        "usage": {
+          "input_tokens": 39684,
+          "cached_input_tokens": 0,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3005,
+          "reasoning_output_tokens": 2011
+        },
+        "result": {
+          "verdict": "PASS",
+          "summary": "目标1692b630-79f9-41b6-bd22-7b2bf7bca8d5的当前文字候选六项通过。本报告仅适用于本次提交，非四岗位正式审阅；未进行真实媒体、声音或视觉验收。",
+          "criteria": [
+            {
+              "id": "user_requirements",
+              "verdict": "PASS",
+              "evidence": "target.result.shots三镜的subject均逐字为“CHAR-01，老人，灰蓝长衫”，weather均为“阴天”，timeOfDay均为“傍晚”；framing均指定16:9。SHOT-02.avoid排除女儿本人、照片及视频影像；SHOT-03保留拉近空椅和细微微笑的温暖结尾。notes将机位、光向、材质表现及调色等补充设计统一标为【AI补充】，未新增角色、服装或场景。",
+              "issues": []
+            },
+            {
+              "id": "motivation",
+              "verdict": "PASS",
+              "evidence": "SHOT-01.purpose及camera.subjectMotion以推杯、扶杯和望向空椅表现留茶与等待；SHOT-02以收到女儿报平安消息后的眉间舒展和点头表现安心；SHOT-03以搭椅背、看茶和微笑延续对女儿的牵挂，动机连贯。",
+              "issues": []
+            },
+            {
+              "id": "logic",
+              "verdict": "PASS",
+              "evidence": "SHOT-02.camera.subjectMotion按手机亮起、点开消息、聆听、表情放松、放回手机的顺序展开，postSound保留报平安语音文字计划；SHOT-03随后拉近空椅，回应SHOT-01留茶。因果转折有明确承载物和反应，无新增反转。",
+              "issues": []
+            },
+            {
+              "id": "duration",
+              "verdict": "PASS",
+              "evidence": "target.result.shots恰好3镜，durationSeconds均为10。camera.subjectMotion分别覆盖00:00—00:10、00:10—00:20、00:20—00:30；镜内分段分别为4+4+2秒、2+6+2秒、5+3+2秒。SHOT-03.avoid明确禁止结尾淡出挤占表演时长。",
+              "issues": []
+            },
+            {
+              "id": "continuity",
+              "verdict": "PASS",
+              "evidence": "三镜entityRefs中的CHAR-01、SCENE-01均保持v1；SHOT-01与SHOT-03使用PROP-01/v1，SHOT-02使用effectiveEntities已标注ai来源的PROP-02/v1。SHOT-01落幅茶杯停在空椅前；SHOT-02明确茶杯与空椅处于裁框外；SHOT-03起幅延续茶杯位置及椅子间隙，随后仅移动椅子。老人始终坐着，服装、光向和左右关系保持一致。",
+              "issues": []
+            },
+            {
+              "id": "production",
+              "verdict": "PASS",
+              "evidence": "各镜moment/action分别锁定00:06、00:17、00:29的单一静态状态，完整动作另列camera.subjectMotion；相机路径均为none，第二镜景别及高度变化由notes明确限定在镜间。正面轴线、空间组织和统一色彩服从生活观察及事实锁，lighting与palette分开记录。notes限定使用现有物件、不新增采购，并列出触及范围、手机屏幕可辨度与画框边界的预演事项。SHOT-02.postSound将女儿语音独立保留为后期文字计划，当前不制作声音；notes明确未生成媒体或完成视觉验收。",
+              "issues": []
+            }
+          ],
+          "issues": [],
+          "estimatedDurationSeconds": 30,
+          "durationBasis": "依据目标分镜的设计值计算：3镜×10秒，时间轴连续覆盖00:00—00:30。此为文字设计时长，未经表演预演、配音录制或成片实测。"
+        }
+      }
+    },
+    "restart": {
+      "restoredAt": "2026-11-15T09:28:05.672Z",
+      "versions": 3,
+      "manualVersionId": "f9c289be-af7b-4da1-88b8-91bb963b6fb5",
+      "originalTaskIdsRetained": true,
+      "originalTextHashesRetained": true
+    },
+    "currentVersions": [
+      {
+        "id": "b5ad2d75-6b51-4a40-89c2-fed8a2d0cab8",
+        "kind": "script",
+        "origin": "codex-cli",
+        "taskId": "8547c7c4-f9e6-47f5-bdb2-5859b32a64e5",
+        "stale": false,
+        "bodySha256": "5c1b9968727e58cb998b3529d19b8154afa924c7b7c1399ea8d88b568bf452ad"
+      },
+      {
+        "id": "840ce11c-d0aa-474c-aebb-ff9a179c7994",
+        "kind": "storyboard",
+        "origin": "codex-cli",
+        "taskId": "1692b630-79f9-41b6-bd22-7b2bf7bca8d5",
+        "stale": true,
+        "bodySha256": "376ad99f043e1faff813c52e6afccaddd3ae4572461b96960472edb5728b3a16"
+      },
+      {
+        "id": "f9c289be-af7b-4da1-88b8-91bb963b6fb5",
+        "kind": "storyboard",
+        "origin": "user",
+        "taskId": null,
+        "stale": false,
+        "bodySha256": "61e040a8e93a9177267a98483487fa95216ce2b553d26ccdb62d49c55290df4d"
+      }
+    ],
+    "reviewNeedsRecheckAfterManualEdit": true
+  },
+  "originalWorktree": {
+    "branch": "codex/story-workbench",
+    "head": "b9b6aa152c04dc1234e4dee8b2705ecca6905363",
+    "clean": true,
+    "unchangedDataFileHashes": 15
+  },
+  "formalStageStatus": "not_checked",
+  "mediaStatus": "not_generated",
+  "jimengCanvasOrMediaSubmissions": 0,
+  "privacy": "Only the non-personal acceptance story and explicit evidence allowlist are exported. Credentials, account identity, absolute runtime paths and stderr are excluded. Complete private raw receipts remain in local data."
+}

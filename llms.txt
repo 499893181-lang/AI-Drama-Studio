@@ -1,10 +1,11 @@
 # AI-Drama-Studio
 
-> Windows 本地中文 AI 短剧软件；当前包含故事立项与第二阶段剧本适配工作台。本索引用于查找公开源代码与开发记录，不表示读取方已自动加载全部文件。
+> Windows 本地中文 AI 短剧软件0.3.0；包含立项、可选即梦剧本适配、本机Codex文字与分镜候选工作台。本索引用于查找公开源代码与开发记录，不表示读取方已自动加载全部文件。
 
 ## 调试入口
 
-- [当前创作路线与三手册／Huobao整合](docs/creative-knowledge-v04.md)：自有ChatGPT／Codex文字创作，15位导演17个作品级预设，静态与运动提示词；现为离线核心，界面和媒体待接。
+- [当前文字与分镜工作台](docs/creative-workbench.md)：Codex剧本、分镜、新会话审阅、人工采用；[服务](src/creative-jobs.mjs)、[当前输入与不可变版本](src/creative-store.mjs)、[真实Codex执行](src/creative-runner.mjs)、[页面](public/creative.js)。正式guard与媒体未接入。
+- [当前创作路线与三手册／Huobao整合](docs/creative-knowledge-v04.md)：知识库0.4的来源与设计基线。该历史文档所说的界面待接已由0.3.0实现，媒体仍待接。
 - [创作编译核心](src/creative-design.mjs)、[来源与规则数据](knowledge/creative/manifest.json)、[离线预览命令](scripts/preview-creative.mjs)。知识库0.4不代表工作台已升级或媒体能力已实现。
 
 - [代码调试上下文](docs/CHATGPT_CONTEXT.md)：当前范围、验证结果、未确认能力、文件索引与问题模板。
@@ -30,7 +31,7 @@
 
 公开仓库只包含代码、测试和文档。本地 data、任务缓存、认证信息和大型媒体不随仓库上传；localhost 服务不能通过仓库链接远程操作。
 
-本轮完成了即梦文字创作命令适配，尚未实际生成；媒体生成未接入。已有工具帮助不等同于已验证的自动剧本、自动分镜或无配音视频接口。预算是计划字段，不是账号扣费硬限制。模型及工具状态以实际运行结果为准。
+0.2.x历史验收完成即梦文字命令适配，因费用未知未实际生成；0.3.0的本机Codex文字创作与独立审阅见[分开记录的验收证据](docs/creative-workbench-acceptance.md)。媒体生成未接入。已有工具帮助不等同于真实任务验证。预算是计划字段，不是Codex账号扣费硬限制。模型及工具状态以实际运行结果为准。
 
 ## 本轮修复与检查
 
