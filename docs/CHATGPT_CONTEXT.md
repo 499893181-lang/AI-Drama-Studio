@@ -4,6 +4,8 @@
 
 ## 当前开发方向：自有模型创作与规则库
 
+最新0.5.1见[无新增生成验收](image-contract-v061-acceptance.md)：215项回归；事件期hook故障中断、分层附件证据、append-only诊断与四项状态。实际`inputImages`非必填且无default，缺省保持未知；若存在只证明该图像请求成功本地读取，不证明远端使用或画面符合。原失败任务与原1/1不改，严格单次无法保证，自动入口继续关闭。入口新增`src/codex-image-watchdog.mjs`、`src/image-evidence.mjs`、`src/image-diagnostics.mjs`；原始回执仍在原data，不根据夹具升为真实成功。
+
 最新软件0.5.0以[单图独立验收](auto-image-acceptance.md)为准：修复参考审核失效传递和旧包下载门禁，增加持久化单镜头任务、去重、原绑定及失败原图保留。真实Codex仅调用一次、产出一张图片，但私有hook失败且事件缺少参考附加证明，自动验收未通过，当前自动提交关闭。手工出图、导入和检查仍可用。新增入口为`src/image-jobs.mjs`、`src/codex-image-runner.mjs`、`src/codex-image-guard.mjs`、`src/image-decoder.mjs`；[官方契约和实际缺口](codex-image-contract.md)必须一起阅读。不能把隔离成功、功能标志或已保留原图当作自动接入成功。
 
 软件0.4.0新增 [分镜图片工作台](image-workbench.md) 和 [官方图像能力只读核查](image-tools-check.md)：`src/image-store.mjs`、`src/image-files.mjs`、`src/image-capabilities.mjs`、`public/images.*`。只执行手工导出、实际文件导入和人工选用，未接自动出图。`src/entity-provenance.mjs`修复模型新增实体来源自报漏洞，输入证据与快照分别核对；历史缺证据记录保持待确认，原文不改。测试图片不证明真实AI生成，最新验收以本分支独立记录为准。

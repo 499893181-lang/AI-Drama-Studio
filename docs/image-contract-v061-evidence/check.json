@@ -1,0 +1,322 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-15T11:47:01.767Z",
+  "baseCommit": "7a19ac93aa6d9538dddefccffbe7dd70423411c7",
+  "implementationBranch": "codex/image-contract-fix-v061-20261115",
+  "scope": "contract_repair_without_new_generation",
+  "newApplicationSubmissions": 0,
+  "newModelTurns": 0,
+  "newImageGenerations": 0,
+  "originalCounts": {
+    "applicationSubmissions": 1,
+    "modelTurnRequests": 1,
+    "modelTurnsAcknowledged": 1,
+    "imageToolStarts": 1,
+    "imageToolCompletions": 1,
+    "observationComplete": true,
+    "note": "应用提交意图、turn请求和图像item分别计数；日志不完整时未观测数量为未知，不推定为零或严格额度保证。"
+  },
+  "originalTask": {
+    "status": "failed",
+    "error": "未找到私有hook准许的原生图像调用证据。",
+    "submittedAt": "2026-11-15T10:34:48.587Z",
+    "requestId": "9a209470-119a-4d26-863b-31cb0c95c0df",
+    "packetId": "9ea94adc-d1d5-4806-98e5-5b918a7b43c2",
+    "inputSnapshotHash": "bad66d1c606e81441fe1cea40f2c798e259da738cd9252a43f7e4b91758b43a8",
+    "taskFileSha256": "125d0f0e691b53a4079232f41ccb9003da7a10d3475aa5d596064fb43075ca96"
+  },
+  "originalMarker": {
+    "existedBefore": false,
+    "existsAfter": false,
+    "modified": false
+  },
+  "evidence": {
+    "artifact": {
+      "status": "produced",
+      "reason": "实际文件Hash和像素解码已核对，官方图像与turn终态完成；这只证明产物，不代表完整候选验收。",
+      "officialImageCompleted": true,
+      "officialTurnCompleted": true,
+      "fileHashVerified": true,
+      "decoded": true,
+      "sha256": "bbe2683b21c5362a8cd501e322310ad716437c6fe4afb431de7897dd486c6738",
+      "width": 1672,
+      "height": 941,
+      "sourceBound": true
+    },
+    "protection": {
+      "status": "failed",
+      "reason": "已观测hook失败或多次图像调用。应用可发起异步中断，但不能保证阻止已开始的调用；严格单次执行保护未验证。",
+      "strictSingleCallGuaranteed": false,
+      "hookFailures": 1
+    },
+    "references": {
+      "status": "unverified",
+      "reason": "会话附件与图像工具使用分开；实际工具参数和有效参考读取回执缺失，参考使用未验证。",
+      "localReadReceiptMatches": null,
+      "backendUsageVerified": false
+    },
+    "acceptance": {
+      "status": "incomplete",
+      "reason": "产物、执行保护、参考使用和视觉检查独立判断；本记录不追改原失败任务，也不作为已通过完整验收的候选。",
+      "automaticallySelected": false
+    }
+  },
+  "attachmentLayers": {
+    "planned": {
+      "status": "planned_only",
+      "count": 1,
+      "reason": "原任务计划与本地副本清单；不等于已发送或使用。",
+      "files": [
+        {
+          "assetId": "93427943-4960-4c7b-b696-0f75533eb587",
+          "sha256": "8c88484107d20940dfd54c6a41ced4a3c9b2d644138f92d2bd1db460e701846d"
+        }
+      ]
+    },
+    "sessionSent": {
+      "status": "observed",
+      "count": 1,
+      "reason": "turn/start日志与同会话userMessage回显共同证明这些会话附件传递；不证明图像工具使用。",
+      "requestLoggedCount": 1,
+      "pipeWrittenCount": null,
+      "sendConfirmedCount": 1,
+      "files": [
+        {
+          "pathHash": "7ab30638e4f4929a3abf0a5585394aa788d4ace4bdccc03a3ac88265dd83731c",
+          "sha256": null
+        }
+      ]
+    },
+    "sessionReceived": {
+      "status": "observed",
+      "count": 1,
+      "reason": "官方userMessage事件回显localImage路径；只证明会话接收，不是图像工具参数或文件Hash回执。",
+      "matchingRequestCount": 1
+    },
+    "toolArguments": {
+      "status": "unverified",
+      "count": null,
+      "reason": "现有原生事件没有实际工具参数，失败hook也没有可信参数记录；计划、会话附件及revisedPrompt不能补造工具参数。",
+      "preToolRecordObserved": false,
+      "nativeToolParametersObserved": false
+    },
+    "toolReadReceipt": {
+      "status": "not_returned",
+      "count": null,
+      "reason": "inputImages是允许缺省且没有default的字段；本次未返回，保留null，不能解释成零参考或已使用。",
+      "fieldPresent": false,
+      "value": null,
+      "localFileHashMatches": null,
+      "plannedHashMatches": null
+    },
+    "serverReceipt": {
+      "status": "not_returned",
+      "count": null,
+      "reason": "当前已核实的官方事件没有独立远端参考使用回执；本地inputImages读取证明不能替代后端使用证明。",
+      "fieldPresent": false,
+      "value": null,
+      "backendReferenceUsageVerified": false
+    },
+    "visualCheck": {
+      "status": "unverified",
+      "count": null,
+      "reason": "参考画面是否符合要求仍需独立视觉检查；协议、文件Hash和解码均不能替代。"
+    }
+  },
+  "actualSchema": {
+    "imageGenerationRequired": [
+      "id",
+      "status",
+      "type"
+    ],
+    "inputImages": {
+      "required": false,
+      "hasDefault": false,
+      "type": "array",
+      "description": "Observed local inputs for a completed generation, absent on older items."
+    },
+    "inputImage": {
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "description": "A local image file successfully read for this exact image-generation request.",
+      "sha256Description": "Lowercase SHA-256 of the file bytes read before image normalization."
+    },
+    "semantics": "若返回，描述本次图像请求成功读取的本地输入及归一化前Hash；不是视觉符合要求的证明。缺失保持未知，不填补为空数组。",
+    "schemaSha256": "d9dc3bfe984335642465586c94117e90adb11943c94d8142d0a906221f092e44"
+  },
+  "artifactVerification": {
+    "width": 1672,
+    "height": 941,
+    "format": "png",
+    "mimeType": "image/png",
+    "extension": "png",
+    "verification": "signature_chunks_crc_and_decompressed_rows",
+    "sha256": "bbe2683b21c5362a8cd501e322310ad716437c6fe4afb431de7897dd486c6738",
+    "decoded": {
+      "decoded": true,
+      "width": 1672,
+      "height": 941,
+      "decoder": "isolated-local-chromium-img.decode",
+      "checkedAt": "2026-11-15T11:31:20.633Z"
+    },
+    "officialBase64Matches": true,
+    "outputCount": 1,
+    "fileHashVerified": true
+  },
+  "originalEvidenceFiles": [
+    {
+      "label": "task",
+      "sha256": "125d0f0e691b53a4079232f41ccb9003da7a10d3475aa5d596064fb43075ca96"
+    },
+    {
+      "label": "task_backup",
+      "sha256": "3269cceb96890f564ca27182699c8498bbd8ad6bbb2f349e37dff1d4086e6585"
+    },
+    {
+      "label": "requests",
+      "sha256": "846fa810d8c215ade284d1bce3d7ed9fb8c217f8de4b7b0c34aaa30b77d9780b"
+    },
+    {
+      "label": "events",
+      "sha256": "5c3bf31653c717faf49db8e4ac94417d7851e6ca91c82052ab7669755745962b"
+    },
+    {
+      "label": "retained_image",
+      "sha256": "bbe2683b21c5362a8cd501e322310ad716437c6fe4afb431de7897dd486c6738"
+    },
+    {
+      "label": "native_image",
+      "sha256": "bbe2683b21c5362a8cd501e322310ad716437c6fe4afb431de7897dd486c6738"
+    },
+    {
+      "label": "guard_manifest",
+      "sha256": "5b09236cdcc133653380e7dcdcd3473849f6e3101bbfccd838a2e66c7e6c2e01"
+    },
+    {
+      "label": "guard_script",
+      "sha256": "27946f7a4830bf6fb97e4edf05975be865c53a9b1bd0ddec74cc045b456c494e"
+    },
+    {
+      "label": "reference_1",
+      "sha256": "8c88484107d20940dfd54c6a41ced4a3c9b2d644138f92d2bd1db460e701846d"
+    }
+  ],
+  "preservation": {
+    "originalDataFiles": 499,
+    "byteIdentical": 499,
+    "additionalDiagnosticRecords": 1,
+    "changedOriginalFiles": 0,
+    "excludedServiceLock": "studio.lock (service PID changes on restart)",
+    "originalDataDirectoryReused": true,
+    "maximumApplicationSubmissions": 1,
+    "submittedBefore": 1,
+    "submittedAfter": 1,
+    "remaining": 0,
+    "authenticationConfigurationModified": false,
+    "authenticationFilesInspected": false
+  },
+  "protection": {
+    "strictSingleCallGuaranteed": false,
+    "automaticEntryEnabled": false,
+    "asynchronousInterruptOnly": true,
+    "previousHookFailureToImageStartMs": 1,
+    "unknownActualCallsAreNull": true
+  },
+  "tests": {
+    "command": "node --test tests/*.test.mjs",
+    "tests": 215,
+    "passed": 215,
+    "failed": 0,
+    "isolatedOnly": true,
+    "watchdogFaultCases": 15,
+    "rpcFaultCases": 10,
+    "evidenceCases": 11,
+    "diagnosticCases": 7,
+    "hookObservationCases": 1
+  },
+  "browser": {
+    "isolatedStatuses": {
+      "passed": true,
+      "checks": [
+        "产物、执行保护、参考和完整验收分开显示；隔离图片不冒充真实生成",
+        "应用1次、模型turn请求2次、图像工具事件1次分别显示，不能互相替代",
+        "计划、会话请求和接收、工具入参、本地读取、服务端回执、视觉检查七层证据分别显示；inputImages不冒充服务端使用",
+        "缺失的turn和工具事件计数显示未核实，不推断为0；已知应用意图仍保留1",
+        "自动入口关闭时手工任务包仍可准备，没有调用生成器",
+        "新准备任务也不能开启自动入口，0模型turn、0生成器调用",
+        "刷新和诊断显示不改原失败任务字节、错误或回执；无未处理页面异常"
+      ],
+      "count": 7,
+      "consoleExceptions": 0
+    },
+    "actualExistingImage": {
+      "passed": true,
+      "checks": [
+        "同页分别显示真实图片已产出、执行保护未验证、参考使用未验证、候选未通过完整验收",
+        "应用提交1次、模型turn请求1次、图像开始/完成各1次分别展示；原1/1仍占用",
+        "真实会话发送与接收已观测；工具参数、本地读取回执、服务端使用和视觉符合程度未验证，不补造inputImages",
+        "原有真实PNG仍可由浏览器解码，图片证据与执行保护、参考使用独立",
+        "只读页面和诊断不改原任务字节、错误、回执或原1/1记录；无页面异常"
+      ],
+      "count": 5,
+      "consoleExceptions": 0
+    },
+    "existingIsolatedWorkflow": {
+      "passed": true,
+      "checks": [
+        "真实Chrome预览当前镜头提示词、实际参考Hash和账号用量说明；准备不调用生成，不把未知费用显示免费",
+        "一次隔离runner返回真实PNG文件；生产Chrome解码器核对像素后自动导入新候选，保存回执与输入附件，不自动选用",
+        "浏览器实际预览、人工填写检查依据并明确选用；重复submit复用原任务，fixture调用仍一次",
+        "上游输入改变后原候选与任务需复核，原参考及图片Hash不变，不自动重新生成",
+        "重启恢复原任务、实际图片、检查和选择历史，提交次数不重置，未发第二次调用"
+      ],
+      "count": 5,
+      "consoleExceptions": 0
+    },
+    "manualWorkflow": {
+      "passed": true,
+      "checks": [
+        "真实Chrome显示三镜头、人物/场景版本、画面提示词与导演规则；费用待确认、手工出图及正式阶段未接入分开说明",
+        "通过实际文件控件上传并预览带像素标记的测试PNG；人物与场景各自人工检查后选用，Hash/格式/尺寸与来源声明真实保存",
+        "真实提示词任务包与ZIP包含两份选定参考及Hash，attached=false且官网未发送；仅文字实体引用不冒充图片附加",
+        "三镜头实际图片各自绑定当前分镜版本，检查后人工选用；第一镜关联实际导出的任务包，其他手工上传明确未验证模型输入",
+        "仅第二镜换图；前后镜选用不变，旧图可读取，两个图片版本与替换历史保留",
+        "人物参考换版使受影响分镜图需复核；旧参考、旧图及选用历史均保留，缓存JSON下载、旧提示词复制及ZIP均被当前门禁拒绝",
+        "保存输入改变后旧图片全部明确需复核；重启恢复7份实际文件、Hash、旧版、人工检查与选择历史，0页面异常"
+      ],
+      "count": 7,
+      "consoleExceptions": 0
+    },
+    "failureFixture": {
+      "passed": true,
+      "checks": [
+        "失败仍占原提交次数，官方完成文字及真实文件不能冒充自动候选或免费",
+        "只读保留原图接口返回真实可解码PNG，不将它导入为可信自动来源",
+        "自动验收失败后手工任务包流程仍可使用，未重复生成"
+      ],
+      "count": 3,
+      "consoleExceptions": 0
+    }
+  },
+  "cost": {
+    "extraPurchase": false,
+    "paidApiConfigured": false,
+    "cny": null,
+    "credits": null,
+    "status": "unknown_not_free"
+  },
+  "formalStages": {
+    "guard": "not_checked",
+    "ledger": "not_integrated",
+    "productionPackagePass": false
+  },
+  "unsubmitted": [
+    "new_image_generation",
+    "jimeng_canvas",
+    "video",
+    "voice",
+    "editing"
+  ]
+}

@@ -7,6 +7,7 @@ import { ImageWorkspace } from './image-store.mjs';
 import { inspectImage } from './image-files.mjs';
 import { decodeActualImage } from './image-decoder.mjs';
 import { redact } from './tools.mjs';
+import { ImageTaskDiagnostics } from './image-diagnostics.mjs';
 
 const digest = bytes => createHash('sha256').update(bytes).digest('hex');
 const pending = ['submitting', 'running'];
@@ -33,6 +34,7 @@ export class ImageGenerationJobs {
     if (!Number.isInteger(maxSubmissions) || maxSubmissions < 1 || maxSubmissions > 1000) throw new AppError('自动出图提交上限须为1–1000的整数。');
     this.store = store; this.images = images; this.runner = runner ?? nativeRun; this.decoder = decoder; this.inspector = inspectCapabilities; this.maxSubmissions = maxSubmissions; this.timeoutMs = timeoutMs;
     this.mode = runner ? 'isolated-fixture' : 'official-codex-account'; this.active = new Map(); this.closed = false; this.inspection = null; this.capability = null;
+    this.diagnostics = new ImageTaskDiagnostics(store);
     fs.mkdirSync(path.join(store.root, 'image-generation-jobs'), { recursive: true });
     for (const job of store.list('image-generation-jobs').values) if (pending.includes(job.status)) {
       job.status = 'interrupted'; job.error = '上次服务关闭，原提交可能仍在处理；不自动重提，保留原任务、输入和附件。'; this.record(job, 'interrupted', job.error);
@@ -49,7 +51,7 @@ export class ImageGenerationJobs {
   async view(id) {
     this.store.read('projects', id);
     const capability = await this.inspect(), usageLimit = this.usage();
-    const tasks = this.store.list('image-generation-jobs').values.filter(job => job.projectId === id).map(job => { let stale = false; try { this.images.assertExecutablePacket(id, job.packetId); } catch { stale = true; } return { ...job, stale }; });
+    const tasks = this.store.list('image-generation-jobs').values.filter(job => job.projectId === id).map(job => { let stale = false; try { this.images.assertExecutablePacket(id, job.packetId); } catch { stale = true; } return { ...job, stale, diagnostic: this.diagnostics.view(job) }; });
     const verified = tasks.some(job => job.status === 'succeeded' && job.provider === 'codex-cli-built-in-image' && job.executionMode === 'official-codex-account' && job.result?.completionEvidenceMode === 'official-codex-account');
     return { tasks, capability: { ...capability, actualGenerationVerified: verified, evidenceStatus: verified ? 'real_task_verified' : capability.contractVerified ? 'contract_checked_not_real_task_verified' : 'not_verified', canSubmit: capability.canSubmit === true && usageLimit.remaining > 0 }, usageLimit, cost: { account: capability.accountUsage ?? null, cny: { amount: null, status: 'unknown' }, credits: { amount: null, status: 'unknown' }, label: '使用现有Codex账号额度；人民币及积分费用未知，不代表免费。' }, formalStageStatus: 'not_checked' };
   }

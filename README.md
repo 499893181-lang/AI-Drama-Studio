@@ -1,6 +1,8 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.5.0保留立项、即梦文字适配、本机Codex剧本与分镜、实体来源证据和图片版本，增加单镜头图像任务、原始回执与失败产物保留。当前原生图像自动提交因真实验收发现的契约缺口关闭，手工出图流程可用。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.5.1保留立项、即梦文字适配、本机Codex剧本与分镜、实体来源证据和图片版本，修复自动出图的故障期中断、附件证据分层及诊断展示。严格单次调用无法保证，原生自动提交继续关闭，手工流程可用。
+
+0.5.1[本轮无新增生成验收](docs/image-contract-v061-acceptance.md)：215/215回归通过；故障立即请求异步中断，不能保证拦住已开始调用。实际Schema允许`inputImages`缺省、无default；会话、工具本地读取及远端使用分别记录。原DATA_DIR中499份文件Hash不变，仅追加独立诊断，原失败任务与1/1保持。四项状态分别显示已有真实产物、保护未验证、参考未验证、候选未通过，未新增模型turn或图片。
 
 公开仓库：[499893181-lang/AI-Drama-Studio](https://github.com/499893181-lang/AI-Drama-Studio)。网页版调试先读[调试入口](docs/CHATGPT_CONTEXT.md)与[源码索引](llms.txt)。GitHub提供代码和文档；本机服务、个人项目和认证不会随仓库公开。
 
@@ -18,7 +20,7 @@ node .\src\server.mjs
 
 [分镜图片工作台](http://127.0.0.1:4317/images.html)从已保存分镜开始。独立图片实施worktree可用 `.\scripts\start.ps1 -Port 4319`，打开 [4319图片入口](http://127.0.0.1:4319/images.html)。[图片操作与数据说明](docs/image-workbench.md) · [本机图像能力核查](docs/image-tools-check.md)。
 
-0.5.0[本轮验收](docs/auto-image-acceptance.md)：修复参考审核撤销及来源分镜过期后旧包仍可用的问题；实现任务持久化、去重、原绑定与失败原图保留。现有Codex账号实际完成一次图像调用、得到一张真实图片，但私有hook执行失败且图像事件缺少参考附件证明，**自动验收未通过**，没有自动导入或选用。当前入口明确显示缺口并禁止新提交。独立服务为 [4320图片入口](http://127.0.0.1:4320/images.html)，使用独立数据目录。[使用说明](docs/auto-image-workbench.md) · [官方契约与实际缺口](docs/codex-image-contract.md)。
+0.5.0[历史验收](docs/auto-image-acceptance.md)：修复参考审核撤销及来源分镜过期后旧包仍可用的问题；实现任务持久化、去重、原绑定与失败原图保留。现有Codex账号实际完成一次图像调用、得到一张真实图片，但私有hook执行失败且图像事件缺少参考附件证明，**自动验收未通过**，没有自动导入或选用。当前入口明确显示缺口并禁止新提交。独立服务为 [4320图片入口](http://127.0.0.1:4320/images.html)，使用独立数据目录。[使用说明](docs/auto-image-workbench.md) · [官方契约与实际缺口](docs/codex-image-contract.md)。
 
 0.4.0[历史验收](docs/image-workbench-acceptance.md)：134/134测试通过；真实Chrome验证三镜头图片绑定、单镜换图、参考及输入变更需复核、实际ZIP、旧版保留和重启恢复。该轮测试图片均明确标注非AI生成，未发起模型或图像生成任务。
 

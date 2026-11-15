@@ -75,7 +75,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.5.0', phase: 'single-image-generation', supportedPhases: ['story-initiation', 'script', 'creative', 'images'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.5.1', phase: 'image-contract-diagnostics', supportedPhases: ['story-initiation', 'script', 'creative', 'images'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/creative/knowledge' && method === 'GET') { json(response, creative.catalog()); return; }
       if (url.pathname === '/api/novel/status' && method === 'GET') { json(response, await scripts.inspect(true)); return; }
@@ -204,6 +204,7 @@ export function createStudio(options = {}) {
       if (segments[0] === 'api' && segments[1] === 'image-generation-tasks' && validId(segments[2])) {
         const id = segments[2];
         if (segments.length === 3 && method === 'GET') { json(response, imageGeneration.read(id)); return; }
+        if (segments.length === 4 && segments[3] === 'diagnostics' && method === 'GET') { json(response, imageGeneration.diagnostics.history(id)); return; }
         if (segments.length === 5 && segments[3] === 'artifacts' && /^\d{1,3}$/.test(segments[4]) && method === 'GET') {
           const file = imageGeneration.artifactFile(id, Number(segments[4]));
           response.writeHead(200, { 'Content-Type': file.mimeType, 'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(file.name)}`, 'Content-Length': file.bytes.length, 'Cache-Control': 'no-store' });
