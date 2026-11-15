@@ -1,0 +1,5 @@
+Command: dreamina-canvas auth status
+Exit code: 0
+Timed out: false
+
+{"schemaVersion":"1","ok":true,"data":{"loggedIn":false,"profile":"default","region":"cn","environment":"prod","authMode":"oauth","distribution":"cn","version":"1.2.0","edition":"public"}}

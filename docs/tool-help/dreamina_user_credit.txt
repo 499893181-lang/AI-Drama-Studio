@@ -1,0 +1,6 @@
+Command: dreamina user_credit
+Exit code: 1
+Timed out: false
+
+initialize logs failed: initialize file logger: open C:\Users\DYX\.dreamina_cli\logs\dreamina.log.2026-11-15_11: Access is denied.
+未检测到有效登录态，请先执行 dreamina login

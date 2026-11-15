@@ -1,0 +1,8 @@
+Command: codex --version
+Exit code: 0
+Timed out: false
+
+codex-cli 0.167.0-alpha.4.1
+
+WARNING: failed to clean up stale arg0 temp dirs: 拒绝访问。 (os error 5)
+WARNING: proceeding, even though we could not create PATH aliases: 拒绝访问。 (os error 5) at path "C:\\Users\\Public\\CodexHome\\tmp\\arg0-windows\\codex-arg0WO7N5m"

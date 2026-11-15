@@ -1,0 +1,15 @@
+Checked: 2026-11-15 (Asia/Shanghai)
+Purpose: Native Codex discovery without desktop-injected PATH.
+Environment in child Node process: PATH cleared; CODEX_BIN removed.
+Discovery: Windows PowerShell Get-AppxPackage -Name 'OpenAI.Codex*', current user only.
+Privilege: Normal Windows user context outside development sandbox; no administrator requirement.
+No model inference request was submitted.
+
+Observed output:
+{
+  "found": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1106.6628.0_x64__2p2nqsd0c76g0\\app\\resources\\codex.exe",
+  "cached": "C:\\Program Files\\WindowsApps\\OpenAI.Codex_26.1106.6628.0_x64__2p2nqsd0c76g0\\app\\resources\\codex.exe",
+  "firstMs": 804,
+  "cachedMs": 1,
+  "version": "codex-cli 0.167.0-alpha.4.1"
+}

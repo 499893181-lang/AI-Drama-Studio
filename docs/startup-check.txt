@@ -1,0 +1,15 @@
+AI-Drama-Studio startup check
+Checked at: 2026-11-15T12:15:01.6551792+08:00
+PowerShell: Windows PowerShell 5.1
+Case 1: inherited process PATH
+NODE_SOURCE=PATH
+NODE_PATH=C:\Program Files\WindowsApps\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\dependencies\node\bin\node.exe
+NODE_VERSION=v24.22.1
+CHECK_ONLY=PASS; no server started; no PATH changes
+Exit code: 0
+Case 2: ordinary Machine + User PATH; no Codex-injected Node path
+NODE_SOURCE=Installed CodexPrimaryRuntime
+NODE_PATH=C:\Program Files\WindowsApps\OpenAI.CodexPrimaryRuntime.v26-1104-2876-0_26.1104.2876.0_x64__3k8sg7r9htsxt\dependencies\node\bin\node.exe
+NODE_VERSION=v24.22.1
+CHECK_ONLY=PASS; no server started; no PATH changes
+Exit code: 0

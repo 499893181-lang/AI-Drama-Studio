@@ -1,0 +1,14 @@
+{
+  "startedAt": "2026-11-15T04:16:38.651Z",
+  "base": "http://127.0.0.1:4317",
+  "restoreOnly": true,
+  "expand": false,
+  "checks": [
+    "服务重启后磁盘项目与创作说明恢复",
+    "浏览器列表与编辑字段恢复",
+    "无未处理的浏览器脚本异常"
+  ],
+  "projectId": "64b9ffc6-2570-4788-8d9a-75e69c7a78fb",
+  "passed": true,
+  "finishedAt": "2026-11-15T04:16:38.918Z"
+}
