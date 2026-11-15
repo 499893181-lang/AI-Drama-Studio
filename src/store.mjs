@@ -109,8 +109,14 @@ export class Store {
     if (job.status !== 'succeeded' || !job.result) throw new AppError('任务尚未成功，不能采用。', 409);
     if (job.appliedAt) throw new AppError('这个候选已经采用过。', 409);
     if (inputHash(project) !== job.inputHash) throw new AppError('构思或项目设置已改变，请基于当前内容重新扩写。旧候选保留供参考。', 409);
-    const updated = this.update(project.id, { revision, creativeBrief: job.result });
-    updated.briefProvenance = { source: 'codex-cli', jobId: job.id, inputHash: job.inputHash, inputRevision: job.inputRevision, generatedAt: job.updatedAt, userEditedAt: null };
+    if (revision !== project.revision) throw new AppError('项目已在其他窗口更新。请刷新后核对，当前编辑内容尚未覆盖磁盘。', 409);
+    const updated = {
+      ...project,
+      ...fields({ creativeBrief: job.result }, project),
+      revision: project.revision + 1,
+      updatedAt: now(),
+      briefProvenance: { source: 'codex-cli', jobId: job.id, inputHash: job.inputHash, inputRevision: job.inputRevision, generatedAt: job.updatedAt, userEditedAt: null },
+    };
     return this.write('projects', updated);
   }
   addReference(projectId, name, mimeType, bytes) {
