@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-11-16T02:12:38.905Z",
+  "cliVersion": "1.2.0",
+  "testFixture": true,
+  "actualGenerationVerified": false,
+  "realGenerationSubmissions": 0,
+  "creditConfirmations": 0,
+  "source": "existing tracked TEST FIXTURE / NOT AI MP4; local_upload",
+  "canvas": {
+    "projectId": "5a79568c-c830-48c5-b697-53066890d4ec",
+    "nodeId": "node_xb9jksrkm7",
+    "resourceId": "76eab309-20f1-4e81-ba3b-96d372a25b5d",
+    "importSubmitId": "34578191-16b1-4ab8-ba4c-f5e1776fbba9",
+    "webUrl": "https://jimeng.jianying.com/ai-tool/ai-canvas/5a79568c-c830-48c5-b697-53066890d4ec"
+  },
+  "original": {
+    "sha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+    "size": 17750,
+    "format": "mov,mp4,m4a,3gp,3g2,mj2",
+    "durationSeconds": 5,
+    "width": 1280,
+    "height": 720,
+    "audioStreams": 0,
+    "videoStreams": 1,
+    "videoCodec": "h264",
+    "pixelFormat": "yuv420p",
+    "frameRate": "24/1"
+  },
+  "downloaded": {
+    "sha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+    "size": 17750,
+    "format": "mov,mp4,m4a,3gp,3g2,mj2",
+    "durationSeconds": 5,
+    "width": 1280,
+    "height": 720,
+    "audioStreams": 0,
+    "videoStreams": 1,
+    "videoCodec": "h264",
+    "pixelFormat": "yuv420p",
+    "frameRate": "24/1"
+  },
+  "exactFileBytesRetained": true,
+  "mediaDifferences": [],
+  "schemaDownloadSummary": "安全下载成功的图片素材",
+  "conclusion": "Actual existing TEST video resource download only; no AI generation, model admission or frame-reference result claimed.",
+  "formalStageStatus": "not_checked",
+  "browser": [
+    {
+      "width": 1280,
+      "height": 720,
+      "duration": 5,
+      "currentTime": 0.2601,
+      "readyState": 4
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "duration": 5,
+      "currentTime": 0.2639,
+      "readyState": 4
+    }
+  ],
+  "browserConsoleExceptions": 0
+}

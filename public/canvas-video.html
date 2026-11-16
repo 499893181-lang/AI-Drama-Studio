@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>AI-Drama-Studio · 画布单镜视频</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/video.css">
+  <link rel="stylesheet" href="/canvas-video.css">
+</head>
+<body class="video-page">
+  <div id="canvas-video-app"><p class="loading-message" role="status">正在读取画布视频的输入绑定和待授权状态…</p></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <dialog id="canvas-confirm" aria-labelledby="canvas-confirm-heading"></dialog>
+  <script type="module" src="/canvas-video.js"></script>
+</body>
+</html>

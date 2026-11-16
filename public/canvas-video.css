@@ -1,0 +1,19 @@
+.canvas-scope { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px 20px; margin: 0 0 16px; }
+.canvas-scope div { min-width: 0; border-bottom: 1px solid #ececf3; padding: 9px 0; }
+.canvas-scope dt { font-size: 12px; color: #8288a2; margin-bottom: 6px; }
+.canvas-scope dd { margin: 0; font-size: 12px; overflow-wrap: anywhere; color: #3b4460; }
+.canvas-scope dd code { font-size: 10px; }
+.canvas-stage { display: flex; gap: 9px; flex-wrap: wrap; margin: 18px 0; font-size: 12px; color: #7c86a5; }
+.canvas-stage span { border: 1px solid #e4e0f2; border-radius: 7px; padding: 8px 10px; background: #fff; }
+.canvas-video-review { width: 100%; min-height: 70px; padding: 10px; border: 1px solid #ddddea; border-radius: 7px; font: inherit; }
+.canvas-video-select { width: 100%; min-height: 40px; border: 1px solid #ddddea; border-radius: 7px; background: #fff; padding: 8px; font: inherit; }
+.canvas-task-list { display: grid; gap: 10px; margin: 14px 0; }
+.canvas-task-choice { text-align: left; padding: 12px; border: 1px solid #e4e0f2; border-radius: 8px; background: #fff; overflow-wrap: anywhere; }
+.canvas-task-choice.active { border-color: #8b6dda; background: #f7f4fd; }
+.canvas-quote-amount { font-size: 27px; line-height: 1.3; color: #6442ba; }
+.canvas-panel-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
+.canvas-explainer { color: #68738e; font-size: 12px; line-height: 1.8; }
+.canvas-video-card { border-top: 1px solid #eeeaf5; margin-top: 20px; padding-top: 20px; }
+.canvas-video-card video { max-width: 100%; width: 540px; max-height: 320px; background: #192139; border-radius: 9px; display: block; margin: 12px 0; }
+.canvas-video-page-label { margin: 10px 0; color: #8c77b6; font-size: 12px; }
+@media (max-width: 700px) { .canvas-scope { grid-template-columns: minmax(0,1fr); } }

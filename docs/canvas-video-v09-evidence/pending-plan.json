@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-11-16T02:33:41.586Z",
+  "projectId": "76e18591-47fc-48cf-992d-112d183a3036",
+  "taskId": "ecab5569-0001-449b-bbb0-0e07a6fff981",
+  "submitId": "1378ddcd-37ad-4c71-8b0c-ce9e32c51944",
+  "status": "prepared",
+  "submittedAt": null,
+  "authorization": {
+    "status": "not_granted",
+    "reason": "待本人明确批准；页面和请求参数不能发放授权。"
+  },
+  "plan": {
+    "projectId": "7f2bee13-2e6f-4097-9281-b814c3a314a2",
+    "nodeId": "node_ht5aaps7yz",
+    "sourceNodeId": "node_agvq74dwqs",
+    "sourceResourceId": "3e74fdf2-d290-4979-a200-4968dea502be",
+    "inputSha256": "0a016af311df50b5b82ead4dc39292d03e8ed5eef738eac3197336de3c6b53ba",
+    "registeredResourceSha256": "679b92bc271603e46dd9eb2650d678129cf0d9bd279375159e1b2da012697e16",
+    "prompt": "保持首帧测试卡的文字和布局；固定机位，5秒内仅蓝色色块做轻微明暗变化。不新增人物、真实场景或额外字幕。本次是软件链路验收。",
+    "parameters": {
+      "mode": "first_last_frame",
+      "model": "seedance_2.0_vip",
+      "ratio": "16:9",
+      "resolution": "720p",
+      "durationSeconds": 5,
+      "outputCount": 1,
+      "audioMode": "mute_derivative"
+    },
+    "localProjectId": "76e18591-47fc-48cf-992d-112d183a3036",
+    "taskId": "ecab5569-0001-449b-bbb0-0e07a6fff981",
+    "localBindingHash": "193329f0567c825b2ef82f8ca84421ea1e1d7a596a4ace5b298f3fc68b821872",
+    "inputSnapshotHash": "26e1801ad99b20de3eb9b54797f84f48a1fceca68ae9b98049bf86dda5a910bb"
+  },
+  "localBinding": {
+    "storyboardVersion": "7a1d65e2-ceaa-4ee7-8d57-d0e442de62f2",
+    "imageAssetId": "7910017a-b01d-4dca-9ab2-1309c374aeca",
+    "imageVersion": 1,
+    "imageSha256": "0a016af311df50b5b82ead4dc39292d03e8ed5eef738eac3197336de3c6b53ba",
+    "knowledgeHash": "b1a629130829591e081f47b86dc250effd8d1f9a76018679e8a53d57e349bad3",
+    "sourceHash": "4313538e593e98344b1b6f9dea16a0ec900286ef37d9644d33dc2a5aa96f794f",
+    "imageReviewId": "ffd0d260-0865-4482-90f3-59bbf317bf8d",
+    "imageSelectionId": "7be89123-bf97-48b9-9981-10724e2976a9"
+  },
+  "authorizationScopeHash": "9a91abfba3508157bf58245a22596ca36989a1a1444e04e0b5c8f22069c46a35",
+  "draftVersion": 3,
+  "quote": {
+    "channel": "dreamina-canvas-node-video",
+    "status": "quoted_snapshot",
+    "amount": 70,
+    "currency": "CREDITS",
+    "unit": "maximum credits / this saved node run",
+    "expiresAt": null,
+    "officialQuoteId": null,
+    "cnyAmount": null,
+    "checkedAt": "2026-11-16T02:33:41.484Z",
+    "source": "actual dreamina-canvas node quote",
+    "projectId": "7f2bee13-2e6f-4097-9281-b814c3a314a2",
+    "nodeId": "node_ht5aaps7yz",
+    "planHash": "8439184ddbe0ed547f3292edac80419a12828fb346c71f269f839647b26fb0e5",
+    "canSubmit": false,
+    "raw": {
+      "schemaVersion": "1",
+      "ok": true,
+      "data": {
+        "consumptionSubject": {
+          "kind": "personal"
+        },
+        "items": [
+          {
+            "nodeId": "node_ht5aaps7yz",
+            "maxCredits": 70
+          }
+        ],
+        "totalMaxCredits": 70,
+        "draftVersion": 3,
+        "confirmable": true,
+        "confirmationRequired": true
+      },
+      "meta": {
+        "requestId": "20261116103340D991110DFE569EFB43F4"
+      }
+    },
+    "requestId": "20261116103340D991110DFE569EFB43F4",
+    "itemMaxCredits": 70,
+    "totalMaxCredits": 70,
+    "draftVersion": 3,
+    "confirmable": true,
+    "confirmationRequired": true,
+    "consumptionSubject": {
+      "kind": "personal"
+    },
+    "conditions": [
+      "只适用于此画布、此节点、此已保存草稿及当前账号上下文。",
+      "报价不是授权或最终结算；运行前须重新读取输入与节点并取得最新报价。",
+      "未返回有效期，不推算有效期；未验证实际运行准入。"
+    ],
+    "reason": "同节点运行前最大积分预估；不是实际扣费、人民币价格或direct渠道报价。"
+  },
+  "threshold": 70,
+  "thresholdMeaning": "maximum estimate approval threshold; not final settlement or absolute platform charge limit",
+  "actualCost": null,
+  "generationCalls": 0,
+  "creditConfirmations": 0,
+  "formalStageStatus": "not_checked"
+}

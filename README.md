@@ -1,6 +1,8 @@
 # AI-Drama-Studio
 
-Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.7.0新增画布视频准备/真实报价证据与本地时间轴、MP4拼接导出。已选视频版本、顺序、实测时长、来源、历史及失效检查持久保存；原立项、文字分镜、图片和单镜视频功能保留。真实生成提交仍关闭。
+Windows 本地中文 AI 短剧工作台，MIT 开源。当前0.8.0完成待本人批准的画布单镜执行、原ID恢复、下载与无声候选链；本轮无签名批准，真实消费仍未执行。原立项、文字分镜、图片、direct视频准备、本地时间轴和MP4导出保留。
+
+0.8.0[本轮验收](docs/canvas-video-v09-acceptance.md)：317/317完整回归、9组新工作台Chrome及3组实际主服务检查通过。官方既有TEST MP4上传/导入/下载已实际验证，原/下载Hash相同，非AI生成证据。新链路绑定具体任务、草稿、输入及参数，由仅本机签名批准控制，无HTTP发放授权接口；未知结果只查原submitId，下载失败只恢复下载。当前同节点最大预估70积分，未确认或生成。[可确认首次单镜方案](docs/video-first-run-plan-v09.md) · [工作台与本机批准说明](docs/canvas-video-workbench-v09.md) · [下载预检](docs/canvas-video-download-v09.md)。原530文件及图片1/1保持。
 
 0.7.0[本轮验收](docs/video-prep-v08-acceptance.md)：已登录canvas保存独立测试视频空草稿，同节点5秒720p报价最大预估70积分，0生成/0消费确认；资格、视频下载、真实产物与实际扣费未验收。direct认证与价格保持独立。[渠道与报价证据](docs/canvas-video-channel-v08.md) · [可审核单镜验收方案](docs/video-real-acceptance-plan-v08.md) · [本地时间轴说明](docs/local-timeline-v08.md)。100积分仅为未授权计划预算。主服务沿用原数据目录，原507文件Hash不变、图像原1/1不重置。
 
@@ -29,6 +31,8 @@ node .\src\server.mjs
 0.4.0[历史验收](docs/image-workbench-acceptance.md)：134/134测试通过；真实Chrome验证三镜头图片绑定、单镜换图、参考及输入变更需复核、实际ZIP、旧版保留和重启恢复。该轮测试图片均明确标注非AI生成，未发起模型或图像生成任务。
 
 ## 当前功能
+
+- 画布单镜待授权执行：[主服务页面](http://127.0.0.1:4320/canvas-video.html?projectId=76e18591-47fc-48cf-992d-112d183a3036)展示实际首帧、同节点最新报价、完整范围、原submitId和待本人批准状态。本地签名只覆盖该任务与70积分最大预估阈值，网页不能自发授权；短期消费凭证不落盘。原片保留，若有音轨则本地静音派生并FFprobe复核，再入候选、人工检查与选用；原始回执、Hash、版本和失败记录保留。模型实际资格和首帧符合性留首次获批任务验收。
 
 - 本地时间轴：从当前人工检查选用的视频添加、排序、移除、保存不可变版本，绑定镜头版本和实际Hash；兼容H.264 MP4无损拼接，保留原音轨或明确后处理静音派生。FFprobe与浏览器检查输出；失败、取消、超时、重启不自动重导，不损坏原片。当前只验收明确TEST素材，不冒充AI成片。主服务[时间轴测试项目](http://127.0.0.1:4320/timeline.html?projectId=437306c6-d0b8-4b1b-86b4-6c259c89b006) · [只读报价页](http://127.0.0.1:4320/video-channel.html)。
 
@@ -75,6 +79,7 @@ node tests/auto-image-browser-smoke.mjs
 node tests/auto-image-failure-browser.mjs
 node tests/video-browser-smoke.mjs
 node tests/timeline-browser-smoke.mjs
+node tests/canvas-video-browser-smoke.mjs
 ```
 
 浏览器测试使用明确隔离夹具与临时数据，需要本机Chrome/Edge；其假审阅报告不能算真实模型结果。第一阶段 `tests/browser-smoke.mjs --expand` 与 `scripts/verify-real.mjs --run-codex`会真实调用Codex，普通测试不执行它们。

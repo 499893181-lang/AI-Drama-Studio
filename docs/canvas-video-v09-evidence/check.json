@@ -1,0 +1,71 @@
+{
+  "checkedAt": "2026-11-16T02:36:26.067Z",
+  "baseline": "af4d70413e0064c43f2152796346252bce47008c",
+  "branch": "codex/canvas-video-execution-v09-20261116",
+  "regression": {
+    "tests": 317,
+    "passed": 317,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "newCanvasChecks": 9,
+    "mainServiceChecks": 3,
+    "existingVideoChecks": 7,
+    "existingTimelineChecks": 12
+  },
+  "mainService": {
+    "checkedAt": "2026-11-16T02:35:33.262Z",
+    "mainVersion": "0.8.0",
+    "projectId": "76e18591-47fc-48cf-992d-112d183a3036",
+    "taskId": "ecab5569-0001-449b-bbb0-0e07a6fff981",
+    "submitId": "1378ddcd-37ad-4c71-8b0c-ce9e32c51944",
+    "signedApprovalRecords": 0,
+    "nativeConfirmationOrRunReceipts": 0,
+    "actualVideoGenerationCalls": 0,
+    "newImages": 0,
+    "checks": [
+      "实际主服务显示同一首帧和70积分最新最大预估；任务待本人批准，真实执行按钮禁用，没有网页签发授权控件",
+      "原530文件Hash不变，原失败图像任务和1/1保持，自动出图仍关闭",
+      "生产数据没有本机签名批准或短期凭证；当前任务提交时间/result均null，原submitId和未提交状态完整恢复"
+    ],
+    "autoImage": {
+      "status": "failed",
+      "result": null,
+      "error": "未找到私有hook准许的原生图像调用证据。",
+      "maxSubmissions": 1,
+      "submitted": 1,
+      "remaining": 0
+    },
+    "decodedInput": {
+      "width": 1280,
+      "height": 720
+    },
+    "preservation": {
+      "originalFiles": 530,
+      "changed": 0,
+      "originalImageRecordPreserved": true,
+      "noBudgetReset": true
+    },
+    "consoleExceptions": 0,
+    "passed": true
+  },
+  "testVideoDownloadPrecheck": {
+    "passed": true,
+    "sourceSha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+    "downloadSha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+    "generationVerified": false
+  },
+  "realConfirmations": 0,
+  "realVideoGenerations": 0,
+  "newAIImages": 0,
+  "voiceGenerations": 0,
+  "nativeSubmissionAuthorized": false,
+  "formalStageStatus": "not_checked",
+  "remainingConditions": [
+    "本人明确批准当前完整单镜范围，当前没有签名批准。",
+    "执行前重新回读同节点与同草稿范围，最新最大预估须不超过70积分。",
+    "模型实际运行资格、真实生成终态、首帧符合性与最终费用在首次任务中验收，不在此前付费证明。"
+  ],
+  "nativeDraftAtomicity": "CLI无expectedDraftVersion参数，不能宣称服务端锁住最后回读与run之间的草稿；保留实际generationDiff（若返回）供人工检查。"
+}
