@@ -28,12 +28,14 @@ const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
 const q = name => `[data-testid="${name}"]`;
 async function clickSelector(selector) {
   await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)}) && !document.querySelector(${JSON.stringify(selector)}).disabled`);
+  await browser.evaluate(`{let parent=document.querySelector(${JSON.stringify(selector)}).parentElement;while(parent){if(parent.tagName==='DETAILS')parent.open=true;parent=parent.parentElement;}}`);
   await browser.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);
 }
 const click = name => clickSelector(q(name));
 async function fill(name, value, event = 'input') {
   const selector = q(name);
   await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)}) && !document.querySelector(${JSON.stringify(selector)}).disabled`);
+  await browser.evaluate(`{let parent=document.querySelector(${JSON.stringify(selector)}).parentElement;while(parent){if(parent.tagName==='DETAILS')parent.open=true;parent=parent.parentElement;}}`);
   await browser.evaluate(`(() => { const e=document.querySelector(${JSON.stringify(selector)}); e.value=${JSON.stringify(value)}; e.dispatchEvent(new Event(${JSON.stringify(event)},{bubbles:true})); })()`);
 }
 async function get(route) { const res = await fetch(base + route); const value = await res.json(); if (!res.ok) throw new Error(`${res.status} ${value.error}`); return value; }
@@ -44,7 +46,7 @@ async function workspace(predicate) {
 async function shot(name) { const result = await browser.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false }); fs.writeFileSync(path.join(browserArtifacts, name), Buffer.from(result.data, 'base64')); }
 async function confirmDialog() { await click('creative-confirm-submit'); }
 try {
-  await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${project.id}` });
+  await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${project.id}&stage=script` });
   await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('creative-generate-script'))})`);
   assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(q('creative-director'))}).options.length`), 15);
   const catalog = await get('/api/creative/knowledge');
@@ -63,6 +65,8 @@ try {
   report.checks.push('从已保存构思执行文字任务，独立隔离runner产生可见候选，未访问即梦报价');
   await clickSelector(`[data-select-script="${script.id}"]`);
   await workspace(ws => ws.selectedScriptTaskId === script.id);
+  await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${project.id}&stage=storyboard` });
+  await browser.waitFor(`document.querySelectorAll('[data-testid="creative-shot-thumb"]').length===3`);
   await browser.waitFor(`document.querySelectorAll(${JSON.stringify(q('creative-shot'))}).length === 3`);
   await fill('creative-director', 'jia_zhangke', 'change');
   await fill('creative-preset', 'jia.platform.distance', 'change');
@@ -140,7 +144,7 @@ try {
   report.checks.push('新要求使旧分镜和审阅过期，后端拒绝旧候选采用并保留人工稿');
   await app.close();
   app = createStudio(options); base = await listen();
-  await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${project.id}` });
+  await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${project.id}&stage=script` });
   await browser.waitFor(`document.body.textContent.includes('白色')`);
   ws = await get(`/api/projects/${project.id}/creative`);
   assert.ok(ws.versions.some(version => version.id === manualId));

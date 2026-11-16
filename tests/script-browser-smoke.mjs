@@ -123,6 +123,14 @@ try {
   report.checks.push('独立服务重启后稿件、报告、原request-id与过期状态恢复');
   const shot = await browser.call('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
   fs.writeFileSync(path.join(browserArtifacts, 'script-workbench-isolated.png'), Buffer.from(shot.data, 'base64'));
+  for (const [width,height] of [[1366,768],[1440,900]]) {
+    await browser.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
+    await browser.evaluate("document.querySelector('.studio-main').scrollTop=0");
+    const bounds=await browser.evaluate("(()=>{const main=document.querySelector('.studio-main').getBoundingClientRect(),footer=document.querySelector('.studio-footer').getBoundingClientRect();return {scroll:document.documentElement.scrollWidth,mainBottom:main.bottom,footerTop:footer.top,footerBottom:footer.bottom,height:innerHeight};})()");
+    assert.ok(bounds.scroll<=width);assert.ok(bounds.mainBottom<=bounds.footerTop+1);assert.ok(bounds.footerBottom<=height+1);
+    const image=await browser.call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(path.join(browserArtifacts,`c-script-${width}.png`),Buffer.from(image.data,'base64'));
+  }
+  report.checks.push('C版1366×768及1440×900中人工稿、审阅与版本入口保留，主区和底部操作分离、无异常横向滚动');
   assert.equal(browser.messages.length, 0);
   report.checks.push('真实Chrome无未处理页面异常');
   report.passed = true;

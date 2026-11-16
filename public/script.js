@@ -1,3 +1,5 @@
+import { mountStudio } from './studio-shell.js';
+
 const $ = selector => document.querySelector(selector);
 const app = $('#script-app');
 const esc = (value = '') => String(value ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -54,15 +56,36 @@ function setWorkspace(ws, { keepDraft = false } = {}) {
   if (!keepDraft) { state.draftBody = ''; state.draftDirty = false; state.parentId = null; }
 }
 function pill(label, type = '') { return `<span class="script-pill ${esc(type)}">${esc(label)}</span>`; }
-function projectSidebar() {
-  return `<aside class="sidebar"><div class="brand"><div class="brand-mark">▤</div><div><div class="brand-name">AI-Drama-Studio</div><div class="brand-sub">让故事开始发生</div></div></div><a class="script-nav" href="/" data-action="return"><span class="step-number">01</span>故事立项</a><div class="script-nav active"><span class="step-number">02</span>剧本与独立审阅</div><a class="script-nav" href="/video.html${state.project ? `?projectId=${encodeURIComponent(state.project.id)}` : ''}" data-leave><span class="step-number">04</span>单镜头视频</a><a class="script-nav" href="/timeline.html${state.project ? `?projectId=${encodeURIComponent(state.project.id)}` : ''}" data-leave><span class="step-number">05</span>本地时间轴</a><div class="sidebar-heading"><span>我的项目 <span class="project-count">${state.projects.length}</span></span></div><div class="project-list">${state.projects.map(project => `<button class="project-link ${project.id === state.project?.id ? 'active' : ''}" data-project-id="${esc(project.id)}"><span class="project-dot"></span><div><strong>${esc(project.name)}</strong><small>${project.durationSeconds} 秒 · ${project.aspectRatio === '16:9' ? '横屏' : '竖屏'}</small></div></button>`).join('') || '<div class="empty-list">先创建一个故事项目。</div>'}</div><div class="sidebar-bottom"><span class="local-dot"></span><div>本地版本记录<small>已保存的稿件与审阅独立保留</small></div></div></aside>`;
-}
 function render() {
   document.body.classList.add('script-page');
-  app.innerHTML = `<div class="layout">${projectSidebar()}<main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>剧本</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions"><a class="secondary-button" href="/creative.html${state.project ? `?projectId=${encodeURIComponent(state.project.id)}` : ''}" data-action="return" data-testid="open-creative">Codex 文字与分镜 →</a><a class="ghost-button" href="/" data-action="return">返回故事立项</a><button class="secondary-button" data-action="reload" data-testid="script-refresh">刷新状态</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">让创作说明成为可拍摄的故事</div><h1>剧本与独立审阅</h1><p>即梦生成候选，Codex 独立检查，最终稿由你决定。</p></div><span class="stage-badge">第二阶段 · 剧本</span></div><div class="script-route-steps"><span>已保存创作说明</span><span>→</span><strong>即梦剧本候选</strong><span>→</span><strong>Codex 独立审阅</strong><span>→</span><span>人工修改与版本保存</span></div><div id="script-error"></div>${state.project && state.ws ? workspaceView() : `<div class="script-empty"><strong>${state.projects.length ? '请选择一个故事项目' : '故事还没有开始'}</strong>先在故事立项中保存项目和创作说明，再进入剧本阶段。<p><a href="/" data-action="return">前往故事立项</a></p></div>`}<p class="footer-note">图片、视频、配音和剪辑留待后续阶段。本页面不以文本节点保存冒充即梦 Agent 改稿。</p></div></main></div>`;
+  app.innerHTML = `<div class="layout"><main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>剧本</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions"><a class="secondary-button" href="/creative.html${state.project ? `?projectId=${encodeURIComponent(state.project.id)}` : ''}" data-action="return" data-testid="open-creative">Codex 文字与分镜 →</a><a class="ghost-button" href="/" data-action="return">返回故事立项</a><button class="secondary-button" data-action="reload" data-testid="script-refresh">刷新状态</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">让创作说明成为可拍摄的故事</div><h1>剧本与独立审阅</h1><p>即梦生成候选，Codex 独立检查，最终稿由你决定。</p></div><span class="stage-badge">第二阶段 · 剧本</span></div><div class="script-route-steps"><span>已保存创作说明</span><span>→</span><strong>即梦剧本候选</strong><span>→</span><strong>Codex 独立审阅</strong><span>→</span><span>人工修改与版本保存</span></div><div id="script-error"></div>${state.project && state.ws ? workspaceView() : `<div class="script-empty"><strong>${state.projects.length ? '请选择一个故事项目' : '故事还没有开始'}</strong>先在故事立项中保存项目和创作说明，再进入剧本阶段。<p><a href="/" data-action="return">前往故事立项</a></p></div>`}<p class="footer-note">图片、视频、配音和剪辑留待后续阶段。本页面不以文本节点保存冒充即梦 Agent 改稿。</p></div></main></div>`;
   if (state.kind === 'outline' && selected()) $('.script-editor-toolbar')?.insertAdjacentHTML('beforeend', '<button class="secondary-button" data-action="outline-to-summary" data-testid="outline-to-summary">填入本集梗概</button>');
   $('#script-input-form')?.insertAdjacentHTML('beforeend', `<div class="form-group"><label for="script-credit-cap">积分预算上限（可选，独立于人民币预算）</label><input id="script-credit-cap" data-spend="credits" data-testid="script-credit-cap" type="number" min="0" max="1000000000" step="any" value="${state.limits.credits === null ? '' : esc(state.limits.credits)}" placeholder="尚未设定"><p class="script-panel-note">设置上限不等于同意付费。只有取得本次明确费用并再次确认后才可提交；人民币与积分不换算。</p></div>`);
   renderError(); renderRuntime(); setBusy(state.busy); dirtyIndicators();
+  arrangeScript();
+  mountStudio(app, { step: 'script', project: state.project, projects: state.projects, title: '剧本 · 即梦可选渠道', nextText: '下一步：确认剧本后制作分镜。即梦费用待确认时，可继续使用本机 Codex 或人工编辑。', primary: { label: '保存人工剧本', selector: '[data-testid="script-save-version"]', disabled: !state.ws, reason: !state.ws ? '先选择一个已保存的故事项目。' : undefined }, secondary: { label: '使用 Codex 创作', href: `/creative.html?stage=script${state.project ? `&projectId=${encodeURIComponent(state.project.id)}` : ''}` } });
+}
+function scriptDetails(node, title, { open = false, className = '' } = {}) {
+  if (!node) return null;
+  const details = document.createElement('details'); details.className = `script-settings ${className}`; details.open = open;
+  const summary = document.createElement('summary'); summary.textContent = title; node.before(details); details.append(summary, node); return details;
+}
+function arrangeScript() {
+  const content = app.querySelector('.content'); if (!content) return;
+  content.classList.add('script-focused-workspace'); content.querySelector('.script-route-steps')?.remove();
+  content.querySelector('.stage-badge')?.remove();
+  const heading = content.querySelector('.page-heading h1'); if (heading) heading.textContent = '编辑与检查剧本';
+  const paragraph = content.querySelector('.page-heading p'); if (paragraph) paragraph.textContent = '这里是即梦可选渠道。核对输入、编辑并保存剧本，再独立审阅当前版本。';
+  scriptDetails(content.querySelector('.script-top-summary'), '即梦工具、费用与预算 · 按真实报价确认');
+  const inputs = content.querySelector('.script-grid>.script-stack:first-child');
+  if (inputs) {
+    const panels = Array.from(inputs.children);
+    scriptDetails(panels[0], '剧本输入与用户要求', { open: !state.input.idea });
+    scriptDetails(panels[1], '即梦画布绑定与访问检查');
+    scriptDetails(panels[2], '生成任务与候选', { open: state.tasks.some(task => ['submitting', 'querying', 'query_failed', 'download_ready'].includes(task.status)) });
+  }
+  const editorStack = content.querySelector('.script-grid>.script-stack:last-child');
+  if (editorStack) scriptDetails(editorStack.children[1], '独立审阅与问题', { open: state.reviews.some(review => review.needsReview || ['queued', 'running'].includes(review.status)) });
 }
 function workspaceView() {
   const input = state.input;

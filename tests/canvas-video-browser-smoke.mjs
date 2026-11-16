@@ -24,7 +24,7 @@ const adapter={
   async query({submitId}){calls.query++;if(queryFailure){queryFailure=false;throw new Error('TEST查询网络失败；保留原submitId。');}return {submitId,status:'success',resourceId,receipt:{testFixture:true}};},
   async download({submitId,resourceId:original,cwd,outputPath}){calls.download++;assert.equal(original,resourceId);if(downloadFailure){downloadFailure=false;throw new Error('TEST下载失败；只能恢复原资源。');}const file=outputPath??path.join(cwd,'original.mp4');fs.writeFileSync(file,sourceBytes,{flag:'wx'});return {submitId,resourceId:original,status:'success',path:file,testFixture:true};},
 };
-const options={dataDir,canvasVideoOptions:{adapter,evidence},inspectImageTools:async()=>({canSubmit:false,message:'隔离UI验收不运行图像工具。'}),imageGenerationOptions:{inspectCapabilities:async()=>({canSubmit:false,message:'自动出图关闭。'})}};
+const options={dataDir,canvasVideoOptions:{adapter,evidence},videoOptions:{adapter:{inspect:async()=>({canSubmit:false,realSubmissionEnabled:false,auth:{loggedIn:false},message:'隔离UI验收：人工检查不调用外部直连CLI。'}),submit:async()=>{throw new Error('禁止使用直连生成');}}},inspectImageTools:async()=>({canSubmit:false,message:'隔离UI验收不运行图像工具。'}),imageGenerationOptions:{inspectCapabilities:async()=>({canSubmit:false,message:'自动出图关闭。'})}};
 let app=createStudio(options);
 async function listen(){await new Promise(resolve=>app.server.listen(0,'127.0.0.1',resolve));return `http://127.0.0.1:${app.server.address().port}`;}
 let base=await listen();
@@ -68,7 +68,17 @@ try{
   const originalFile=await fetch(base+`/api/canvas-video-tasks/${task.id}/original`);assert.equal(originalFile.status,200);assert.equal(hash(Buffer.from(await originalFile.arrayBuffer())),hash(sourceBytes));
   assert.equal((await fetch(base+`/api/projects/${project.id}/video-assets/${old.id}`)).status,200);assert.equal(hash(app.videos.file(project.id,old.id).bytes),hash(sourceBytes));
   await browser.evaluate(`document.querySelector('[data-asset-id="${candidate.id}"]').scrollIntoView({block:'start'})`);await screenshot('canvas-test-candidate-playback.png');report.checks.push('查询故障继续原ID，下载故障仅恢复原资源；实际TEST文件FFprobe与Chrome播放成功，旧已选视频与原片保留，新候选不自动检查或选用');
-  await browser.evaluate(`{const node=document.querySelector('[data-review-notes="${candidate.id}"]');node.value='人工软件检查：TEST素材非AI生成，实播通过，画面仅作工程验收。';node.dispatchEvent(new Event('input',{bubbles:true}));}`);
+  const notes='人工软件检查：TEST素材非AI生成，实播通过，画面仅作工程验收。';
+  await browser.evaluate(`{const node=document.querySelector('[data-review-notes="${candidate.id}"]');node.value=${JSON.stringify(notes)};node.dispatchEvent(new Event('input',{bubbles:true}));}`);
+  await click('[data-studio-step="images"]');await browser.waitFor("!!document.querySelector('#canvas-confirm[open] [data-testid=canvas-leave-stay]')");
+  assert.ok(await browser.evaluate("document.querySelector('#canvas-confirm').textContent.includes('有未保存的检查说明')"));
+  await click(q('canvas-leave-stay'));assert.equal(await browser.evaluate('location.pathname'),'/canvas-video.html');
+  assert.equal(await browser.evaluate(`document.querySelector('[data-review-notes="${candidate.id}"]').value`),notes);
+  await click('[data-studio-step="video"]');await browser.waitFor("!!document.querySelector('#canvas-confirm[open] [data-testid=canvas-leave-discard]')");await click(q('canvas-leave-discard'));
+  await browser.waitFor(`!!document.querySelector('[data-review-notes="${candidate.id}"]')&&document.querySelector('[data-review-notes="${candidate.id}"]').value===''`);
+  assert.equal(calls.submit,1);assert.equal((await api(route)).assets.find(asset=>asset.id===candidate.id).state,'pending_check');
+  await browser.evaluate(`{const node=document.querySelector('[data-review-notes="${candidate.id}"]');node.value=${JSON.stringify(notes)};node.dispatchEvent(new Event('input',{bubbles:true}));}`);
+  report.checks.push('左侧步骤导航明确确认未保存检查说明：取消保留原输入，明确放弃后才离开；原任务/候选未写入或重新生成');
   await click(`[data-review="${candidate.id}"][data-verdict=accepted]`);await click(`[data-select="${candidate.id}"]`);view=await api(route);assert.equal(view.selectionHistory.at(-1).assetId,candidate.id);assert.equal(view.selectionHistory.length,2);
   report.checks.push('人工检查与人工选用分别写历史，选择新版本后旧原片仍可读，不把媒体技术核验当正式内容PASS');
   images=app.images.view(project.id);app.images.review(project.id,{revision:images.revision,assetId:image.id,verdict:'rejected',notes:'TEST撤销输入审核，验证旧候选需复核。'});await click(q('canvas-refresh'));await browser.waitFor(`!!document.querySelector(${JSON.stringify(q('canvas-stale'))})`);view=await api(route);assert.ok(view.assets.every(asset=>asset.stale));assert.equal(calls.submit,1);
