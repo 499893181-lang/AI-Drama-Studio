@@ -1,0 +1,1193 @@
+{
+  "metadata": {
+    "round": 5,
+    "topic": "画面提示词优化",
+    "observed_at": "2026-11-16",
+    "prior_unique_douyin_ids": 202,
+    "new_unique_douyin_ids": 30,
+    "total_unique_douyin_ids": 232,
+    "prompt_handbook_sources": 88,
+    "watch_method": "打开作品后抽看关键帧、字幕、提示卡和界面；非全部连续观看",
+    "engagement": "25条显示万赞量级；5条专项补充。万为近似显示，播放量均未显示。",
+    "generation_tested": false,
+    "software_integrated": false
+  },
+  "records": [
+    {
+      "id": "R5P01",
+      "modal_id": "7622244416803163418",
+      "title": "氛围提示词的奥义",
+      "title_kind": "为检索简化的作品标题",
+      "author": "何止维",
+      "duration": "02:45",
+      "likes_display": "8.4万",
+      "likes_approx": 84000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%E7%BB%98%E7%94%BB%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E8%B4%A8%E6%84%9F%20%E5%85%89%E5%BD%B1?aid=f4ba240e-d9b7-4ac9-b0f3-da87590d6280&modal_id=7622244416803163418&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:40 机甲脸部提亮，背景保留暗部，字幕指出主体脸部更亮。",
+        "01:08 旧工业空间与表面磨损。",
+        "01:42 cinematic lighting提示卡强调照明服务戏剧表达。"
+      ],
+      "takeaway_own": "先明确亮的是谁、暗的是哪里，再补气氛词。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "傍晚旧屋，奶奶坐在木桌边，左侧窗光照亮眼睛与手背；背后碗柜低亮度，仅保留木框轮廓。视觉重点是停在半空的筷子。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "lighting.target",
+        "lighting.dark_regions",
+        "attention.primary"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-04"
+      ]
+    },
+    {
+      "id": "R5P02",
+      "modal_id": "7702798522386631945",
+      "title": "写出电影感画面提示词",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Tom的混乱空间",
+      "duration": "02:43",
+      "likes_display": "9444",
+      "likes_approx": 9444,
+      "likes_is_rounded": false,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/%E5%8D%B3%E6%A2%A6%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E9%AB%98%E7%BA%A7%E6%84%9F?aid=644f7305-be1d-453b-8cdc-40c0c4dc44c8&modal_id=7702798522386631945&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:36 鱼眼、超广角与正交构图对比。",
+        "00:43 街景案例提醒先决定观众要看见的信息。",
+        "01:29 模板分列时间天气、光源位置、软硬、明暗、暗部信息及景别、机位、透视、景深。"
+      ],
+      "takeaway_own": "信息可读性、照明和摄影选择分别描述，说明暗部保留什么。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "阴天早晨，平视中景，人物腰部以上入画。窗在画面左侧提供柔光，右脸稍暗但能看清表情；后方门牌保持可辨，其他背景轻微虚化。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "framing",
+        "lighting",
+        "readability"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "专项补充，点赞未达万赞；提供其他来源未充分覆盖的具体方法。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-01",
+        "P5-04"
+      ]
+    },
+    {
+      "id": "R5P03",
+      "modal_id": "7695676799700123530",
+      "title": "设计师做AI图的隐藏技巧 少给风格词多给动作词",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Ak007设计师",
+      "duration": "00:49",
+      "likes_display": "2.0万",
+      "likes_approx": 20000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%9E%84%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=ff36ff2d-7428-4520-8896-a9ed8c55f6a5&modal_id=7695676799700123530&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:09 饮料罐夹在巨大柠檬与冰块之间。",
+        "00:33 香水放在石台，周围花朵及水面反光。",
+        "作品说明列出穿、夹、定、嵌、卷、撞等关系动词。"
+      ],
+      "takeaway_own": "写清物体如何接触和作用，用可见关系替代空泛装饰词。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "粗布包的提手绕过奶奶手腕，包底压在木凳上，布料在受力处折叠；凳面接触处有柔和阴影，其他物件不悬浮。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "relations.contact",
+        "materials.deformation"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-05"
+      ]
+    },
+    {
+      "id": "R5P04",
+      "modal_id": "7591816823465610559",
+      "title": "三个步骤掌握AI的JSON生图",
+      "title_kind": "为检索简化的作品标题",
+      "author": "刺猬星球super-i",
+      "duration": "01:30",
+      "likes_display": "5.7万",
+      "likes_approx": 57000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%9E%84%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=ff36ff2d-7428-4520-8896-a9ed8c55f6a5&modal_id=7591816823465610559&type=general",
+      "source_type": "方法主张与视觉案例",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:10 三步骤标题。",
+        "00:38至00:40 红衣人物、双侧台灯和对称桌面案例。",
+        "正文提出研究美学风格、组织JSON、再生成动态。"
+      ],
+      "takeaway_own": "结构化字段便于编辑与版本对比；格式本身不能证明画质提高。",
+      "limitations": [
+        "未见完整可读JSON。普通文本永远达不到效果属于作者主张，缺乏对照支持。"
+      ],
+      "example_prompt_own": "先填主体、位置、动作、照明和色盘字段，再合成一句话：穿灰蓝布衫的青年站在左三分线，背向江面，风掀衣角；阴天散射光，灰蓝与枯黄为主。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "prompt_fields",
+        "prompt_revision"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-11"
+      ]
+    },
+    {
+      "id": "R5P05",
+      "modal_id": "7687940864387140902",
+      "title": "提示词堪比论文的拆解教程",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Surviving-黑猫阿",
+      "duration": "03:13",
+      "likes_display": "5.5万",
+      "likes_approx": 55000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%9E%84%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=ff36ff2d-7428-4520-8896-a9ed8c55f6a5&modal_id=7687940864387140902&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:22 Flova文档分列焦段、快门、白平衡和影调。",
+        "01:19 焦点控制段写眼睛、面部、手与物件之间的注意转移及短暂遮挡。"
+      ],
+      "takeaway_own": "把摄影、光色和注意对象分开。静态图只指定当前焦点。",
+      "limitations": [
+        "参数词不代表精确执行；标题1800w播放是作者说法，不作平台播放统计。"
+      ],
+      "example_prompt_own": "近景，焦点落在握住布牌的右手，布牌缝线清晰，人物面部稍虚；暖色窗光，背景不过度锐化。镜头移动和焦点转移另写入视频段。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "focus.target",
+        "image_prompt",
+        "video_prompt"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-11"
+      ]
+    },
+    {
+      "id": "R5P06",
+      "modal_id": "7678927306476432358",
+      "title": "AI创意封面怎么做 提示词很重要",
+      "title_kind": "为检索简化的作品标题",
+      "author": "哈尼玩AI",
+      "duration": "01:27",
+      "likes_display": "3.4万",
+      "likes_approx": 34000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%9E%84%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=ff36ff2d-7428-4520-8896-a9ed8c55f6a5&modal_id=7678927306476432358&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:13 上传人物参考后输入赛博都市封面需求。",
+        "00:48 红毯、围栏、闪光灯和前景摄影者形成层次。",
+        "00:57 明示低机位仰拍。"
+      ],
+      "takeaway_own": "先定封面的叙事、机位与前后景，再用人物参考保持身份。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "沿用人物参考中的面容和衣服。低机位中景，青年站在雨夜巷口，近景湿栏杆略虚，中景人物最清晰，远处招牌只作模糊色块；右上留出标题空间。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "references.identity",
+        "layers",
+        "title_safe_area"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": []
+    },
+    {
+      "id": "R5P07",
+      "modal_id": "7668764478627958050",
+      "title": "掌握5个AI提示词优化照片",
+      "title_kind": "为检索简化的作品标题",
+      "author": "小沈NexT",
+      "duration": "00:18",
+      "likes_display": "1.9万",
+      "likes_approx": 19000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%9E%84%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=ff36ff2d-7428-4520-8896-a9ed8c55f6a5&modal_id=7668764478627958050&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:04 食物照片转手绘plog的案例。",
+        "00:07 人像卡写半脸强光、暗背景、横向拖影、2:3和8K，附带无关英文标题。"
+      ],
+      "takeaway_own": "套用模板前删掉无关文字、比例和特效，保留真正需要的照明。",
+      "limitations": [
+        "8K字样不等于输出分辨率；半脸强光描述不足以证明标准伦勃朗光型。"
+      ],
+      "example_prompt_own": "单幅竖向人像，左侧硬光照亮半边脸，右侧轮廓仍可辨；深灰背景。人物静止、边缘清晰，不添加横向拖影与装饰文字。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "template_cleanup",
+        "output.aspect_ratio"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-07",
+        "P5-11"
+      ]
+    },
+    {
+      "id": "R5P08",
+      "modal_id": "7688761164835266289",
+      "title": "希望大家一起加油 生活短片提示词教程",
+      "title_kind": "为检索简化的作品标题",
+      "author": "艺眸",
+      "duration": "04:32",
+      "likes_display": "1.9万",
+      "likes_approx": 19000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%9E%84%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=ff36ff2d-7428-4520-8896-a9ed8c55f6a5&modal_id=7688761164835266289&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:05 旧列车提示词分写年代道具、眼部手部细节、窗光与暗部纹理。",
+        "00:14 田间近景可见皮肤、衣褶与土地。",
+        "02:09 候车厅双人宽景由窗光与长椅线条组织。"
+      ],
+      "takeaway_own": "生活质感需要年代物件、身体状态和环境光相互对应。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "旧客车站内，奶奶把折好的布袋推向青年，嘴唇轻抿，目光停在他的袖口。旧木长椅沿窗排列，窗光柔和，白围裙有自然折痕，室内无现代电子广告屏。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "scene.era",
+        "expression",
+        "props"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-02"
+      ]
+    },
+    {
+      "id": "R5P09",
+      "modal_id": "7629235002428968232",
+      "title": "再见了AI抽卡 搞懂AI生图的底层逻辑",
+      "title_kind": "为检索简化的作品标题",
+      "author": "大师的AI小灶",
+      "duration": "05:31",
+      "likes_display": "30.1万",
+      "likes_approx": 301000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%8A%80%E5%B7%A7?aid=c94e229f-227e-4bf7-b3f2-8300f9731c1b&modal_id=7629235002428968232&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:14 玩手机案例中屏幕反向朝观众。",
+        "02:16 提示词强调睡觉人物腹肌，示例被子出现露腹洞口。"
+      ],
+      "takeaway_own": "删除当前机位不可见的特征，明确朝向和接触关系，避免关键词逼迫画面破坏遮挡。",
+      "limitations": [
+        "提示词污染和视觉代偿是作者解释框架，不作为模型内部机制证据。"
+      ],
+      "example_prompt_own": "侧后方中景，青年低头看手机，屏幕朝向他的脸，观众仅看见手机背壳；双手自然托住机身。下半身被桌面遮住，不描述裤袋或腰带细节。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "visibility",
+        "relations.orientation",
+        "occlusion"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-01",
+        "P5-12"
+      ]
+    },
+    {
+      "id": "R5P10",
+      "modal_id": "7651197799991627051",
+      "title": "生图AI提示词2026实用七种玩法",
+      "title_kind": "为检索简化的作品标题",
+      "author": "大户AI分享",
+      "duration": "00:29",
+      "likes_display": "2.7万",
+      "likes_approx": 27000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%8A%80%E5%B7%A7?aid=c94e229f-227e-4bf7-b3f2-8300f9731c1b&modal_id=7651197799991627051&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:03 产品融合卡要求保留外形材质，匹配透视、比例、光向和接触阴影。",
+        "00:10 风格迁移卡更换水果并重置产品照明。"
+      ],
+      "takeaway_own": "将保留、修改和随环境调整的属性分开，解决锁色与重新打光的冲突。",
+      "limitations": [
+        "可见提示卡，未完整观察生成过程或成功率。"
+      ],
+      "example_prompt_own": "把参考中的搪瓷杯放在桌面右前方，保留杯体轮廓与花纹。适配左窗暖光与桌面反射，允许明暗变化，杯底必须接地；不改变桌椅和墙面布局。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "edit.preserve",
+        "edit.change",
+        "edit.adapt"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-09"
+      ]
+    },
+    {
+      "id": "R5P11",
+      "modal_id": "7650818310648499492",
+      "title": "设计师私藏七个出图提示词公式",
+      "title_kind": "为检索简化的作品标题",
+      "author": "赛博鸭AIGC",
+      "duration": "00:16",
+      "likes_display": "7.8万",
+      "likes_approx": 78000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%8A%80%E5%B7%A7?aid=c94e229f-227e-4bf7-b3f2-8300f9731c1b&modal_id=7650818310648499492&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:04 摩托车转手绘线稿案例。",
+        "00:11 去杂物卡同时要求清理投影、补全遮挡纹理和环境光。"
+      ],
+      "takeaway_own": "删除对象还要处理投影与被挡住的背景，之后核对周边未修改区域。",
+      "limitations": [
+        "所谓像素级与100%无痕未验证。"
+      ],
+      "example_prompt_own": "只删除桌角塑料袋及其在桌面的投影，按周边木纹方向补全桌面。保留旁边饭盒、人物手指与窗光；修复区不新增花纹或反光亮斑。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "edit.mask",
+        "edit.remove_shadow",
+        "edit.background_repair"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-09"
+      ]
+    },
+    {
+      "id": "R5P12",
+      "modal_id": "7636399632989343028",
+      "title": "你不是不会用AI 是不会看图说话",
+      "title_kind": "为检索简化的作品标题",
+      "author": "小G-0202",
+      "duration": "01:23",
+      "likes_display": "8881",
+      "likes_approx": 8881,
+      "likes_is_rounded": false,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%8A%80%E5%B7%A7?aid=c94e229f-227e-4bf7-b3f2-8300f9731c1b&modal_id=7636399632989343028&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:10 巨兽和舰船示例说明前中后景可辨。",
+        "00:18 标线说明主体约占画面三分之二。",
+        "00:48 提醒辨认暖色调。"
+      ],
+      "takeaway_own": "参考图分析应记录景深、占比、色温和层次，不只列物体名。",
+      "limitations": [
+        "反推是对可见画面的重新描述，不是恢复原始提示词。"
+      ],
+      "example_prompt_own": "全身人物约占画面高度三分之二，站在右三分线附近；近处石阶、中景人物、远处木门都能辨认，整体暖灰色。只迁移比例与层次，不复制参考中的人物身份。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "reference_analysis.subject_ratio",
+        "reference_analysis.depth"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "专项补充，点赞未达万赞；提供其他来源未充分覆盖的具体方法。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-03"
+      ]
+    },
+    {
+      "id": "R5P13",
+      "modal_id": "7647841437068823842",
+      "title": "九天仙阙 仙侠类风格分享",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Aurora MJ",
+      "duration": "00:50",
+      "likes_display": "2.5万",
+      "likes_approx": 25000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/Midjourney%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%95%99%E7%A8%8B?aid=f76c2296-c60f-4b6c-a37e-3679bb1c3c62&modal_id=7647841437068823842&type=general",
+      "source_type": "成片视觉分析",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:08 巨龙、金殿、云层与小人物构成尺度对照。",
+        "00:34 两侧建筑和弧形云层围合中央留空。",
+        "00:44 青蓝环境与金色饰物、发丝亮边的人像。"
+      ],
+      "takeaway_own": "幻想场景可转写为尺度、围合、有限色盘和不同材质反光。",
+      "limitations": [
+        "抽看未见完整提示词；此条为成片分析，迁移词由本项目撰写。"
+      ],
+      "example_prompt_own": "极远景，青灰云海中的古老石桥，两侧高塔围合中央天空；桥上行人仅占画面高度十二分之一。暖金光落在塔沿，粗石主体保持哑光，不把所有表面都写成金属。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "scale",
+        "framing.enclosure",
+        "palette"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-06"
+      ]
+    },
+    {
+      "id": "R5P14",
+      "modal_id": "7630024220487077129",
+      "title": "日系风格短片制作工作流",
+      "title_kind": "为检索简化的作品标题",
+      "author": "SansanYe",
+      "duration": "09:41",
+      "likes_display": "2.7万",
+      "likes_approx": 27000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/Midjourney%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%95%99%E7%A8%8B?aid=f76c2296-c60f-4b6c-a37e-3679bb1c3c62&modal_id=7630024220487077129&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "01:51 先做2×2无人物无文字的卧室环境板。",
+        "02:01 脸部和全身服装三视图分开准备。",
+        "05:16 组合人物、场景、人脸参考生成四镜板，动作指定捧杯看窗外。"
+      ],
+      "takeaway_own": "先确认环境和人物资产，再组合分镜；图板与最终单幅图用途分离。",
+      "limitations": [
+        "标题43万等历史展示不作为当前平台播放量。"
+      ],
+      "example_prompt_own": "单幅画面，不是拼图。沿用场景参考的窗、桌和门位置，沿用人物参考的脸与服装；青年双手捧杯看向左窗，中景，窗光柔和，背景保留桌沿。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "artifact_type",
+        "references.roles"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-08",
+        "P5-10"
+      ]
+    },
+    {
+      "id": "R5P15",
+      "modal_id": "7644867526236622114",
+      "title": "AI影片制作教程 日系人物与场景",
+      "title_kind": "为检索简化的作品标题",
+      "author": "汁汁鸡腿堡",
+      "duration": "14:01",
+      "likes_display": "4.2万",
+      "likes_approx": 42000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/Midjourney%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E6%95%99%E7%A8%8B?aid=f76c2296-c60f-4b6c-a37e-3679bb1c3c62&modal_id=7644867526236622114&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "02:53 单独生成服装、袜鞋和包的多视图，展示无头服装模特。",
+        "05:52 面容近景与全身三视图分开。",
+        "07:24 列车分镜卡分锁定项、画面、焦距和质感，指定双手分别所在位置及视线。"
+      ],
+      "takeaway_own": "身份、衣物、动作和风格分层，每只手的动作与道具归属要明确。",
+      "limitations": [
+        "标题历史观看量不作当前播放量；未复现生成。"
+      ],
+      "example_prompt_own": "沿用面容参考和灰蓝外套参考。青年坐在列车窗边，右手扶住耳旁头发，左手按住膝上的布包；目光朝窗外，身体略前倾，衣褶沿肘部受力方向展开。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "identity",
+        "wardrobe",
+        "hands",
+        "prop_owner"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-08"
+      ]
+    },
+    {
+      "id": "R5P16",
+      "modal_id": "7679738487188584070",
+      "title": "AI视频的电影感 复刻六种电影灯光",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Shine Ai",
+      "duration": "05:51",
+      "likes_display": "4.2万",
+      "likes_approx": 42000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E5%9C%BA%E6%99%AF%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E7%94%B5%E5%BD%B1%E6%84%9F?aid=43552d57-b3b3-4e88-beaf-34b895968aa3&modal_id=7679738487188584070&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:24 列顶光、侧光、逆光、伦勃朗光、体积光和底光。",
+        "01:48 顶光舞者脚下有影子，周围暗。",
+        "01:58 人脸侧光明暗分界。",
+        "04:28 卡片指定冷蓝与金光穿过烟雾，舞台其他区域暗。"
+      ],
+      "takeaway_own": "光线要写方向、颜色、介质、被照对象与暗区，并设主次。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "旧仓库只有高窗投下的窄束暖光照到人物肩部和地面，空气中少量薄尘显出光路；脸由墙面弱反光照亮，背景货架低亮度，不叠加无来源的彩色底光。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "lighting.source",
+        "lighting.medium",
+        "lighting.priority"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-04"
+      ]
+    },
+    {
+      "id": "R5P17",
+      "modal_id": "7671562721260177142",
+      "title": "Ai新人报道 微表情 视频含提示词",
+      "title_kind": "为检索简化的作品标题",
+      "author": "打打打个渔AIGC",
+      "duration": "00:35",
+      "likes_display": "2.6万",
+      "likes_approx": 26000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E4%BA%BA%E5%83%8F%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E7%9C%9F%E5%AE%9E%E6%84%9F?aid=b5a58dd4-b56c-4daa-b46f-4ef8da6f1914&modal_id=7671562721260177142&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:08 高兴案例把情绪拆为眉眼、嘴角与手势，限定正面近景及逆光树林。",
+        "00:17 小委屈案例分别描述眼眶、嘴角和视线，维持同人物近景自然光。"
+      ],
+      "takeaway_own": "情绪转成可见面部变化；静态图只选一个瞬间，时间分段留给视频。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "奶奶刚听完电话，眼神停在桌沿，嘴角稍收紧，眼眶微湿但不落大颗泪珠；握电话的手仍贴着耳边。固定近景，侧窗柔光，不做夸张哭喊表情。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "expression.visible_cues",
+        "moment"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-02"
+      ]
+    },
+    {
+      "id": "R5P18",
+      "modal_id": "7697346003003199218",
+      "title": "为什么你需要真人感提示词",
+      "title_kind": "为检索简化的作品标题",
+      "author": "小佟AIGC",
+      "duration": "00:19",
+      "likes_display": "1.6万",
+      "likes_approx": 16000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E4%BA%BA%E5%83%8F%20%E6%8F%90%E7%A4%BA%E8%AF%8D%20%E7%9C%9F%E5%AE%9E%E6%84%9F?aid=b5a58dd4-b56c-4daa-b46f-4ef8da6f1914&modal_id=7697346003003199218&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:09 自拍案例提示卡规定夜间室内灯、手机视点和细小动作。",
+        "00:17 质感段指定手机成像、轻微噪点，排除过度磨皮与无关UI文字。"
+      ],
+      "takeaway_own": "先统一拍摄媒介与照明，再选择适量成像缺陷。",
+      "limitations": [
+        "H3与SD2.5的比较及硬件耗时为作者示例，未经验证。"
+      ],
+      "example_prompt_own": "夜间家中手机随拍，人物位于画面偏左，顶灯提供日常室内光，面部有轻微明暗不均，皮肤保留自然纹理；主体清晰，暗部少量噪点，不附加手机界面文字。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "capture_look",
+        "imperfections"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-07"
+      ]
+    },
+    {
+      "id": "R5P19",
+      "modal_id": "7619941932428463412",
+      "title": "第33集 材质升级提示词拆解",
+      "title_kind": "为检索简化的作品标题",
+      "author": "何止维",
+      "duration": "03:17",
+      "likes_display": "2.9万",
+      "likes_approx": 29000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%9D%90%E8%B4%A8%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=24c8f632-5d63-4447-b644-09b6435ef630&modal_id=7619941932428463412&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:55 字幕提出仅通过PBR材质升级实现变化。",
+        "01:38 机械臂卡要求已有面板粗糙度不同、不新增几何；可见掉漆、接缝油污和反光差异。"
+      ],
+      "takeaway_own": "材质变化限定在已有表面，写粗糙度和磨损位置，避免新增结构。",
+      "limitations": [
+        "文本生成图不等于得到物理渲染材质或可编辑贴图。"
+      ],
+      "example_prompt_own": "保留旧铁门的板块、门栓和比例，仅调整表面：常触摸的把手更平滑，接缝少量锈色，门板大面为低光泽旧漆；不新增铆钉、管线或裂口。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "materials.roughness",
+        "materials.wear_location",
+        "geometry_lock"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-05"
+      ]
+    },
+    {
+      "id": "R5P20",
+      "modal_id": "7644481755684751857",
+      "title": "实用提示词分享 产品分解提示词",
+      "title_kind": "为检索简化的作品标题",
+      "author": "宅急颂AI",
+      "duration": "00:23",
+      "likes_display": "4.9万",
+      "likes_approx": 49000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%9D%90%E8%B4%A8%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=24c8f632-5d63-4447-b644-09b6435ef630&modal_id=7644481755684751857&type=general",
+      "source_type": "提示词卡",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:03 产品分解卡要求保留造型比例透视材质，按轴向分离零件并指定层级间距。",
+        "00:22 为作者推广收尾，未见充分的结构验证。"
+      ],
+      "takeaway_own": "道具分解图写清轴向和间距，复杂内部结构需另给可靠参考。",
+      "limitations": [
+        "提示卡不是工程证据，生成器可能补造不可见零件。"
+      ],
+      "example_prompt_own": "依据提供的水壶结构图，只将已标注的壶盖沿竖直轴向上分离一个盖高，其余部件不拆；白色背景，统一视角，壶体比例不变，不猜测内部结构。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "asset_diagram.axis",
+        "asset_diagram.parts"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": []
+    },
+    {
+      "id": "R5P21",
+      "modal_id": "7657515668790660402",
+      "title": "掌握3种基础构图原则",
+      "title_kind": "为检索简化的作品标题",
+      "author": "尧の电波",
+      "duration": "01:21",
+      "likes_display": "3.3万",
+      "likes_approx": 33000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%9E%84%E5%9B%BE%20%E7%94%9F%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=fc972ebc-e665-4830-8f91-2f1e0b068e8d&modal_id=7657515668790660402&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:30 人物坐在岩石中的画面对比，字幕强调主体与环境关系。",
+        "01:01 对称宫门和中央轴线示例，字幕描述严肃规整。"
+      ],
+      "takeaway_own": "构图服务人物和环境关系；秩序感可用明确轴线及重复元素建立。",
+      "limitations": [
+        "抽看为构图解释，未完整验证生成步骤。"
+      ],
+      "example_prompt_own": "正对旧屋门的固定远景，门框中轴与画面中轴重合，人物坐在轴线右侧木凳，空椅在左侧；重复窗格稳定画面，人物略偏离对称中心。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "framing.axis",
+        "framing.balance"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-03"
+      ]
+    },
+    {
+      "id": "R5P22",
+      "modal_id": "7671924714021033969",
+      "title": "有参考图AI还是画不像 试试这3步",
+      "title_kind": "为检索简化的作品标题",
+      "author": "周末Zomo",
+      "duration": "02:22",
+      "likes_display": "1.0万",
+      "likes_approx": 10000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%9E%84%E5%9B%BE%20%E7%94%9F%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=fc972ebc-e665-4830-8f91-2f1e0b068e8d&modal_id=7671924714021033969&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:43 字幕强调每张参考图各管一件事。",
+        "01:27 提示卡分整体风格、新内容、必须保留及去掉项，保留手绘线条配色，排除原角色构图和背景纹理。"
+      ],
+      "takeaway_own": "每张参考标注职责，列出继承与不继承的属性。",
+      "limitations": [
+        "本轮未复现生成，不能据此计算成功率。"
+      ],
+      "example_prompt_own": "参考A只提供人物面容，参考B只提供旧屋空间，参考C只提供暖灰配色；新画面为奶奶坐在窗边折衣服。不复制C中的人物、文字和构图。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "references.role",
+        "references.inherit",
+        "references.exclude"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-08"
+      ]
+    },
+    {
+      "id": "R5P23",
+      "modal_id": "7601093090220264730",
+      "title": "AI视频要有电影感 用好7种构图技巧",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Xuan酱",
+      "duration": "09:43",
+      "likes_display": "2.4万",
+      "likes_approx": 24000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%9E%84%E5%9B%BE%20%E7%94%9F%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=fc972ebc-e665-4830-8f91-2f1e0b068e8d&modal_id=7601093090220264730&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "01:56 面部特写配中心构图提示卡，强调麻木情绪。",
+        "04:21 树林双人画面叠九宫格，人物及树干在交点和分割线附近。"
+      ],
+      "takeaway_own": "把构图术语转为可检查的位置、占比与背景线条。",
+      "limitations": [
+        "部分为电影画面讲解，不能证明AI已精确执行。"
+      ],
+      "example_prompt_own": "16:9远景，青年在右侧三分线附近，头部落在上方三分线附近；道路从左下通往人物脚下，地平线位于上三分线。背景树干不穿过头部。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "framing.subject_anchor",
+        "framing.leading_lines"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-03"
+      ]
+    },
+    {
+      "id": "R5P24",
+      "modal_id": "7658628406623489299",
+      "title": "AI漫剧分镜图如何制作",
+      "title_kind": "为检索简化的作品标题",
+      "author": "K-Insight",
+      "duration": "04:08",
+      "likes_display": "1.4万",
+      "likes_approx": 14000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%9E%84%E5%9B%BE%20%E7%94%9F%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=fc972ebc-e665-4830-8f91-2f1e0b068e8d&modal_id=7658628406623489299&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "01:18 九宫格双人办公室对话，包含远景、过肩和近景。",
+        "02:40 单幅面部近景，界面分别绑定两人物与场景参考。"
+      ],
+      "takeaway_own": "图板选叙事覆盖，单镜另行生成并验收身份、服装、窗位和视线。",
+      "limitations": [
+        "图板展示不能证明完全一致，需逐镜检查。"
+      ],
+      "example_prompt_own": "生成单幅过肩中近景：前景为老板右肩虚影，青年在对面工位偏左，目光朝老板，后方窗位按场景母版保留；不生成九宫格、边框或重复人物。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "shot.coverage",
+        "artifact_type",
+        "continuity"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-10"
+      ]
+    },
+    {
+      "id": "R5P25",
+      "modal_id": "7675334591045012778",
+      "title": "6种AI高阶修图玩法",
+      "title_kind": "为检索简化的作品标题",
+      "author": "AI桃子",
+      "duration": "00:29",
+      "likes_display": "7332",
+      "likes_approx": 7332,
+      "likes_is_rounded": false,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E5%B1%80%E9%83%A8%E9%87%8D%E7%BB%98%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=a2e5ffc8-b57f-4125-97fb-73bed8c00fee&modal_id=7675334591045012778&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:04 人像卡将脸型五官发型表情服装构图列为保留项，允许改善肤质及光影过渡。",
+        "00:20 老照片修复前后分屏。"
+      ],
+      "takeaway_own": "真实感编辑与身份修改分开；只调整纹理和照明，不能声称恢复真实缺失细节。",
+      "limitations": [
+        "未逐像素比对，不能保证身份百分百保留。"
+      ],
+      "example_prompt_own": "保留参考人物的脸型、眼鼻位置、发型和表情，只减弱蜡质高光，补适量皮肤纹理与自然肤色过渡；不增添疤痕、雀斑或改变年龄。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "edit.identity_lock",
+        "edit.surface_only"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "专项补充，点赞未达万赞；提供其他来源未充分覆盖的具体方法。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-07"
+      ]
+    },
+    {
+      "id": "R5P26",
+      "modal_id": "7687130677359217946",
+      "title": "如何保持场景一致",
+      "title_kind": "为检索简化的作品标题",
+      "author": "画镜AI",
+      "duration": "00:52",
+      "likes_display": "3.5万",
+      "likes_approx": 35000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E6%9E%84%E5%9B%BE%20%E7%94%9F%E5%9B%BE%20%E6%95%99%E7%A8%8B?aid=fc972ebc-e665-4830-8f91-2f1e0b068e8d&modal_id=7687130677359217946&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:05 餐厅桌椅、吊灯、窗和吧台位置可辨。",
+        "00:28 同原图派生其他角度，字幕指定45度斜俯视全景。",
+        "00:44 人物进入餐厅画面。"
+      ],
+      "takeaway_own": "固定地标后派生空间参照，先检查桌椅门窗关系再用于分镜。",
+      "limitations": [
+        "单图不能证明不可见空间正确，也不能保证多机位一致。"
+      ],
+      "example_prompt_own": "根据已验收的院落布局，斜树在灰砖墙前，藤椅靠近台阶，门位于主屋中央。输出45度斜俯视参考，保留数量和相对位置，不自行补出新门窗。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "scene.landmarks",
+        "scene.layout_reference"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-10"
+      ]
+    },
+    {
+      "id": "R5P27",
+      "modal_id": "7624116434016259391",
+      "title": "如何精准替换AI视频里的元素",
+      "title_kind": "为检索简化的作品标题",
+      "author": "刺猬星球super-i",
+      "duration": "01:41",
+      "likes_display": "1.5万",
+      "likes_approx": 15000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E5%B1%80%E9%83%A8%E9%87%8D%E7%BB%98%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=a2e5ffc8-b57f-4125-97fb-73bed8c00fee&modal_id=7624116434016259391&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:49 导出静帧后编辑的步骤。",
+        "01:14 用场景变化案例说明改元素可能连带背景改变。",
+        "正文区分遮罩静帧替换与直接写位置关系，举桌面杯换花瓶但位置不变。"
+      ],
+      "takeaway_own": "修改应指定目标、位置、范围和保留区；回到视频后另查时序连续性。",
+      "limitations": [
+        "每秒取帧不是通用标准；作者关于生成机制的解释未经验证。"
+      ],
+      "example_prompt_own": "仅将桌面右前角杯子替换成同高度陶瓷杯，杯底中心位置不变，桌面透视和人物双手保留。适配原光向并重做杯底接触阴影。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "edit.target",
+        "edit.position",
+        "edit.allowed_region"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-09"
+      ]
+    },
+    {
+      "id": "R5P28",
+      "modal_id": "7601881693217099035",
+      "title": "一套指令 消除Banana模糊感",
+      "title_kind": "为检索简化的作品标题",
+      "author": "黄一鸣AI",
+      "duration": "00:56",
+      "likes_display": "9042",
+      "likes_approx": 9042,
+      "likes_is_rounded": false,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E5%B1%80%E9%83%A8%E9%87%8D%E7%BB%98%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=a2e5ffc8-b57f-4125-97fb-73bed8c00fee&modal_id=7601881693217099035&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:01 服装肩部刺绣和银饰近景。",
+        "00:31 同时上传线稿与彩色局部图，提示词指定绸缎、氧化银、立体刺绣、珍珠流苏、微距和柔和影棚光。"
+      ],
+      "takeaway_own": "复杂衣物细节拆成结构参考和颜色材质参考，再限定近景重建。",
+      "limitations": [
+        "重建不能保证恢复原信息；8K不证明尺寸，纹样须对照。"
+      ],
+      "example_prompt_own": "使用线稿A约束围裙缝线走向，彩色图B约束米白布料。肩部近景，柔和侧光，棉布低光泽、针脚细但不过度锐化；不增加刺绣和装饰扣。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "references.structure",
+        "references.material",
+        "detail_rebuild"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "专项补充，点赞未达万赞；提供其他来源未充分覆盖的具体方法。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-05",
+        "P5-11"
+      ]
+    },
+    {
+      "id": "R5P29",
+      "modal_id": "7685338989965367986",
+      "title": "图片AI味太重怎么办 限制元素与视觉重心",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Ak007设计师",
+      "duration": "01:54",
+      "likes_display": "1.3万",
+      "likes_approx": 13000,
+      "likes_is_rounded": true,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E5%B1%80%E9%83%A8%E9%87%8D%E7%BB%98%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=a2e5ffc8-b57f-4125-97fb-73bed8c00fee&modal_id=7685338989965367986&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:47 提出只留一个视觉重心，举主体偏右。",
+        "01:21 饮料海报随机版与限制版并列，后者有限暖色、单主体和留白。"
+      ],
+      "takeaway_own": "给元素、色盘、装饰与文字设符合任务的上限，让重点明确。",
+      "limitations": [
+        "作者精选对比未披露控制变量或失败样本，不量化提升。"
+      ],
+      "example_prompt_own": "短剧封面只保留一把空藤椅和门口的人物背影，暖灰、旧木棕及少量暗绿；右上留空，移除装饰光粒、英文标语和无关道具。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "palette.limit",
+        "visual_priority",
+        "decoration_limit"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "可见点赞为万赞量级，并有相关提示卡、界面或画面案例。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-06",
+        "P5-12"
+      ]
+    },
+    {
+      "id": "R5P30",
+      "modal_id": "7702004335065032795",
+      "title": "image2.5生图太脏怎么办 画面质感提示词",
+      "title_kind": "为检索简化的作品标题",
+      "author": "Master Lu",
+      "duration": "00:29",
+      "likes_display": "3175",
+      "likes_approx": 3175,
+      "likes_is_rounded": false,
+      "views_display": null,
+      "views_status": "页面未显示可核验播放量",
+      "engagement_observed_at": "2026-11-16",
+      "engagement_timezone": "Asia/Shanghai",
+      "url": "https://www.douyin.com/jingxuan/search/AI%20%E7%94%9F%E5%9B%BE%20%E6%9D%90%E8%B4%A8%20%E6%8F%90%E7%A4%BA%E8%AF%8D?aid=ad4106e9-9437-4369-b222-8e4eabd194e0&modal_id=7702004335065032795&type=general",
+      "source_type": "提示词或方法演示",
+      "watch_level": "关键帧与字幕及提示卡抽看，非全程连续观看",
+      "observations": [
+        "00:13 古镇街景前后并列，强调减少密集地面碎纹理。",
+        "00:08 卡片要求大面平整连续、焦点附近留必要细节，低至中等局部对比、自然边缘；避免锐化光晕、油腻高光与重复纹理。"
+      ],
+      "takeaway_own": "按视觉重点分配细节，远景和大面保留简洁区域。",
+      "limitations": [
+        "image2.5为作者称谓，不作为官方型号；未验证跨模型效果。"
+      ],
+      "example_prompt_own": "旧院落灰砖墙保持连续大面，只在窗框与台阶边缘保留轻微磨损。人物眼睛和布牌针脚清晰，远景不铺满噪点；自然边缘过渡，无HDR光晕和重复裂纹。",
+      "example_status": "原创迁移示例，未经生成实测",
+      "software_fields_proposed": [
+        "detail_budget",
+        "sharpening",
+        "texture_density"
+      ],
+      "implementation_status": "研究建议，未接入应用代码或生成API",
+      "selection_reason": "专项补充，点赞未达万赞；提供其他来源未充分覆盖的具体方法。",
+      "support_scope": "支持提示词与验收流程设计；不证明模型稳定执行或软件已实现。",
+      "related_rule_ids": [
+        "P5-06",
+        "P5-12"
+      ]
+    }
+  ]
+}
