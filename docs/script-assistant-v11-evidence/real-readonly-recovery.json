@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-16T17:13:50.225Z",
+  "readOnlyRecovery": true,
+  "existingSuccessfulTurns": 1,
+  "existingInterruptedTurns": 1,
+  "recordsHashesUnchanged": true,
+  "refreshRecovery": true,
+  "projectIsolation": true,
+  "newCalls": 0,
+  "totalRecordedCliInvocations": 2,
+  "realRewriteApplyPassed": false,
+  "consoleExceptions": 0,
+  "passed": true
+}

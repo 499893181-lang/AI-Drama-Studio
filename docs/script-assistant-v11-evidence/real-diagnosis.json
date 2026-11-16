@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-11-16T17:07:10.307Z",
+  "appendOnlyDiagnostic": true,
+  "approvedMaximumTextInvocations": 2,
+  "actualCliInvocations": 2,
+  "noAdditionalInvocation": true,
+  "originalFailureReportHash": "1ac220d1cb89754c0370a5404560a861a45694bc754ffd79c6fec37e9bc61274",
+  "cause": "验收脚本等待新消息时错误读取上一条成功消息，断言失败后关闭测试服务，导致第二条真实文字会话中断；不是模型成功或应用成功。等待已改为绑定新消息ID，新增隔离回归。",
+  "realEndToEndAcceptance": "partial_not_passed",
+  "turns": [
+    {
+      "sequence": 1,
+      "id": "09da2dae-ccb2-494b-9869-fa095798a59a",
+      "status": "succeeded",
+      "threadId": "01a1e54e-3569-7980-818b-8acde19e0fa0",
+      "exitCode": 0,
+      "completed": true,
+      "conversationHistoryCount": 0,
+      "selectedText": "",
+      "currentStage": "script",
+      "projectName": "[真实文字接入验收] 留茶 · 独立测试",
+      "reply": "项目名称是「[真实文字接入验收] 留茶 · 独立测试」，当前处于剧本阶段。主要人物是穿灰蓝长衫的独居老人，只有老人出镜，女儿仅通过报平安的语音参与。结尾是老人收到语音后，把空椅子拉近桌边，轻轻微笑，温暖收束；本次仅讨论，不修改正文。",
+      "proposalKind": "none",
+      "error": null,
+      "receiptError": null,
+      "inputHash": "a4d0ffcbb84cbf8b5fdc199c83bc4d2668e945ffc97ec5dda61da6b4be51ddc4",
+      "rawEventsHash": "5b360f6eb9132deac3e2783c663d1312bcb4c271e8072a0f99a36c2a22e6a594",
+      "receiptHash": "34f08ce6d59bf1fb6eccb7687fa4a88594d3084586e04924e15270f8ee1378df",
+      "eventTypes": [
+        "thread.started",
+        "turn.started",
+        "item.completed",
+        "turn.completed"
+      ],
+      "itemTypes": [
+        "agent_message"
+      ],
+      "actualToolEvents": 0,
+      "usage": {
+        "input_tokens": 27303,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 465,
+        "reasoning_output_tokens": 319
+      },
+      "appliedVersionId": null
+    },
+    {
+      "sequence": 2,
+      "id": "411cc45f-6204-4f68-a58b-bac002dfc499",
+      "status": "interrupted",
+      "threadId": "01a1e54e-925c-7b73-82a6-016a8b2c8283",
+      "exitCode": null,
+      "completed": false,
+      "conversationHistoryCount": 1,
+      "selectedText": "老人把茶杯放到空椅子前",
+      "currentStage": "script",
+      "projectName": "[真实文字接入验收] 留茶 · 独立测试",
+      "reply": null,
+      "proposalKind": null,
+      "error": "服务关闭，对话中断；不会自动重发。",
+      "receiptError": "The operation was aborted",
+      "inputHash": "204354ef871eadbebcd6391db8bf71dd2000438b233582035e07c02ac75374b8",
+      "rawEventsHash": "01a8a22b868154b4e03cd5947dfdd568c66b7bd8d33033acdd3d0734b9ca5826",
+      "receiptHash": "7db13015daf9e0c4c70439d8faa28d3f332d7b949698a32ccf0d070ddf951403",
+      "eventTypes": [
+        "thread.started",
+        "turn.started"
+      ],
+      "itemTypes": [],
+      "actualToolEvents": 0,
+      "usage": null,
+      "appliedVersionId": null
+    }
+  ],
+  "successfulTurns": 1,
+  "interruptedTurns": 1,
+  "noMediaToolEventsObserved": true,
+  "accountCost": {
+    "channel": "existing-codex-chatgpt-login",
+    "cny": {
+      "amount": null,
+      "status": "unknown"
+    },
+    "credits": {
+      "amount": null,
+      "status": "unknown"
+    },
+    "secondTurnUsageReturned": false
+  }
+}

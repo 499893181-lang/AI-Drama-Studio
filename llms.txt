@@ -1,6 +1,10 @@
 # AI-Drama-Studio
 
-当前0.9.0：[C·调整版真实工作台](docs/ui-c-v10.md)、[本轮验收与前后截图](docs/ui-c-v10-acceptance.md)。完整窄rail＋项目面板＋七步＋四资源，顶部仅breadcrumb及必要操作，无重复横向流程；公共命名、导航和蓝白设计变量见public/studio-config.js、studio-shell.js、studio.css。故事/creative stage script或storyboard/images/canvas-video/timeline view finishing或export/resources均保留原任务、人工稿、版本与保存能力，详细参数与诊断折叠。src/workflow.mjs只读当前版本/Hash/审核/选用/文件状态，不是formal guard PASS。原认证、预算授权、失败任务、图片1/1保留，自动出图关闭，配音字幕未接；本轮无新增真实模型或媒体调用。
+当前0.10.0：[四标签剧本与AI创作助手](docs/script-assistant-v11.md)、[本轮实际验收与未完成项](docs/script-assistant-v11-acceptance.md)。保留C版完整左侧；正文场景/段落无损分页、点击检查及历史，生成后直接编辑，一次确认保存/采用/绑定分镜。src/script-workbench.mjs、creative-assistant.mjs及public/script-pages.js、creative-assistant.js；明确应用才新增待确认AI版本，选文/快照/Hash/revision重验，旧稿及下游复核保留，AI来源不变用户事实。项目完整对话持久化，每条官方CLI新会话携带本项目最近12轮；取消/重启不自动重发，串联独立检查至多一次，账号用量及人民币/积分未知分别记录。
+
+0.10.0基线为PR #9 codex/ui-c-adjusted-v10-20261116、b3a683c5b00017fa66b406ece50205cafd61c3b8；分支codex/script-assistant-v11-20261117为堆叠PR，不自动merge。真实助手最多2轮：首轮完成并正确读取上下文，次轮带1轮历史+精确选段但验收等待竞态提前关服务，中断无完整正文/usage/未应用，无第三轮；helper修复及2隔离回归不是实际改稿成功。默认4317/本次4320，不新增付费API或媒体调用，原1/1和正式guard边界保持。全部实际结果见本轮验收。
+
+0.9.0历史：[C·调整版真实工作台](docs/ui-c-v10.md)、[该轮验收与前后截图](docs/ui-c-v10-acceptance.md)。完整窄rail＋项目面板＋七步＋四资源，顶部仅breadcrumb及必要操作，无重复横向流程；公共命名、导航和蓝白设计变量见public/studio-config.js、studio-shell.js、studio.css。故事/creative stage script或storyboard/images/canvas-video/timeline view finishing或export/resources均保留原任务、人工稿、版本与保存能力，详细参数与诊断折叠。src/workflow.mjs只读当前版本/Hash/审核/选用/文件状态，不是formal guard PASS。原认证、预算授权、失败任务、图片1/1保留，自动出图关闭，配音字幕未接；该轮无新增真实模型或媒体调用。
 
 0.9.0基线：PR #8 codex/canvas-video-execution-v09-20261116，SHA1900352f1ff4fd6142906d4a89e437bd700b932f。实施分支codex/ui-c-adjusted-v10-20261116为堆叠PR，不从缺功能的main覆盖，不自动merge。默认localhost4317，本机此次4320；GitHub不暴露个人data或本机服务。node scripts/check-ui.mjs、node --test tests/*.test.mjs及4组C浏览器命令见使用说明，实际执行结果见本轮验收。下文为各历史版本记录。
 
