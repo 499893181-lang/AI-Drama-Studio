@@ -1,0 +1,39 @@
+{
+  "at": "2026-11-16T02:31:06.493Z",
+  "testFixture": true,
+  "sourceSha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3",
+  "realConfirmationCalls": 0,
+  "realVideoGenerationCalls": 0,
+  "newImageGenerations": 0,
+  "formalStageStatus": "not_checked",
+  "checks": [
+    "真实服务+Chrome显示待本人批准，页面无发放授权控件；HTTP伪造批准仍409，隔离provider未被提交",
+    "新报价读取失败时旧70仅显示历史预估，持久quoteError与禁执行状态被重新读取，未把旧估价当最新授权",
+    "最新最大预估超过70时UI停止批准流程；70标为预估批准阈值，100为未授权计划，实际扣费未返回",
+    "草稿变化使旧任务过期，另备任务追加新scope和稳定submitId，旧草稿/原结果不被重绑或覆盖",
+    "仅temp DATA_DIR可信签名夹具可模拟批准；一次提交意图/原submitId持久化，重复HTTP提交不重复confirm或run夹具",
+    "查询故障继续原ID，下载故障仅恢复原资源；实际TEST文件FFprobe与Chrome播放成功，旧已选视频与原片保留，新候选不自动检查或选用",
+    "人工检查与人工选用分别写历史，选择新版本后旧原片仍可读，不把媒体技术核验当正式内容PASS",
+    "上游审核撤销后旧任务/候选需复核；服务重启恢复scope、submitId、原片、两候选和选择历史，0自动重提",
+    "390px页面无横向溢出，真实Chrome无未处理异常"
+  ],
+  "decoded": {
+    "width": 1280,
+    "height": 720,
+    "duration": 5,
+    "currentTime": 0.2577
+  },
+  "mobile": {
+    "client": 390,
+    "scroll": 390
+  },
+  "passed": true,
+  "fixtureCalls": {
+    "inspect": 7,
+    "submit": 1,
+    "simulatedConfirm": 1,
+    "query": 2,
+    "download": 2
+  },
+  "finishedAt": "2026-11-16T02:31:40.530Z"
+}

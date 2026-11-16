@@ -1,0 +1,90 @@
+{
+  "scope": "Existing TEST video registration/download, never AI generation.",
+  "localPathRedacted": true,
+  "resource": {
+    "schemaVersion": "1",
+    "ok": true,
+    "data": {
+      "video": {
+        "width": 1280,
+        "height": 720,
+        "durationSeconds": 5,
+        "fps": 24,
+        "effectiveFps": 24
+      },
+      "generationKind": "normal",
+      "resourceId": "76eab309-20f1-4e81-ba3b-96d372a25b5d",
+      "type": "video",
+      "status": "success",
+      "name": "TEST FIXTURE / NOT AI - Existing 5s MP4",
+      "createdAt": 1794795139819,
+      "source": "uploaded"
+    },
+    "meta": {
+      "requestId": "20261116101231A46EB7DDA2888CF6B559"
+    }
+  },
+  "node": {
+    "schemaVersion": "1",
+    "ok": true,
+    "data": {
+      "nodes": [
+        {
+          "result": "FOUND",
+          "node": {
+            "nodeId": "node_xb9jksrkm7",
+            "type": "video",
+            "title": "TEST FIXTURE / NOT AI - IMPORTED, NOT GENERATED",
+            "tags": [],
+            "status": "success",
+            "upstreamNodeIds": [],
+            "downstreamNodeIds": [],
+            "executionDependencyNodeIds": [],
+            "resources": [
+              {
+                "video": {
+                  "width": 1280,
+                  "height": 720,
+                  "durationSeconds": 5,
+                  "fps": 24,
+                  "effectiveFps": 24
+                },
+                "resourceId": "76eab309-20f1-4e81-ba3b-96d372a25b5d",
+                "type": "video",
+                "status": "success",
+                "name": "TEST FIXTURE / NOT AI - Existing 5s MP4",
+                "createdAt": 1794795139819,
+                "canRegenerate": false,
+                "source": "uploaded"
+              }
+            ],
+            "layout": {
+              "x": 0,
+              "y": 0,
+              "width": 568.889,
+              "height": 320
+            },
+            "resourceObservedAtMs": 1794795152564
+          }
+        }
+      ],
+      "draftVersion": 1
+    },
+    "meta": {
+      "requestId": "20261116101232F9ED63F074418E039761"
+    }
+  },
+  "download": {
+    "schemaVersion": "1",
+    "ok": true,
+    "data": {
+      "resourceId": "76eab309-20f1-4e81-ba3b-96d372a25b5d",
+      "path": "[local download path redacted]",
+      "size": 17750,
+      "sha256": "7de983635b4b445d23d72d09ca41f0c30d255a14a0e3df25647ad6e2116800b3"
+    },
+    "meta": {
+      "requestId": "20261116101235EFE49BA027D675FAFE33"
+    }
+  }
+}

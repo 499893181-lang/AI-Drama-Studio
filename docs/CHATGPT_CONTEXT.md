@@ -4,6 +4,8 @@
 
 ## 当前开发方向：自有模型创作与规则库
 
+最新0.8.0见[首次生成前验收](canvas-video-v09-acceptance.md)：官方既有TEST MP4纯上传/导入/下载、Hash/FFprobe/Chrome实播已验证，不能冒充AI视频成功。`canvas-execution.mjs`、`canvas-video-jobs.mjs`、`canvas-authorization.mjs`实现具体scope签名授权、稳定submitId、原任务查询/下载恢复、原片与静音派生、候选人工检查选用；页面`public/canvas-video.*`，无HTTP发放授权。317完整回归通过，模型实际准入/真实终态/首帧符合性留首次获批任务；不再先要求付费证明。[可确认的5秒720p方案](video-first-run-plan-v09.md)记录实际首帧、同节点最新70积分最大预估，70仅批准阈值而非结算或平台绝对上限。真实confirm/run为0，无生产签名批准，原530文件及图像1/1保持。[下载预检](canvas-video-download-v09.md) · [执行与本机批准](canvas-video-workbench-v09.md)。
+
 最新0.7.0见[视频准备与本地导出验收](video-prep-v08-acceptance.md)。真实canvas纯保存测试空节点并同节点报价：`seedance_2.0_vip`、5秒720p、最大预估70积分；未确认/未生成，不套direct，100积分仅未授权计划。视频下载Schema仍有类型口径缺口，模型实际准入/终态/参考使用/最终扣费未验收。[下一次单镜范围](video-real-acceptance-plan-v08.md)。新增`canvas-video.mjs`及只读渠道页、`timeline-{store,jobs}.mjs`与`public/timeline.*`，兼容MP4本地拼接/明确后处理静音；3段既有测试视频输出15秒并实播，非AI成片。原507文件及图像1/1未改，guard/账本保持not_checked，自动出图保持关闭。[时间轴使用](local-timeline-v08.md) · [真实渠道契约](canvas-video-channel-v08.md)。
 
 最新0.6.0见[视频独立验收](video-v07-acceptance.md)：252/252回归，新增当前图片→即梦视频准备→原ID查询/下载→候选检查选用的完整隔离流程。源码`src/video-{store,jobs,media}.mjs`、`src/dreamina-video.mjs`、`public/video.*`。真实提交硬关闭、未消耗积分；direct未登录/canvas已登录、费用未知/原生静音不支持分别展示。测试MP4不是真实即梦生成。原500文件及原图像1/1保持，自动出图及hook不扩展。[下次真实验收方案](video-real-acceptance-plan-v07.md)列实际素材/参数及建议100积分上限，未获授权且报价未知不能提交。

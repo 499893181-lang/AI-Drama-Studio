@@ -13,6 +13,7 @@ import { ImageGenerationJobs } from './image-jobs.mjs';
 import { VideoService } from './video-jobs.mjs';
 import { TimelineService } from './timeline-jobs.mjs';
 import { readCanvasVideoEvidence } from './canvas-video.mjs';
+import { CanvasVideoService } from './canvas-video-jobs.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -55,6 +56,7 @@ export function createStudio(options = {}) {
   const imageGeneration = new ImageGenerationJobs(store, { images, ...options.imageGenerationOptions });
   const videos = new VideoService(store, { images, ...options.videoOptions });
   const timeline = new TimelineService(store, { videos, ...options.timelineOptions });
+  const canvasVideo = new CanvasVideoService(store, { videos, ...options.canvasVideoOptions });
   let imageReport = null, imageInspection = null;
   const getImageCapabilities = () => {
     if (imageReport && Date.now() - Date.parse(imageReport.checkedAt) < 60000) return Promise.resolve(imageReport);
@@ -95,7 +97,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.7.0', phase: 'video-preparation-local-timeline', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.8.0', phase: 'canvas-video-pending-authorization', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/video-channels/canvas') {
         if (method !== 'GET') throw new AppError('渠道证据仅供只读查看，生成和授权入口关闭。', 405);
@@ -112,6 +114,10 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'canvas-video') {
+          if (segments.length === 4 && method === 'GET') { json(response, canvasVideo.view(id)); return; }
+          if (segments.length === 4 && method === 'POST') { json(response, await canvasVideo.prepare(id, await readJson(request)), 201); return; }
+        }
         if (segments[3] === 'timeline') {
           if (segments.length === 4 && method === 'GET') { json(response, timeline.view(id)); return; }
           if (segments.length === 4 && method === 'PUT') { json(response, timeline.update(id, await readJson(request))); return; }
@@ -216,6 +222,16 @@ export function createStudio(options = {}) {
           }
         }
       }
+      if (segments[0] === 'api' && segments[1] === 'canvas-video-tasks' && validId(segments[2])) {
+        const id = segments[2];
+        if (segments.length === 3 && method === 'GET') { json(response, canvasVideo.taskView(canvasVideo.read(id))); return; }
+        if (segments.length === 4 && ['GET', 'HEAD'].includes(method) && segments[3] === 'original') { sendVideo(request, response, canvasVideo.originalFile(id)); return; }
+        if (segments.length === 4 && method === 'POST') {
+          await readJson(request); // Request bodies can never issue or override a grant.
+          if (['refresh', 'submit', 'query', 'download'].includes(segments[3])) { json(response, await canvasVideo[segments[3]](id), 202); return; }
+          if (segments[3] === 'cancel') { json(response, canvasVideo.cancel(id)); return; }
+        }
+      }
       if (segments[0] === 'api' && segments[1] === 'timeline-exports' && validId(segments[2])) {
         const id = segments[2];
         if (segments.length === 3 && method === 'GET') { json(response, timeline.read(id)); return; }
@@ -307,7 +323,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, images, imageGeneration, videos, timeline, getTools, getImageCapabilities, close: () => { timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, images, imageGeneration, videos, timeline, canvasVideo, getTools, getImageCapabilities, close: () => { canvasVideo.close(); timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {

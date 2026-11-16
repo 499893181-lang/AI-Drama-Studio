@@ -11,7 +11,7 @@ async function load() {
   const url = canvas.webUrl ?? record.webUrl;
   const official = typeof url === 'string' && /^https:\/\/jimeng\.jianying\.com\/ai-tool\/ai-canvas\/[a-zA-Z0-9-]+$/.test(url);
   document.querySelector('#channel-report').innerHTML = `
-    <div class="video-notice" data-testid="canvas-no-submit">真实视频提交关闭 · 0笔视频生成。100积分仅为未授权计划预算，既不是报价，也不是平台硬限额。</div>
+    <p><a class="secondary-button" id="canvas-workbench" href="/canvas-video.html${project?`?projectId=${encodeURIComponent(project)}`:''}">进入画布单镜工作台 · 待授权</a></p><div class="video-notice" data-testid="canvas-no-submit">真实视频提交关闭 · 0笔视频生成。100积分仅为未授权计划预算，既不是报价，也不是平台硬限额。</div>
     <section class="video-panel"><div class="video-body"><h2>当前检查结论</h2><p>${esc(record.message ?? '按下方实际回执读取各项结论。')}</p>
       <table>${row('检查时间', record.checkedAt)}${row('渠道', record.channel)}${row('画布', canvas.projectId)}${row('待生成视频节点', canvas.nodeId)}${row('登录与资格', record.eligibility ?? record.auth)}${row('参数', params)}${row('费用记录', quote)}</table>
       ${official ? `<p><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">打开独立官方测试画布</a></p>` : ''}

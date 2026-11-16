@@ -73,7 +73,7 @@ export class VideoWorkspace {
     });
     return { ...workspace, project: this.store.read('projects', projectId), targets, assets: workspace.assets.map(asset => this.assetState(projectId, asset, workspace)), sourceError, formalStageStatus: 'not_checked', canvasSync: { status: 'not_synced', message: 'CLI直接视频任务与画布媒体导入独立；没有写入画布或文本节点。' } };
   }
-  importCandidate(projectId, { task, bytes, probe }) {
+  importCandidate(projectId, { task, bytes, probe, provenance = null }) {
     const workspace = this.get(projectId), existing = workspace.assets.find(item => item.taskId === task.id), hash = sha(bytes);
     if (existing) {
       if (existing.sha256 !== hash) throw new AppError('同一视频任务已有不同产物，旧文件保留，不能覆盖。', 409);
@@ -85,6 +85,14 @@ export class VideoWorkspace {
     const id = randomUUID(), extension = probe.mimeType === 'video/webm' ? 'webm' : probe.mimeType === 'video/quicktime' ? 'mov' : 'mp4';
     const directory = path.join(this.store.root, 'video-files', projectId); fs.mkdirSync(directory, { recursive: true });
     const asset = { id, taskId: task.id, externalTaskId: task.externalTaskId, shotId: task.shotId, version: workspace.assets.filter(item => item.shotId === task.shotId).length + 1, filename: `${task.executionMode === 'isolated-fixture' ? 'TEST-FIXTURE-NOT-AI-' : 'Dreamina-'}${task.shotId}-v${workspace.assets.filter(item => item.shotId === task.shotId).length + 1}.${extension}`, storedName: `${id}.${extension}`, extension, mimeType: probe.mimeType ?? 'video/mp4', size: bytes.length, sha256: hash, binding: clone(task.binding), bindingHash: task.bindingHash, inputSnapshot: clone(task.inputSnapshot), parameters: clone(task.parameters), probe: clone(probe), createdAt: now(), source: { kind: task.executionMode === 'isolated-fixture' ? 'test' : 'dreamina-cli', description: task.executionMode === 'isolated-fixture' ? '隔离runner与明确测试视频；不是即梦真实生成结果。' : '官方即梦CLI任务成功、实际下载且FFprobe核验；仍需人工视觉检查。' }, testFixture: task.executionMode === 'isolated-fixture', canvasStatus: 'not_synced', audioStatus: task.parameters.audioMode === 'mute_derivative' && probe.hasAudio ? 'requires_explicit_derivation' : probe.hasAudio ? 'original_has_audio' : 'no_audio_detected' };
+    if (provenance) {
+      asset.provenance = clone(provenance);
+      if (task.provider === 'dreamina-canvas-node-video') {
+        asset.canvasStatus = 'source_canvas_resource_bound';
+        if (!asset.testFixture) asset.source = { kind: 'dreamina-canvas', description: '官方画布原任务成功终态、资源下载与FFprobe核验；实际首帧/画面仍待人工检查。' };
+      }
+      if (provenance.derivative) asset.audioStatus = 'local_silent_derivative_verified';
+    }
     fs.writeFileSync(path.join(directory, asset.storedName), bytes, { flag: 'wx' });
     this.save({ ...workspace, assets: [...workspace.assets, asset] }); return asset;
   }
