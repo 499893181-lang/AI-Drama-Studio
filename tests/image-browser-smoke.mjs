@@ -29,7 +29,7 @@ async function get(route){const response=await fetch(base+route),value=await res
 const view=()=>get(`/api/projects/${project.id}/images`);
 async function wait(predicate){for(let i=0;i<100;i++){const value=await view();if(predicate(value))return value;await pause(100);}throw new Error('图片工作区等待超时');}
 const q=name=>`[data-testid="${name}"]`;
-async function clickSelector(selector){await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)}) && !document.querySelector(${JSON.stringify(selector)}).disabled`);await browser.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);}
+async function clickSelector(selector){await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)}) && !document.querySelector(${JSON.stringify(selector)}).disabled`);await browser.evaluate(`{const node=document.querySelector(${JSON.stringify(selector)});for(let parent=node.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;node.scrollIntoView({block:'center'});node.click();}`);}
 const click=name=>clickSelector(q(name));
 async function fill(name,value,event='input'){const selector=q(name);await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)}) && !document.querySelector(${JSON.stringify(selector)}).disabled`);await browser.evaluate(`{const el=document.querySelector(${JSON.stringify(selector)});el.value=${JSON.stringify(value)};el.dispatchEvent(new Event(${JSON.stringify(event)},{bubbles:true}));}`);}
 async function setFile(file){const doc=await browser.call('DOM.getDocument');const node=await browser.call('DOM.querySelector',{nodeId:doc.root.nodeId,selector:q('image-file')});await browser.call('DOM.setFileInputFiles',{nodeId:node.nodeId,files:[file]});}
@@ -46,7 +46,10 @@ async function imported(role,targetId,file,packetId=''){
   ws=await wait(value=>value.assets.length===count+1);
   const asset=ws.assets.at(-1);
   await browser.waitFor(`!!document.querySelector('[data-asset-id="${asset.id}"]')`);
-  await browser.evaluate(`document.querySelector('[data-asset-id="${asset.id}"]').scrollIntoView({block:'center'})`);
+  await clickSelector('[data-action="open-image-versions"]');
+  const versionsDrawer=role==='character'?'image-character-versions-details':role==='scene'?'image-scene-versions-details':'image-versions-details';
+  assert.equal(await browser.evaluate(`document.getElementById(${JSON.stringify(versionsDrawer)}).open`),true);
+  await browser.evaluate(`{const node=document.querySelector('[data-asset-id="${asset.id}"]');for(let parent=node.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;node.scrollIntoView({block:'center'});}`);
   await browser.waitFor(`!!document.querySelector('[data-asset-id="${asset.id}"] img')?.naturalWidth`);
   assert.equal(asset.source.kind,'test');assert.equal(asset.width,320);assert.equal(asset.height,180);assert.equal(asset.format,'png');assert.match(asset.sha256,/^[a-f0-9]{64}$/);
   const selector=`[data-review-notes="${asset.id}"]`;
@@ -90,6 +93,15 @@ try{
   const shot3=await imported('shot','SHOT-03',fixtureFiles[4]);
   ws=await view();assert.equal(ws.assets.filter(a=>a.role==='shot'&&a.state==='selected').length,3);
   await browser.evaluate(`document.querySelector('[data-target-id="SHOT-01"]').scrollIntoView({block:'start'})`);await screenshot('three-shots.png');
+  await clickSelector('[data-focus-target="shot:SHOT-01"]');
+  for(const [width,height] of [[1366,768],[1440,900]]){
+    await browser.call('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
+    await browser.evaluate("document.querySelector('.studio-main').scrollTop=0");
+    const bounds=await browser.evaluate("(()=>{const main=document.querySelector('.studio-main').getBoundingClientRect(),footer=document.querySelector('.studio-footer').getBoundingClientRect();return {scroll:document.documentElement.scrollWidth,mainBottom:main.bottom,footerTop:footer.top,footerBottom:footer.bottom,width:innerWidth,height:innerHeight,thumbs:document.querySelectorAll('.image-focus-strip [data-focus-target]').length};})()");
+    assert.ok(bounds.scroll<=width);assert.ok(bounds.mainBottom<=bounds.footerTop+1);assert.ok(bounds.footerBottom<=height+1);assert.equal(bounds.thumbs,3);
+    await screenshot(`c-images-${width}.png`);
+  }
+  report.checks.push('C版1366×768及1440×900中当前真实主图、右侧制作检查区与三镜缩略图可用，左侧双层结构和底部按钮不遮挡，无异常横滚');
   report.checks.push('三镜头实际图片各自绑定当前分镜版本，检查后人工选用；第一镜关联实际导出的任务包，其他手工上传明确未验证模型输入');
   const redo=await imported('shot','SHOT-02',fixtureFiles[5]);ws=await view();
   assert.equal(ws.assets.filter(a=>a.role==='shot'&&a.targetId==='SHOT-02').length,2);
@@ -128,6 +140,16 @@ try{
   const restored=await view();assert.deepEqual(restored.assets.map(a=>a.id),ids);assert.deepEqual(restored.assets.map(a=>a.sha256),hashes);assert.equal(JSON.stringify(restored.selectionHistory),history);assert.ok(restored.assets.every(a=>a.stale));
   await screenshot('restored.png');assert.equal(browser.messages.length,0,JSON.stringify(browser.messages));
   report.checks.push('保存输入改变后旧图片全部明确需复核；重启恢复7份实际文件、Hash、旧版、人工检查与选择历史，0页面异常');
+  const removedProject=app.store.create({name:'[TEST] 移除目标后的历史图片',idea:'仅测试旧资产可见性，不生成媒体。'});
+  app.creative.update(removedProject.id,{revision:0,stylePresetId:'jia.platform.distance',entities:structuredClone(fixtureEntities),shots:fixtureShots()});
+  const removedView=app.images.import(removedProject.id,{revision:0,role:'shot',targetId:'SHOT-01',filename:'TEST-FIXTURE-NOT-AI-orphan.png',source:{kind:'test',description:'软件验收旧目标素材，非AI生成。'}},fs.readFileSync(fixtureFiles[2]));
+  const removedAsset=removedView.assets.at(-1),oldCreative=app.creative.workspace.get(removedProject.id);
+  app.creative.update(removedProject.id,{revision:oldCreative.revision,shots:oldCreative.shots.filter(shot=>shot.id!=='SHOT-01')});
+  await browser.call('Page.navigate',{url:`${base}/images.html?projectId=${removedProject.id}`});
+  await browser.waitFor(`!!document.querySelector('[data-asset-id="${removedAsset.id}"]')`);
+  assert.ok(await browser.evaluate("document.body.textContent.includes('已移除目标的历史图片')"));
+  assert.equal((await fetch(`${base}/api/projects/${removedProject.id}/image-assets/${removedAsset.id}`)).status,200);
+  report.checks.push('上游移除镜头目标后，旧图片仍有独立历史入口并可下载；不因目标消失丢失原版本');
   report.passed=true;report.consoleExceptions=0;report.finishedAt=new Date().toISOString();report.assetCount=restored.assets.length;report.selectionCount=restored.selectionHistory.length;
   fs.writeFileSync(path.join(directory,'image-browser-report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
 }finally{await browser.close();await app.close();}

@@ -14,6 +14,7 @@ import { VideoService } from './video-jobs.mjs';
 import { TimelineService } from './timeline-jobs.mjs';
 import { readCanvasVideoEvidence } from './canvas-video.mjs';
 import { CanvasVideoService } from './canvas-video-jobs.mjs';
+import { inspectWorkflow } from './workflow.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -97,7 +98,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.8.0', phase: 'canvas-video-pending-authorization', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.9.0', phase: 'c-adjusted-creative-workbench', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/video-channels/canvas') {
         if (method !== 'GET') throw new AppError('渠道证据仅供只读查看，生成和授权入口关闭。', 405);
@@ -114,6 +115,7 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
+        if (segments[3] === 'workflow' && segments.length === 4 && method === 'GET') { json(response, inspectWorkflow({ store, creative, scripts, images, videos, timeline, canvasVideo }, id)); return; }
         if (segments[3] === 'canvas-video') {
           if (segments.length === 4 && method === 'GET') { json(response, canvasVideo.view(id)); return; }
           if (segments.length === 4 && method === 'POST') { json(response, await canvasVideo.prepare(id, await readJson(request)), 201); return; }

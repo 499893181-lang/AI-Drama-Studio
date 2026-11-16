@@ -2,6 +2,16 @@
 
 本文件用于快速理解当前代码及验收边界。请结合当前分支/提交中的源文件阅读；文档中的历史验收结果不是任何新修改的自动验收结论。
 
+## 当前0.9.0：C·调整版界面
+
+[使用与架构说明](ui-c-v10.md) · [本轮实际验收和前后截图](ui-c-v10-acceptance.md)。改的是现有真实应用：左侧完整窄图标栏＋项目面板＋七步流程，下面保留角色与场景、风格库、预算、设置；顶部仅项目路径与必要操作，删除重复横向流程。主要任务、具体动作及下一步说明突出，高级参数、历史、诊断可展开。软件暂名“AI 短剧”，集中在 `public/studio-config.js`；共享壳和设计变量为 `public/studio-shell.js`、`public/studio.css`。
+
+默认地址 `http://127.0.0.1:4317`，本机此次为 [4320工作台](http://127.0.0.1:4320)。主路线为 `/` → `/creative.html?stage=script` → `?stage=storyboard` → `/images.html` → `/canvas-video.html` → `/timeline.html?view=finishing` → `?view=export`；`/resources.html?section=entities|style|budget|settings` 为项目资源入口。原直连视频、可选即梦文字与只读渠道记录仍保留。
+
+`src/workflow.mjs` 和只读 `GET /api/projects/:id/workflow` 依据当前版本、Hash、审核及文件状态汇总导航，不修改任务、不批准消费、不冒充正式四岗位PASS。沿用原编辑、采用、独立审阅、不可变版本及失效规则；当前有效且未改动的继续操作复用版本。手工媒体流程、认证、预算与具体scope授权、原失败任务和图片1/1均保留；自动出图关闭，配音与字幕尚未接通。本轮没有新增真实模型或媒体调用。
+
+开发基线为 PR #8 的 `codex/canvas-video-execution-v09-20261116`、提交 `1900352f1ff4fd6142906d4a89e437bd700b932f`；实施分支 `codex/ui-c-adjusted-v10-20261116` 是堆叠PR，不应从缺少已有功能的main覆盖，不自动合并。检查命令及四组C版浏览器入口见[使用说明](ui-c-v10.md#检查与证据)，实际结果只以[本轮验收](ui-c-v10-acceptance.md)为准。下文保留历史版本的能力与验证边界，不作为0.9.0的新调用证据。
+
 ## 当前开发方向：自有模型创作与规则库
 
 最新0.8.0见[首次生成前验收](canvas-video-v09-acceptance.md)：官方既有TEST MP4纯上传/导入/下载、Hash/FFprobe/Chrome实播已验证，不能冒充AI视频成功。`canvas-execution.mjs`、`canvas-video-jobs.mjs`、`canvas-authorization.mjs`实现具体scope签名授权、稳定submitId、原任务查询/下载恢复、原片与静音派生、候选人工检查选用；页面`public/canvas-video.*`，无HTTP发放授权。317完整回归通过，模型实际准入/真实终态/首帧符合性留首次获批任务；不再先要求付费证明。[可确认的5秒720p方案](video-first-run-plan-v09.md)记录实际首帧、同节点最新70积分最大预估，70仅批准阈值而非结算或平台绝对上限。真实confirm/run为0，无生产签名批准，原530文件及图像1/1保持。[下载预检](canvas-video-download-v09.md) · [执行与本机批准](canvas-video-workbench-v09.md)。

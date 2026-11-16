@@ -1,0 +1,27 @@
+.studio-ui .studio-media-content .video-grid,.studio-ui .studio-media-content .timeline-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}
+.studio-ui .studio-media-content .video-panel,.studio-ui .studio-media-content .timeline-panel{border-color:var(--studio-border,#dce5f0);box-shadow:none;border-radius:12px;margin-bottom:20px}
+.studio-ui .studio-media-content :is(.video-panel-heading,.timeline-heading){padding:20px;border-bottom:1px solid var(--studio-border,#dce5f0);gap:12px}
+.studio-ui .studio-media-content :is(.video-body,.timeline-body){padding:20px}
+.studio-ui .studio-media-input{display:flex;flex-direction:column;gap:12px;align-items:stretch;padding:0;border:0;background:transparent;margin:16px 0}
+.studio-ui .studio-media-input img{width:100%;height:auto;max-height:360px;object-fit:contain;background:#f3f6fb;border:1px solid #dce5f0;border-radius:10px}
+.studio-ui .studio-media-input .video-input-data{font-size:13px;line-height:1.75;min-width:0;overflow-wrap:anywhere}
+.studio-ui .studio-media-details{border:1px solid var(--studio-border,#dce5f0);background:var(--studio-surface,#fff);border-radius:9px;padding:12px 16px;margin:12px 0;font-size:13px;min-width:0}
+.studio-ui .studio-media-details>summary{cursor:pointer;color:#455c7a;font-weight:500;list-style-position:inside}
+.studio-ui .studio-media-details[open]>summary{margin-bottom:14px}
+.studio-ui .studio-media-details :is(.video-status-grid,.timeline-local-status){margin:0}
+.studio-ui .studio-media-content .video-price{background:#f2f7ff;border-color:#d5e4fb;font-size:13px;padding:16px;border-radius:10px}
+.studio-ui .studio-media-content .video-price strong{color:var(--studio-blue,#1769dc);font-size:22px;line-height:1.5}
+.studio-ui .studio-media-content :is(.video-hash,.timeline-hash){font-size:11px;line-height:1.7;overflow-wrap:anywhere;word-break:break-all}
+.studio-ui .studio-media-content .video-form{gap:14px}
+.studio-ui .studio-media-content .video-form textarea{min-height:96px}
+.studio-ui .studio-media-content :is(.canvas-video-card,.video-asset,.timeline-asset){border-color:#e0e7f1;background:#fff;border-radius:10px}
+.studio-ui .studio-media-content :is(.timeline-clip,.timeline-ruler span){background:#f5f8fd;color:#244c7d;border-color:#dbe5f2}
+.studio-ui .studio-media-content :is(.video-expand,.timeline-expand){font-size:13px;line-height:1.7}
+.studio-ui .studio-media-content .stage-badge,.studio-ui .studio-media-content .eyebrow{display:none}
+.studio-ui .studio-unavailable{padding:22px 0;border-top:1px solid #dce5f0;color:#61728b;font-size:14px;line-height:1.8}
+.studio-ui .studio-unavailable h2{font-size:17px;color:#20344e;margin:0 0 8px}
+.studio-ui .studio-export-view #timeline-exports video{max-height:380px}
+.studio-ui .studio-media-content .timeline-export{padding:20px}
+.studio-ui .studio-media-content .timeline-table-wrap{max-width:100%}
+.studio-ui .studio-media-content .canvas-stage{display:none}
+@media(max-width:1100px){.studio-ui .studio-media-content .video-grid,.studio-ui .studio-media-content .timeline-grid{grid-template-columns:1fr}}

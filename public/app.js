@@ -1,3 +1,5 @@
+import { mountStudio } from './studio-shell.js';
+
 const icons = {
   film: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 4v16M17 4v16M3 9h4m-4 6h4m10-6h4m-4 6h4"/>',
   grid: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
@@ -61,23 +63,45 @@ async function confirmDiscard() {
     dialog.addEventListener('click', onClick); dialog.addEventListener('cancel', onClose);
   });
 }
-function workflow() {
-  return `<div class="workflow" aria-label="制作流程">${['故事立项', '即梦剧本', 'Codex 审阅', '即梦分镜', 'Codex 检查', '画风预算', '画布视频', '后期制作', '成片导出'].map((label, index) => `${index ? '<div class="step-connector"></div>' : ''}<div class="workflow-step ${index === 0 ? 'current' : ''}" ${index === 0 ? 'aria-current="step"' : 'title="后续阶段尚未开放"'}><span class="step-circle">${index + 1}</span>${label}</div>`).join('')}</div>`;
-}
-function sidebar() {
-  return `<aside class="sidebar"><div class="brand"><div class="brand-mark">${svg('film')}</div><div><div class="brand-name">AI-Drama-Studio</div><div class="brand-sub">让故事开始发生</div></div></div><div class="nav-item">${svg('grid')}故事立项工作台<span class="tag">01</span></div><a class="nav-item" href="/video.html${state.project ? `?projectId=${encodeURIComponent(state.project.id)}` : ''}">单镜头视频</a><a class="nav-item" href="/timeline.html${state.project ? `?projectId=${encodeURIComponent(state.project.id)}` : ''}">本地时间轴</a><div class="sidebar-heading"><span>我的项目 <span class="project-count">${state.projects.length.toString().padStart(2, '0')}</span></span><button type="button" data-action="new" title="新建项目" aria-label="新建项目">＋</button></div><div class="project-list">${state.projects.length ? state.projects.map(project => `<button class="project-link ${state.project?.id === project.id ? 'active' : ''}" data-project-id="${esc(project.id)}"><span class="project-dot"></span><div><strong>${esc(project.name)}</strong><small>${esc(dateLabel(project.updatedAt))} · ${esc(project.durationSeconds)} 秒 · ${project.aspectRatio === '16:9' ? '横屏' : '竖屏'}</small></div></button>`).join('') : '<div class="empty-list">你的第一部短剧，<br>就从这里开始。</div>'}</div><div class="sidebar-bottom"><span class="local-dot"></span><div>本地工作空间<small>内容保存在这台电脑上</small></div></div></aside>`;
-}
 function render() {
   const editing = Boolean(state.draft);
-  app.innerHTML = `<div class="layout">${sidebar()}<main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>故事立项</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions">${state.project ? '<button class="primary-button" data-action="open-creative" data-testid="open-creative">文字与分镜创作 →</button><button class="secondary-button" data-action="open-images" data-testid="open-images">分镜图片</button><button class="secondary-button" data-action="open-script" data-testid="open-script">即梦剧本</button>' : ''}<button class="ghost-button" data-action="tools" data-testid="check-tools">${svg('settings')}环境检测</button><button class="primary-button" data-action="new" data-testid="new-project">${svg('plus')}新建项目</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">每个好故事，都从一个想法开始</div><h1>故事立项工作台</h1><p>记录灵感，明确创作方向，让 Codex 帮你把构思变成故事。</p></div><span class="stage-badge">第一阶段 · 本地创作</span></div>${workflow()}${state.warnings.length ? `<div class="warning-box" role="alert">${state.warnings.map(esc).join('<br>')}</div>` : ''}${editing ? editor() : welcome()}<p class="footer-note">${svg('shield')}保存项目后可进入本机 Codex 文字与分镜创作；即梦剧本保留为可选渠道。</p></div></main></div>`;
+  app.innerHTML = `<div class="layout"><main class="main"><header class="topbar"><div class="breadcrumb">工作空间<span>/</span><strong>故事立项</strong>${state.project ? `<span class="breadcrumb-project">/　${esc(state.project.name)}</span>` : ''}</div><div class="top-actions">${state.project ? '<button class="primary-button" data-action="open-creative" data-testid="open-creative">文字与分镜创作 →</button><button class="secondary-button" data-action="open-images" data-testid="open-images">分镜图片</button><button class="secondary-button" data-action="open-script" data-testid="open-script">即梦剧本</button>' : ''}<button class="ghost-button" data-action="tools" data-testid="check-tools">${svg('settings')}环境检测</button><button class="primary-button" data-action="new" data-testid="new-project">${svg('plus')}新建项目</button></div></header><div class="content"><div class="page-heading"><div><div class="eyebrow">每个好故事，都从一个想法开始</div><h1>故事立项工作台</h1><p>记录灵感，明确创作方向，让 Codex 帮你把构思变成故事。</p></div><span class="stage-badge">第一阶段 · 本地创作</span></div>${state.warnings.length ? `<div class="warning-box" role="alert">${state.warnings.map(esc).join('<br>')}</div>` : ''}${editing ? editor() : welcome()}<p class="footer-note">${svg('shield')}保存项目后可进入本机 Codex 文字与分镜创作；即梦剧本保留为可选渠道。</p></div></main></div>`;
   if (editing) { bindForm(); renderJob(); }
+  arrangeStory();
+  mountStudio(app, { step: 'story', project: state.project, projects: state.projects, title: '故事', nextText: editing ? '下一步：剧本。使用已保存的构思和创作说明生成可编辑候选。' : '先创建项目，写下你的故事构思。', primary: editing ? { label: '保存故事并继续', onClick: continueToScript } : { label: '新建故事', selector: '[data-action="new"]' }, secondary: editing ? { label: '保存故事', selector: '[data-testid="save-project"]' } : undefined });
+}
+function arrangeStory() {
+  const content = app.querySelector('.content'); if (!content) return;
+  content.classList.add('story-workspace');
+  content.querySelector('.workflow')?.remove();
+  content.querySelector('.stage-badge')?.remove();
+  const title = content.querySelector('.page-heading h1'); if (title) title.textContent = '写下你的故事';
+  const description = content.querySelector('.page-heading p'); if (description) description.textContent = '记录人物、冲突和结局。保存后进入剧本，继续完善可编辑的故事。';
+  const form = content.querySelector('#project-form');
+  if (form) {
+    const settings = document.createElement('details'); settings.className = 'story-settings';
+    settings.innerHTML = '<summary>画风、参考素材与预算<span>可选设置 · 随时可修改</span></summary><div class="story-settings-body"></div>';
+    const body = settings.querySelector('div');
+    for (const id of ['project-style', 'reference-input', 'project-budget']) { const group = form.querySelector('#' + id)?.closest('.form-group'); if (group) body.append(group); }
+    form.querySelector('.panel-body')?.append(settings);
+    const save = form.querySelector('[data-testid="save-project"]'); if (save) save.innerHTML = `${svg('save')}保存故事`;
+  }
+  const cards = content.querySelector('.feature-grid'); if (cards) cards.remove();
+}
+async function continueToScript() {
+  if (state.busy || !state.draft) return;
+  if (!state.draft.idea.trim()) { toast('先写下故事构思，再进入剧本。', true); $('#project-idea')?.focus(); return; }
+  if ((state.creating || state.dirty) && !await saveProject({ quiet: true })) return;
+  if (!state.project) return;
+  state.dirty = false;
+  location.href = `/creative.html?stage=script&projectId=${encodeURIComponent(state.project.id)}`;
 }
 function welcome() {
   return `<section class="empty-workspace"><div class="eyebrow">你的创作空间，已经准备好了</div><h2>把一个念头，<br>变成下一部短剧。</h2><p>不必一开始就想好全部。写下一个场景、一个人物，<br>或是一个让你念念不忘的冲突，故事从这里生长。</p><button class="primary-button" data-action="new">创建第一个项目${svg('arrow')}</button></section><div class="feature-grid"><div class="feature-card">${svg('edit')}<h3>留住每一个灵感</h3><p>构思、时长、画风和预算，在一个项目中有序保存。</p></div><div class="feature-card">${svg('sparkle')}<h3>与 Codex 一起创作</h3><p>调用本机 Codex 扩写故事，并区分你的设定与补充内容。</p></div><div class="feature-card">${svg('folder')}<h3>随时回来，接着写</h3><p>项目与参考素材保存在本地，关闭后重新打开仍然可用。</p></div></div>`;
 }
 function editor() {
   const d = state.draft;
-  return `<div class="workspace"><section class="panel"><div class="panel-heading"><div class="panel-icon">${svg('edit')}</div><div><h2>故事设定</h2><p>你的构思，是一切创作的起点</p></div><div id="save-state" class="save-state ${state.dirty ? 'dirty' : ''}">${svg(state.dirty ? 'clock' : 'check')}${state.dirty ? '有未保存修改' : state.creating ? '新项目' : '已保存到本地'}</div></div><form id="project-form"><div class="panel-body"><div class="form-group"><div class="label-line"><label for="project-name">项目名称<span class="required">*</span></label></div><input id="project-name" name="name" data-testid="name" required maxlength="120" value="${esc(d.name)}" placeholder="给这个故事起个名字"></div><div class="form-group"><div class="label-line"><label for="project-idea">故事构思<span class="required">*</span></label><span class="hint" id="idea-count">${d.idea.length} 字</span></div><textarea id="project-idea" class="idea-input" name="idea" data-testid="idea" maxlength="20000" placeholder="写下你的故事想法。人物、场景、冲突，或是一个想要实现的结局……\n\n你指定的内容将作为扩写的创作约束。">${esc(d.idea)}</textarea></div><div class="form-row"><div class="form-group"><div class="label-line"><label for="project-duration">目标时长</label></div><div class="input-unit"><input id="project-duration" name="durationSeconds" data-testid="duration" type="number" min="5" max="7200" step="1" required value="${esc(d.durationSeconds)}"><span>秒</span></div></div><div class="form-group"><div class="label-line"><span class="field-label">画面比例</span></div><div class="ratio-options" role="group" aria-label="横竖屏"><button type="button" data-ratio="9:16" data-testid="aspect-portrait" aria-pressed="${d.aspectRatio === '9:16'}" class="ratio-button ${d.aspectRatio === '9:16' ? 'selected' : ''}"><span class="ratio-symbol"></span>竖屏</button><button type="button" data-ratio="16:9" data-testid="aspect-landscape" aria-pressed="${d.aspectRatio === '16:9'}" class="ratio-button ${d.aspectRatio === '16:9' ? 'selected' : ''}"><span class="ratio-symbol"></span>横屏</button></div></div></div><div class="form-group"><div class="label-line"><label for="project-style">画风说明</label><span class="hint">可选</span></div><textarea id="project-style" class="style-input" name="style" data-testid="style" maxlength="5000" placeholder="例如：温暖的二维手绘，柔和光线，低饱和色彩">${esc(d.style)}</textarea></div><div class="form-group"><div class="label-line"><label for="reference-input">参考素材</label><span class="hint">可选 · 本地保存</span></div><label class="upload-zone" for="reference-input">${svg('upload')}<span><strong>点击添加参考文件</strong><small>图片、视频、音频或文档 · 单个不超过 25 MB</small></span><input type="file" id="reference-input" data-testid="references" multiple aria-label="添加参考素材"></label><div class="reference-list">${referenceItems()}</div><p class="budget-help">本阶段保存文件；Codex 仅接收文件信息，不读取或分析素材内容。</p></div><div class="form-group"><div class="label-line"><label for="project-budget">预算上限</label><span class="hint">可选</span></div><div class="input-unit"><input id="project-budget" name="budgetCap" data-testid="budget" type="number" min="0" max="100000000" step="0.01" value="${d.budgetCap === null ? '' : esc(d.budgetCap)}" placeholder="暂未设定"><span>元</span></div><p class="budget-help">用于后续制作规划；本阶段不估价，也不提交付费生成任务。</p></div></div><div class="form-footer"><button type="submit" class="secondary-button" data-testid="save-project" ${state.busy ? 'disabled' : ''}>${svg('save')}保存项目</button><button type="button" class="primary-button" data-action="expand" data-testid="expand-story" ${state.busy || activeJob() ? 'disabled' : ''}>${svg('sparkle')}${activeJob() ? 'Codex 正在扩写' : '让 Codex 扩写'}</button></div></form></section><section class="panel brief-panel"><div class="panel-heading"><div class="panel-icon">${svg('sparkle')}</div><div><h2>创作说明</h2><p>从故事雏形，到清晰的创作方向</p></div><span class="hint auto-margin">${d.creativeBrief ? '可自由编辑' : '由本机 Codex 扩写'}</span></div><div class="panel-body"><div id="job-container" aria-live="polite"></div><div id="brief-container">${briefContent()}</div></div></section></div>`;
+  return `<div class="workspace"><section class="panel"><div class="panel-heading"><div class="panel-icon">${svg('edit')}</div><div><h2>故事设定</h2><p>你的构思，是一切创作的起点</p></div><div id="save-state" class="save-state ${state.dirty ? 'dirty' : ''}">${svg(state.dirty ? 'clock' : 'check')}${state.dirty ? '有未保存修改' : state.creating ? '新项目' : '已保存到本地'}</div></div><form id="project-form"><div class="panel-body"><div class="form-group"><div class="label-line"><label for="project-name">项目名称<span class="required">*</span></label></div><input id="project-name" name="name" data-testid="name" required maxlength="120" value="${esc(d.name)}" placeholder="给这个故事起个名字"></div><div class="form-group"><div class="label-line"><label for="project-idea">故事构思<span class="required">*</span></label><span class="hint" id="idea-count">${d.idea.length} 字</span></div><textarea id="project-idea" class="idea-input" name="idea" data-testid="idea" maxlength="20000" placeholder="写下你的故事想法。人物、场景、冲突，或是一个想要实现的结局……\n\n你指定的内容将作为扩写的创作约束。">${esc(d.idea)}</textarea></div><div class="form-row"><div class="form-group"><div class="label-line"><label for="project-duration">目标时长</label></div><div class="input-unit"><input id="project-duration" name="durationSeconds" data-testid="duration" type="number" min="5" max="7200" step="1" required value="${esc(d.durationSeconds)}"><span>秒</span></div></div><div class="form-group"><div class="label-line"><span class="field-label">画面比例</span></div><div class="ratio-options" role="group" aria-label="横竖屏"><button type="button" data-ratio="9:16" data-testid="aspect-portrait" aria-pressed="${d.aspectRatio === '9:16'}" class="ratio-button ${d.aspectRatio === '9:16' ? 'selected' : ''}"><span class="ratio-symbol"></span>竖屏</button><button type="button" data-ratio="16:9" data-testid="aspect-landscape" aria-pressed="${d.aspectRatio === '16:9'}" class="ratio-button ${d.aspectRatio === '16:9' ? 'selected' : ''}"><span class="ratio-symbol"></span>横屏</button></div></div></div><div class="form-group"><div class="label-line"><label for="project-style">画风说明</label><span class="hint">可选</span></div><textarea id="project-style" class="style-input" name="style" data-testid="style" maxlength="5000" placeholder="例如：温暖的二维手绘，柔和光线，低饱和色彩">${esc(d.style)}</textarea></div><div class="form-group"><div class="label-line"><label for="reference-input">参考素材</label><span class="hint">可选 · 本地保存</span></div><label class="upload-zone" for="reference-input">${svg('upload')}<span><strong>点击添加参考文件</strong><small>图片、视频、音频或文档 · 单个不超过 25 MB</small></span><input type="file" id="reference-input" data-testid="references" multiple aria-label="添加参考素材"></label><div class="reference-list">${referenceItems()}</div><p class="budget-help">本阶段保存文件；Codex 仅接收文件信息，不读取或分析素材内容。</p></div><div class="form-group"><div class="label-line"><label for="project-budget">预算上限</label><span class="hint">可选</span></div><div class="input-unit"><input id="project-budget" name="budgetCap" data-testid="budget" type="number" min="0" max="100000000" step="0.01" value="${d.budgetCap === null ? '' : esc(d.budgetCap)}" placeholder="暂未设定"><span>元</span></div><p class="budget-help">用于后续制作规划；本阶段不估价，也不提交付费生成任务。</p></div></div><div class="form-footer"><button type="submit" class="secondary-button" data-testid="save-project" ${state.busy ? 'disabled' : ''}>${svg('save')}保存项目</button><button type="button" class="primary-button" data-action="expand" data-testid="expand-story" ${state.busy || activeJob() ? 'disabled' : ''}>${svg('sparkle')}${activeJob() ? 'Codex 正在扩写' : '生成创作说明'}</button></div></form></section><section class="panel brief-panel"><div class="panel-heading"><div class="panel-icon">${svg('sparkle')}</div><div><h2>创作说明</h2><p>从故事雏形，到清晰的创作方向</p></div><span class="hint auto-margin">${d.creativeBrief ? '可自由编辑' : '由本机 Codex 扩写'}</span></div><div class="panel-body"><div id="job-container" aria-live="polite"></div><div id="brief-container">${briefContent()}</div></div></section></div>`;
 }
 function referenceItems() {
   return (state.draft.references || []).map(ref => `<div class="reference-item"><a href="/api/projects/${encodeURIComponent(state.project.id)}/references/${encodeURIComponent(ref.id)}" target="_blank" rel="noopener">${esc(ref.name)}</a><span>${ref.size > 1024 * 1024 ? (ref.size / 1024 / 1024).toFixed(1) + ' MB' : Math.ceil(ref.size / 1024) + ' KB'}</span><button type="button" data-remove-reference="${esc(ref.id)}" aria-label="移除参考素材 ${esc(ref.name)}" title="移除参考素材">×</button></div>`).join('');
@@ -86,7 +110,7 @@ function candidateVisible() { return state.viewCandidate && state.job?.status ==
 function briefContent() {
   const candidate = candidateVisible();
   const brief = candidate ? state.job.result : state.draft?.creativeBrief;
-  if (!brief) return `<div class="blank-brief"><div class="blank-art">${svg('sparkle')}</div><h3>给灵感一点生长的空间</h3><p>填写左侧故事构思，点击「让 Codex 扩写」，<br>生成属于这个项目的创作说明。</p><div class="brief-outline">${sections.map(([key, label], i) => `<div class="outline-item"><span>0${i + 1}</span><strong>${label}</strong></div>`).join('')}</div></div><div class="provenance-note">${svg('shield')}<div><strong>你的想法，始终是故事的起点。</strong><br>扩写会保留你指定的内容，并单独标明 AI 自行补充的设定。结果由你审阅、编辑和决定是否采用。</div></div>`;
+  if (!brief) return `<div class="blank-brief"><div class="blank-art">${svg('sparkle')}</div><h3>给灵感一点生长的空间</h3><p>填写左侧故事构思，点击「生成创作说明」，<br>生成属于这个项目的创作说明。</p><div class="brief-outline">${sections.map(([key, label], i) => `<div class="outline-item"><span>0${i + 1}</span><strong>${label}</strong></div>`).join('')}</div></div><div class="provenance-note">${svg('shield')}<div><strong>你的想法，始终是故事的起点。</strong><br>扩写会保留你指定的内容，并单独标明 AI 自行补充的设定。结果由你审阅、编辑和决定是否采用。</div></div>`;
   return `${candidate ? `<div class="candidate-banner"><p><strong>本次扩写已完成，等待你审阅</strong>下方是 Codex 真实返回的候选内容。采用后可自由修改。</p><button type="button" class="primary-button small-button" data-action="apply" data-testid="apply-expansion">采用本次扩写</button>${state.draft.creativeBrief ? '<button type="button" class="ghost-button small-button" data-action="show-current">查看当前说明</button>' : ''}</div>` : state.job?.status === 'succeeded' && !state.job.appliedAt ? '<div class="candidate-banner"><p>你正在编辑已保存的创作说明，另有一份扩写候选可查看。</p><button class="secondary-button small-button" data-action="show-candidate">查看扩写候选</button></div>' : ''}${sections.map(([key, label], index) => `<div class="brief-section"><label for="brief-${key}"><span class="section-number">0${index + 1}</span>${label}</label><textarea id="brief-${key}" data-brief="${key}" data-testid="brief-${key}" ${candidate ? 'readonly' : ''}>${esc(brief[key])}</textarea></div>`).join('')}<div class="provenance-group"><h3>保留的用户指定内容</h3><label class="sr-only" for="brief-preserved">保留的用户指定内容，每行一条</label><textarea id="brief-preserved" data-brief-list="preservedContent" ${candidate ? 'readonly' : ''} placeholder="每行一条">${esc((brief.preservedContent || []).join('\n'))}</textarea></div><div class="provenance-group added"><h3>AI 自行补充的设定 · 采用前请核对</h3><label class="sr-only" for="brief-added">AI 自行补充的设定，每行一条</label><textarea id="brief-added" data-brief-list="addedSettings" ${candidate ? 'readonly' : ''} placeholder="每行一条">${esc((brief.addedSettings || []).join('\n'))}</textarea></div>${candidate ? '' : '<p class="budget-help">修改创作说明后，请点击左侧「保存项目」。</p>'}`;
 }
 function renderJob() {
@@ -105,6 +129,7 @@ function upsertProject(project) {
   state.projects.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   state.project = project; state.draft = clone(project); state.creating = false; state.dirty = false;
   localStorage.setItem('ai-drama-studio:last-project', project.id);
+  history.replaceState(null, '', `/?projectId=${encodeURIComponent(project.id)}`);
 }
 async function saveProject({ quiet = false } = {}) {
   if (state.busy || !state.draft) return false;
@@ -120,7 +145,7 @@ async function saveProject({ quiet = false } = {}) {
 function setBusy() {
   document.querySelectorAll('#project-form input, #project-form textarea, #project-form [data-ratio], #project-form [data-remove-reference], #brief-container textarea').forEach(element => { element.disabled = state.busy; });
   const save = $('[data-testid="save-project"]'); if (save) save.disabled = state.busy;
-  const expand = $('[data-testid="expand-story"]'); if (expand) { expand.disabled = state.busy || Boolean(activeJob()); expand.innerHTML = svg('sparkle') + (activeJob() ? 'Codex 正在扩写' : '让 Codex 扩写'); }
+  const expand = $('[data-testid="expand-story"]'); if (expand) { expand.disabled = state.busy || Boolean(activeJob()); expand.innerHTML = svg('sparkle') + (activeJob() ? '正在生成创作说明' : '生成创作说明'); }
 }
 async function newProject() {
   if (state.busy) { toast('正在保存当前操作，请稍候再切换项目。'); return; }
@@ -141,7 +166,7 @@ async function selectProject(id) {
 }
 async function expand() {
   if (state.busy || activeJob()) return;
-  if (!state.draft.idea.trim()) { toast('请先填写故事构思，再让 Codex 扩写。', true); $('#project-idea')?.focus(); return; }
+  if (!state.draft.idea.trim()) { toast('请先填写故事构思，再生成创作说明。', true); $('#project-idea')?.focus(); return; }
   if (!await saveProject({ quiet: true })) return;
   state.busy = true; setBusy();
   try {
@@ -247,7 +272,7 @@ app.addEventListener('click', async event => {
     if (state.busy) { toast('当前操作尚未结束，请稍候。'); return; }
     if (!state.project || !await confirmDiscard()) return;
     state.dirty = false;
-    location.href = `/creative.html?projectId=${encodeURIComponent(state.project.id)}`;
+    location.href = `/creative.html?stage=script&projectId=${encodeURIComponent(state.project.id)}`;
   }
   if (action === 'open-script') {
     if (state.busy) { toast('当前操作尚未结束，请稍候。'); return; }
@@ -278,7 +303,9 @@ async function initialize() {
   render();
   try {
     const data = await api('/api/projects'); state.projects = data.projects; state.warnings = data.warnings || [];
-    const last = localStorage.getItem('ai-drama-studio:last-project'); const first = state.projects.find(project => project.id === last) || state.projects[0];
+    const query = new URLSearchParams(location.search);
+    if (query.get('new') === '1') { await newProject(); return; }
+    const requested = query.get('projectId'), last = localStorage.getItem('ai-drama-studio:last-project'); const first = state.projects.find(project => project.id === requested) || state.projects.find(project => project.id === last) || state.projects[0];
     if (first) { upsertProject(await api(`/api/projects/${encodeURIComponent(first.id)}`)); render(); if (state.project.latestJobId) await loadJob(state.project.latestJobId, state.project.id); }
     else render();
   } catch (error) { state.warnings = [`无法读取本地项目：${error.message}`]; render(); }
