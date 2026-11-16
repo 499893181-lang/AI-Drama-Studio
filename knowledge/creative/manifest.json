@@ -1,0 +1,34 @@
+{
+  "version": "0.4.0",
+  "status": "source_traced_design_rules_not_generation_validated",
+  "base_project_commit": "2fecee1aaee195fc4fcb52c2927aded5f6e87fdd",
+  "created_at": "2026-11-15",
+  "counts": {
+    "directors": 15,
+    "work_scoped_presets": 17,
+    "base_style_rules": 94,
+    "manual_director_rules": 90,
+    "image_rules": 24,
+    "motion_entries": 13,
+    "motion_general_rules": 15,
+    "workflow_rules": 19
+  },
+  "source_ids": [
+    "M01",
+    "M02",
+    "M03",
+    "H01"
+  ],
+  "data_files": [
+    "sources.json",
+    "source-links.json",
+    "image-rules.json",
+    "motion.json",
+    "directors.json",
+    "workflow.json",
+    "source-anchors.json"
+  ],
+  "capability_scope": "离线知识数据与提示词／任务包编译；不代表四岗位正式verify、生图、视频、账号接入或审美验收已完成",
+  "manual_scope": "三个Word各含50条既有抽样观察记录；不累计声称本轮观看150条、不去重推断跨手册不同作品数",
+  "publication_scope": "derived design rules and source position indexes; no duplicate full handbook text or extracted link collection"
+}

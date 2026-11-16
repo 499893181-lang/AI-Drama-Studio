@@ -4,6 +4,9 @@
 
 ## 调试入口
 
+- [当前创作路线与三手册／Huobao整合](docs/creative-knowledge-v04.md)：自有ChatGPT／Codex文字创作，15位导演17个作品级预设，静态与运动提示词；现为离线核心，界面和媒体待接。
+- [创作编译核心](src/creative-design.mjs)、[来源与规则数据](knowledge/creative/manifest.json)、[离线预览命令](scripts/preview-creative.mjs)。知识库0.4不代表工作台已升级或媒体能力已实现。
+
 - [代码调试上下文](docs/CHATGPT_CONTEXT.md)：当前范围、验证结果、未确认能力、文件索引与问题模板。
 - [启动说明](README.md)：Node.js 22+，无需 npm 运行依赖，Windows 本地启动。
 - [架构说明](docs/architecture.md)：持久化、接口、任务与边界。

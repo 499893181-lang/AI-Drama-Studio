@@ -1,0 +1,4567 @@
+{
+  "schema_version": "0.4.0",
+  "catalog_name": "电影语言与手册设计规则库",
+  "created_at": "2026-11-15",
+  "language": "zh-CN",
+  "director_count": 15,
+  "preset_count": 17,
+  "status": "原94条风格规则保留，新增90条手册候选规则；未做本项目生图视频验收",
+  "scope_note": "根据公开访谈和原生电影分析整理的原创软件规则，不是导演官方配方，不是即梦等厂商隐藏系统提示词；不声称同一导演所有作品使用同一套技法。",
+  "priority": [
+    "用户明确锁定的故事事实与制作限制",
+    "镜头的叙事目的和人物情绪",
+    "角色与场景连续性",
+    "作品级风格规则",
+    "模型的补充建议"
+  ],
+  "global_quality_rules": [
+    "人物动作有明确目的，表情克制而有区别",
+    "按观察位置建立近中远层次及合理尺度",
+    "光源、方向、天气相互一致",
+    "材质有适量使用痕迹，避免所有物体同样光滑、锐利、干净",
+    "细节有疏密，不用满屏纹理代替细腻",
+    "不把导演姓名或电影感等标签作为唯一生成依据"
+  ],
+  "sources": [
+    {
+      "id": "S01",
+      "director": "姜文",
+      "title": "Let the Readings Fly: Jiang Wen Reaches for the Mainstream",
+      "url": "https://cinema-scope.com/features/features-let-the-readings-fly-jiang-wen-reaches-for-the-mainstream/",
+      "evidence_type": "critical_analysis",
+      "access_status": "full_text_opened",
+      "supports": "对白对击、舞台性、大色块、清晰对称构图。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S02",
+      "director": "贾樟柯",
+      "title": "Cinema with an Accent – Interview with Jia Zhangke",
+      "url": "https://www.sensesofcinema.com/2001/feature-articles/zhangke_interview/",
+      "evidence_type": "director_interview",
+      "access_status": "full_text_opened",
+      "supports": "本人区分《小武》的现场手持和《站台》的全景远观。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S03",
+      "director": "王家卫",
+      "title": "Christopher Doyle on shooting Chungking Express",
+      "url": "https://www.bfi.org.uk/interviews/christopher-doyle-shooting-chungking-express",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "full_text_opened",
+      "supports": "《重庆森林》的都市现场能量、霓虹及人物关系。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S04",
+      "director": "张艺谋",
+      "title": "Yong Hou, Cinematographer, CNSC – FilmLight Colour Awards",
+      "url": "https://www.flccawards.org/colour-awards-2024/jury-colour-awards-2024/yong-hou-cinematographer-cnsc/",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "full_text_opened",
+      "supports": "服装、道具、环境的色彩组织与后期去色转向；不采纳访谈对《英雄》色段的过度简化。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S05",
+      "director": "陈凯歌",
+      "title": "Yellow Earth – Harvard Film Archive",
+      "url": "https://harvardfilmarchive.org/programs/yellow-earth-by-chen-kaige/1",
+      "evidence_type": "institutional_program_note",
+      "access_status": "full_text_opened",
+      "supports": "固定摄影、自然光、有限色盘、黄土地与衣料纹理。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S06",
+      "director": "侯孝贤",
+      "title": "Where to begin with Hou Hsiao-hsien",
+      "url": "https://www.bfi.org.uk/features/where-begin-with-hou-hsiao-hsien",
+      "evidence_type": "curatorial_analysis",
+      "access_status": "full_text_opened",
+      "supports": "长镜头、固定视轴、框中框及日常活动。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S07",
+      "director": "杨德昌",
+      "title": "Harvard Film Archive Edward Yang retrospective",
+      "url": "https://www.wbur.org/news/2024/03/27/harvard-film-archive-edward-yang",
+      "evidence_type": "critical_analysis",
+      "access_status": "full_text_opened",
+      "supports": "城市建筑、玻璃反射、人物构图关系及声桥。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S08",
+      "director": "岩井俊二",
+      "title": "Shunji Iwai on Love Letter",
+      "url": "https://moveablefest.com/shunji-iwai-love-letter/",
+      "evidence_type": "director_interview",
+      "access_status": "full_text_opened",
+      "supports": "摄影稳定性随情绪变化，选景与美术反馈故事。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S09",
+      "director": "是枝裕和",
+      "title": "Interview: Hirokazu Kore-eda – Midnight Eye",
+      "url": "https://www.midnighteye.com/interviews/hirokazu-kore-eda/",
+      "evidence_type": "director_interview",
+      "access_status": "full_text_opened",
+      "supports": "《无人知晓》固定观察、手脚和物件细节、表演节奏与避免煽情。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S10",
+      "director": "黑泽明",
+      "title": "How Akira Kurosawa films command the weather",
+      "url": "https://www.bfi.org.uk/features/how-akira-kurosawa-films-command-weather",
+      "evidence_type": "institutional_film_analysis",
+      "access_status": "full_text_opened",
+      "supports": "天气影响处境与动作，多角度动作和场面调度。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S11",
+      "director": "斯皮尔伯格",
+      "title": "Framing the Magic of West Side Story with Janusz Kamiński",
+      "url": "https://discussingfilm.net/2022/03/20/framing-the-magic-of-west-side-story-with-cinematographer-janusz-kaminski-exclusive-interview/",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "full_text_opened",
+      "supports": "光线、摄影运动和构图服务表演，群体空间与情绪协同。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S12",
+      "director": "诺兰",
+      "title": "Hoyte van Hoytema – Dunkirk",
+      "url": "https://britishcinematographer.co.uk/hoyte-van-hoytema-fsf-nsc-asc-dunkirk/",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "search_excerpt_only_full_text_403",
+      "supports": "近身、临场与行动摄影；全文受限，本卡证据等级较低，待补全。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S13",
+      "director": "韦斯·安德森",
+      "title": "DP Robert Yeoman on The Grand Budapest Hotel",
+      "url": "https://www.motionpictures.org/2014/12/2014-in-review-dp-robert-yeoman-on-the-grand-budapest-hotel/",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "full_text_opened",
+      "supports": "构图、道具、美术色彩测试与动态预演。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S14",
+      "director": "大卫·芬奇",
+      "title": "David Fincher and Erik Messerschmidt target V-RAPTOR to shoot The Killer",
+      "url": "https://www.reddigitalcinema.com/stories/the-killer",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "full_text_opened",
+      "supports": "主客观视点、精密构图，以及打斗中的有意失控。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    },
+    {
+      "id": "S15",
+      "director": "丹尼斯·维伦纽瓦",
+      "title": "Uncanny Valley: Blade Runner 2049",
+      "url": "https://theasc.com/article/uncanny-valley-blade-runner-2049/",
+      "evidence_type": "cinematographer_interview",
+      "access_status": "full_text_opened",
+      "supports": "场景光源与人物处境结合，有限光区和空间尺度。",
+      "checked_at": "2026-11-15",
+      "quotation_policy": "仅存原创摘要，不收录访谈全文或电影帧"
+    }
+  ],
+  "directors": [
+    {
+      "id": "jiang_wen",
+      "name": "姜文",
+      "variants": [
+        {
+          "id": "jiang.bullets.dialogue",
+          "label": "群像对峙与对白回击",
+          "reference_works": [
+            "让子弹飞"
+          ],
+          "source_ids": [
+            "S01"
+          ],
+          "fit_tags": [
+            "群像",
+            "黑色幽默",
+            "利益博弈"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "jiang.bullets.dialogue.narrative.1",
+                "text": "让人物目标、筹码与冲突推进对峙",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S01"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "jiang.bullets.dialogue.still_image.1",
+                "text": "先用可读的对称或对峙构图交代多方位置",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S01"
+                ]
+              },
+              {
+                "id": "jiang.bullets.dialogue.still_image.2",
+                "text": "人物服装与场景形成少量有组织的大色块",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S01"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "jiang.bullets.dialogue.motion.1",
+                "text": "摄影运动由权力关系变化或行动触发",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S01"
+                ]
+              },
+              {
+                "id": "jiang.bullets.dialogue.motion.2",
+                "text": "先保持空间方向清楚，再收紧人物反应",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S01"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "jiang.bullets.dialogue.editing.1",
+                "text": "按对白回击、停顿和反应切镜；避免无意义快切",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S01"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不要把广角、吼叫和快切当作全部风格",
+            "无对白片段应只借空间与表演，不凭空增加台词"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.jiang_wen.1",
+          "stage": "narrative",
+          "text": "信息、表面权力、退出能力和关键物件分别归属明确人物，让沉默者也可掌握筹码。",
+          "software_fields": [
+            "information_owner",
+            "apparent_power",
+            "exit_controller",
+            "leverage_prop"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P034"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D15",
+              "D17"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jiang_wen.2",
+          "stage": "still_image",
+          "text": "用桌沿、门口和高低差分隔立场，保持决定性人物的脸、手和物件可辨。",
+          "software_fields": [
+            "blocking_zones",
+            "height_relations",
+            "hand_prop_visibility"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P035",
+              "P040"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D15",
+              "D17"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jiang_wen.3",
+          "stage": "motion",
+          "text": "侧移到真正掌权者，物件落桌时停机并保留其余人物反应位置。",
+          "software_fields": [
+            "camera_path",
+            "camera_stop_event",
+            "reaction_positions"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P036",
+              "P041"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D15",
+              "D17"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jiang_wen.4",
+          "stage": "editing_sound",
+          "text": "道具声和骤静构成对白落点，配乐在关系转折后进入；反打维持方向。",
+          "software_fields": [
+            "prop_sound_cue",
+            "silence_cue",
+            "music_entry_event",
+            "eyeline_match"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P037",
+              "P042"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D15",
+              "D17"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jiang_wen.5",
+          "stage": "validation",
+          "text": "逐个核对三方筹码、沉默者反应与回击后果，快切不得丢失站位。",
+          "software_fields": [
+            "power_change",
+            "reaction_readability",
+            "geography_readability"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P043"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D15",
+              "D17"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jiang_wen.6",
+          "stage": "case_extension",
+          "text": "青春回忆中的硬光、鲜艳布料和自行车仅建独立候选样例；检查脚不穿车轮、皮箱固定前架。",
+          "software_fields": [
+            "candidate_variant",
+            "contact_constraints",
+            "prop_mounting"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P032",
+              "P310",
+              "P320",
+              "P321"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D15",
+              "D17"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "让子弹飞（2010）",
+        "阳光灿烂的日子（1994）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "jia_zhangke",
+      "name": "贾樟柯",
+      "variants": [
+        {
+          "id": "jia.xiaowu.street",
+          "label": "街道日常与现场视点",
+          "reference_works": [
+            "小武"
+          ],
+          "source_ids": [
+            "S02"
+          ],
+          "fit_tags": [
+            "普通人",
+            "街道日常",
+            "社会处境"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "jia.xiaowu.street.narrative.1",
+                "text": "用人际关系中的具体行为表现处境",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "jia.xiaowu.street.still_image.1",
+                "text": "保留有依据的生活痕迹和环境信息",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              },
+              {
+                "id": "jia.xiaowu.street.still_image.2",
+                "text": "摄影位置接近参与现场的旁观者",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "jia.xiaowu.street.motion.1",
+                "text": "跟随人物完成一个有目的的日常动作",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              },
+              {
+                "id": "jia.xiaowu.street.motion.2",
+                "text": "手持幅度保持可读，不以抖动代替现场感",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "jia.xiaowu.street.editing.1",
+                "text": "保留事件连续时间和环境声的接续",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不要为了真实而故意做脏、做糊",
+            "不强制每个镜头都手持"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        },
+        {
+          "id": "jia.platform.distance",
+          "label": "时代环境中的远观",
+          "reference_works": [
+            "站台"
+          ],
+          "source_ids": [
+            "S02"
+          ],
+          "fit_tags": [
+            "时代生活",
+            "群像",
+            "人物与环境"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "jia.platform.distance.narrative.1",
+                "text": "由人在空间中的变化表达时代感",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "jia.platform.distance.still_image.1",
+                "text": "优先以全景保留人与环境的距离",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              },
+              {
+                "id": "jia.platform.distance.still_image.2",
+                "text": "关键关系通过同一画面内的站位可读",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "jia.platform.distance.motion.1",
+                "text": "以稳定视点容纳人物移动",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              },
+              {
+                "id": "jia.platform.distance.motion.2",
+                "text": "只有空间信息需要时才调整机位",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "jia.platform.distance.editing.1",
+                "text": "给行动留下时间，但在短片内按信息密度缩短",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S02"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不能把长片的长镜头长度原样搬入30秒短片",
+            "不以缺少特写为目的"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.jia_zhangke.1",
+          "stage": "narrative",
+          "text": "用等车、找人或收物的具体任务承载工作迁移处境，旁白不先解释全部社会意义。",
+          "software_fields": [
+            "practical_task",
+            "social_context",
+            "voiceover_information"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P047"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D16"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jia_zhangke.2",
+          "stage": "still_image",
+          "text": "为地域年代建立建筑、招牌、道路尺度与物件依据，避免泛化破旧制造贫困标签。",
+          "software_fields": [
+            "period_evidence",
+            "locality_assets",
+            "environment_activity"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P048",
+              "P053",
+              "P315"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D16"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jia_zhangke.3",
+          "stage": "motion",
+          "text": "固定景别记录入画点、停顿锚点和出画点；末尾空场必须有新增信息。",
+          "software_fields": [
+            "entry_point",
+            "pause_anchor",
+            "exit_point",
+            "empty_frame_purpose"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P049",
+              "P054"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D16"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jia_zhangke.4",
+          "stage": "editing_sound",
+          "text": "交通机械现场声、店内音乐和外加配乐分开；场内音乐随距离和遮挡变化。",
+          "software_fields": [
+            "diegetic_music_source",
+            "sound_distance",
+            "sound_occlusion"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P050",
+              "P055"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D16"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jia_zhangke.5",
+          "stage": "validation",
+          "text": "克制观察仍须有任务或关系变化，并检查年份、地点与环境活动相关性。",
+          "software_fields": [
+            "task_progress",
+            "time_place_consistency",
+            "environment_relevance"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P051",
+              "P056"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D16"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.jia_zhangke.6",
+          "stage": "case_extension",
+          "text": "拒绝教程卡中的随机晃动与切半头作为导演默认；使用具体衣料水痕和物件状态。",
+          "software_fields": [
+            "rejected_simplifications",
+            "material_evidence"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P300",
+              "P301",
+              "P315",
+              "P316"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D16"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "站台（2000）",
+        "山河故人（2015）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "wong_kar_wai",
+      "name": "王家卫",
+      "variants": [
+        {
+          "id": "wong.chungking.city",
+          "label": "都市空间中的靠近与错过",
+          "reference_works": [
+            "重庆森林"
+          ],
+          "source_ids": [
+            "S03"
+          ],
+          "fit_tags": [
+            "都市关系",
+            "擦肩",
+            "暧昧与孤独"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "wong.chungking.city.narrative.1",
+                "text": "通过接近、错过与生活行为表达关系变化",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S03"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "wong.chungking.city.still_image.1",
+                "text": "先确定人物与城市空间的关系",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S03"
+                ]
+              },
+              {
+                "id": "wong.chungking.city.still_image.2",
+                "text": "夜景用实际店招或室内灯建立局部色彩，日景遵守原场景光线",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S03"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "wong.chungking.city.motion.1",
+                "text": "摄影随人物动线与注意力变化",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S03"
+                ]
+              },
+              {
+                "id": "wong.chungking.city.motion.2",
+                "text": "关系转折可用近距离生活动作承载",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S03"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "wong.chungking.city.editing.1",
+                "text": "允许停顿或重复意象形成情绪回声",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S03"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不要给所有地点强加霓虹、拖影或雨夜",
+            "本卡不代表《花样年华》等其他作品；拖影属于另行验证的视频技法"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.wong_kar_wai.1",
+          "stage": "narrative",
+          "text": "为靠近和不能表达分别设置原因；独白只增加画面外的时间或视点信息。",
+          "software_fields": [
+            "relationship_need",
+            "expression_barrier",
+            "voiceover_new_information"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P060"
+            ],
+            "secondary_record_ids": [
+              "D01",
+              "D02",
+              "D03",
+              "D04",
+              "D05",
+              "D07",
+              "D08",
+              "D09"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wong_kar_wai.2",
+          "stage": "still_image",
+          "text": "门框或反射遮挡与等待方向留白共同表达距离，有限色盘逐一对应动机光源。",
+          "software_fields": [
+            "occlusion_mask",
+            "negative_space_direction",
+            "motivated_color_sources"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P061",
+              "P066"
+            ],
+            "secondary_record_ids": [
+              "D01",
+              "D02",
+              "D03",
+              "D04",
+              "D05",
+              "D07",
+              "D08",
+              "D09"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wong_kar_wai.3",
+          "stage": "motion",
+          "text": "主体小动作、背景运动速度和相机侧移分别描述，先做主脸清晰版本。",
+          "software_fields": [
+            "subject_motion",
+            "background_motion",
+            "relative_motion",
+            "camera_path"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P062",
+              "P067",
+              "P250"
+            ],
+            "secondary_record_ids": [
+              "D01",
+              "D02",
+              "D03",
+              "D04",
+              "D05",
+              "D07",
+              "D08",
+              "D09"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wong_kar_wai.4",
+          "stage": "editing_sound",
+          "text": "拖影、抽帧和帧叠加另做可开关的后期版本，与清晰原版比较脸手伪影。",
+          "software_fields": [
+            "clean_master",
+            "post_time_effect",
+            "artifact_comparison"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P063",
+              "P068",
+              "P275"
+            ],
+            "secondary_record_ids": [
+              "D01",
+              "D02",
+              "D03",
+              "D04",
+              "D05",
+              "D07",
+              "D08",
+              "D09"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wong_kar_wai.5",
+          "stage": "validation",
+          "text": "检查观众知道人物在等谁、遮挡未丢关系信息、时间效果未只剩模糊。",
+          "software_fields": [
+            "waiting_readability",
+            "identity_visibility",
+            "light_source_readability"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P069"
+            ],
+            "secondary_record_ids": [
+              "D01",
+              "D02",
+              "D03",
+              "D04",
+              "D05",
+              "D07",
+              "D08",
+              "D09"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wong_kar_wai.6",
+          "stage": "case_extension",
+          "text": "多地点一镜、四分之一拍摄和14mm等仅是教程方案；拆分空间事件并独立保存模型尾参。",
+          "software_fields": [
+            "space_transition_events",
+            "optical_semantics",
+            "provider_specific_parameters"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P240",
+              "P245",
+              "P255",
+              "P280"
+            ],
+            "secondary_record_ids": [
+              "D01",
+              "D02",
+              "D03",
+              "D04",
+              "D05",
+              "D07",
+              "D08",
+              "D09"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "重庆森林（1994）",
+        "花样年华（2000）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "zhang_yimou",
+      "name": "张艺谋",
+      "variants": [
+        {
+          "id": "zhang.hero.color",
+          "label": "叙事段落的色彩组织",
+          "reference_works": [
+            "英雄",
+            "大红灯笼高高挂"
+          ],
+          "source_ids": [
+            "S04"
+          ],
+          "fit_tags": [
+            "仪式",
+            "寓言",
+            "视觉史诗"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "zhang.hero.color.narrative.1",
+                "text": "以色彩关系强化已存在的情绪或立场",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "zhang.hero.color.still_image.1",
+                "text": "每场选择有叙事理由的主色与少量辅助色",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              },
+              {
+                "id": "zhang.hero.color.still_image.2",
+                "text": "服装、道具、环境共同组织色块，而非统一滤镜",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "zhang.hero.color.motion.1",
+                "text": "人物调度保持色块与权力关系可读",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "zhang.hero.color.editing.1",
+                "text": "颜色或构图的变化对应段落信息变化",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不硬编码《英雄》只有三色或固定颜色含义",
+            "不覆盖用户已锁定的服装及场景颜色"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        },
+        {
+          "id": "zhang.shadow.ink",
+          "label": "有限色盘与墨色材质",
+          "reference_works": [
+            "影"
+          ],
+          "source_ids": [
+            "S04"
+          ],
+          "fit_tags": [
+            "古风",
+            "克制对峙",
+            "东方绘画感"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "zhang.shadow.ink.narrative.1",
+                "text": "把关系冲突落在可见的动作与物件上",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "zhang.shadow.ink.still_image.1",
+                "text": "收敛色彩，使用墨色层次和材质差异区分空间",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              },
+              {
+                "id": "zhang.shadow.ink.still_image.2",
+                "text": "人物、道具与环境处于统一色彩系统",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "zhang.shadow.ink.motion.1",
+                "text": "用姿态和空间改变制造张力，运动保持清楚",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "zhang.shadow.ink.editing.1",
+                "text": "在静态积蓄和动作变化之间形成节奏",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S04"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不把任何古装作品都去饱和",
+            "黑白处理不能吞没人物辨识度"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.zhang_yimou.1",
+          "stage": "narrative",
+          "text": "颜色对应记忆、阵营或处境变化，仍须保留可见行动目标。",
+          "software_fields": [
+            "color_narrative_owner",
+            "color_change_event",
+            "action_goal"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P073",
+              "P076"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D19",
+              "D22",
+              "D23",
+              "D24"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.zhang_yimou.2",
+          "stage": "still_image",
+          "text": "主色、中性色和强调色逐对象映射，墨色分支分别描述石木布水的材质。",
+          "software_fields": [
+            "color_object_map",
+            "material_channels",
+            "monochrome_variant"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P074",
+              "P079"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D19",
+              "D22",
+              "D23",
+              "D24"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.zhang_yimou.3",
+          "stage": "motion",
+          "text": "先验证队列人数和服装稳定，再沿轴线推进；人物越界是明确的镜头事件。",
+          "software_fields": [
+            "crowd_roster",
+            "wardrobe_lock",
+            "axis_path",
+            "boundary_crossing_event"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P075",
+              "P080"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D19",
+              "D22",
+              "D23",
+              "D24"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.zhang_yimou.4",
+          "stage": "editing_sound",
+          "text": "用颜色、动作或构图呼应衔接，脚步和仪式声建立节奏，调色保护肤色灰阶。",
+          "software_fields": [
+            "match_basis",
+            "diegetic_rhythm",
+            "grade_skin_protection"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P076",
+              "P081"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D19",
+              "D22",
+              "D23",
+              "D24"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.zhang_yimou.5",
+          "stage": "validation",
+          "text": "逐项检查强调色数量、群体衣服漂移以及墨色画面的材质和光线分层。",
+          "software_fields": [
+            "color_count",
+            "crowd_wardrobe_drift",
+            "tonal_separation"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P082"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D19",
+              "D22",
+              "D23",
+              "D24"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.zhang_yimou.6",
+          "stage": "case_extension",
+          "text": "《影》真人墨色、宫廷金色与红绸分别建候选卡；人物比例与16比9等只在对应景别样例适用。",
+          "software_fields": [
+            "shot_size_scope",
+            "frame_ratio_scope",
+            "color_exception",
+            "style_medium"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P345",
+              "P350",
+              "P355"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D19",
+              "D22",
+              "D23",
+              "D24"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "英雄（2002）",
+        "影（2018）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "chen_kaige",
+      "name": "陈凯歌",
+      "variants": [
+        {
+          "id": "chen.yellowearth.land",
+          "label": "土地与人物的空间关系",
+          "reference_works": [
+            "黄土地"
+          ],
+          "source_ids": [
+            "S05"
+          ],
+          "fit_tags": [
+            "土地",
+            "传统",
+            "个体与环境"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "chen.yellowearth.land.narrative.1",
+                "text": "关注人物在文化与环境中的具体选择",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S05"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "chen.yellowearth.land.still_image.1",
+                "text": "以广阔环境和人物尺度建立处境",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S05"
+                ]
+              },
+              {
+                "id": "chen.yellowearth.land.still_image.2",
+                "text": "自然光、有限色盘及有差异的衣料与地形纹理",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S05"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "chen.yellowearth.land.motion.1",
+                "text": "以固定摄影承载人物在环境内的行动",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S05"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "chen.yellowearth.land.editing.1",
+                "text": "让声音或歌声承担部分环境信息，保留静默",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S05"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不是每场都加沙漠与黄色",
+            "景观必须与故事地点相符"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.chen_kaige.1",
+          "stage": "narrative",
+          "text": "传统约束落实为执行者、空间边界与人物代价，认同依附或反抗均须可读。",
+          "software_fields": [
+            "tradition_rule",
+            "rule_enforcer",
+            "choice_cost"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P086"
+            ],
+            "secondary_record_ids": [
+              "D18"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.chen_kaige.2",
+          "stage": "still_image",
+          "text": "把地形、台阶、门和仪式空间转成可走通路线，大景仍保留可追踪人物位置。",
+          "software_fields": [
+            "landmark_route",
+            "human_scale",
+            "traceable_position"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P087",
+              "P092"
+            ],
+            "secondary_record_ids": [
+              "D18"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.chen_kaige.3",
+          "stage": "motion",
+          "text": "以接近边界和停步为主动作，必要转向只揭示阻挡者，长距离行动拆镜。",
+          "software_fields": [
+            "route",
+            "blocking_event",
+            "distance_feasibility"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P088",
+              "P093"
+            ],
+            "secondary_record_ids": [
+              "D18"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.chen_kaige.4",
+          "stage": "editing_sound",
+          "text": "地方劳动或仪式声先入，宏观空间与手脸物件细节之间的切换须推进选择。",
+          "software_fields": [
+            "sound_bridge",
+            "detail_insert_purpose",
+            "choice_progress"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P089",
+              "P094"
+            ],
+            "secondary_record_ids": [
+              "D18"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.chen_kaige.5",
+          "stage": "validation",
+          "text": "核对地理民俗依据、人物愿望和代价，防止景观压掉人物信息。",
+          "software_fields": [
+            "cultural_reference_status",
+            "landscape_story_function"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P090",
+              "P095"
+            ],
+            "secondary_record_ids": [
+              "D18"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.chen_kaige.6",
+          "stage": "case_extension",
+          "text": "戏台金色保留为作者个人改编；镜前勾脸、颜料碟和裸灯泡只对应该教程场景。",
+          "software_fields": [
+            "adaptation_attribution",
+            "scene_asset_reference",
+            "motivated_light"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P085",
+              "P325",
+              "P326"
+            ],
+            "secondary_record_ids": [
+              "D18"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "黄土地（1984）",
+        "霸王别姬（1993）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "hou_hsiao_hsien",
+      "name": "侯孝贤",
+      "variants": [
+        {
+          "id": "hou.childhood.observe",
+          "label": "家庭日常的固定视轴观察",
+          "reference_works": [
+            "童年往事"
+          ],
+          "source_ids": [
+            "S06"
+          ],
+          "fit_tags": [
+            "家庭记忆",
+            "时代日常",
+            "含蓄情感"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "hou.childhood.observe.narrative.1",
+                "text": "用家务、游戏或行走承载时间与关系",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S06"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "hou.childhood.observe.still_image.1",
+                "text": "用门框或室内结构组织前中后景",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S06"
+                ]
+              },
+              {
+                "id": "hou.childhood.observe.still_image.2",
+                "text": "在较远景别中保留人物与家居环境",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S06"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "hou.childhood.observe.motion.1",
+                "text": "固定视轴，让人物进出和日常活动构成运动",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S06"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "hou.childhood.observe.editing.1",
+                "text": "节制反打，以动作完成和视线变化决定切点",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S06"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不要把长镜头等同于拖长无信息画面",
+            "门框不必每镜出现"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.hou_hsiao_hsien.1",
+          "stage": "narrative",
+          "text": "日常任务记录谁知道信息、谁在旁却不回应，用进出和谈话间隙改变关系。",
+          "software_fields": [
+            "knowledge_state",
+            "unanswered_action",
+            "daily_task_causality"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P099"
+            ],
+            "secondary_record_ids": [
+              "D37",
+              "D38"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hou_hsiao_hsien.2",
+          "stage": "still_image",
+          "text": "前景任务与后景关系分别分配可读层次，陈设细节不抢主要关系。",
+          "software_fields": [
+            "foreground_task",
+            "background_relation",
+            "attention_priority"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P100",
+              "P105"
+            ],
+            "secondary_record_ids": [
+              "D37",
+              "D38"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hou_hsiao_hsien.3",
+          "stage": "motion",
+          "text": "固定视轴不追每个说话者，进出路线与离场后物件状态负责信息变化。",
+          "software_fields": [
+            "locked_axis",
+            "entry_exit_routes",
+            "residual_object_state"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P101",
+              "P106"
+            ],
+            "secondary_record_ids": [
+              "D37",
+              "D38"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hou_hsiao_hsien.4",
+          "stage": "editing_sound",
+          "text": "场外声扩大空间但保留地理依据，无需切出每个声源。",
+          "software_fields": [
+            "offscreen_source_position",
+            "reaction_cue",
+            "sound_space"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P102",
+              "P107"
+            ],
+            "secondary_record_ids": [
+              "D37",
+              "D38"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hou_hsiao_hsien.5",
+          "stage": "validation",
+          "text": "固定画面必须有调度，空场有具体变化；换机位另起镜并说明信息需求。",
+          "software_fields": [
+            "blocking_progress",
+            "empty_frame_information",
+            "new_setup_reason"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P103",
+              "P108"
+            ],
+            "secondary_record_ids": [
+              "D37",
+              "D38"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hou_hsiao_hsien.6",
+          "stage": "case_extension",
+          "text": "理发店和窗边案例加入镜中动作匹配、窗高光轮廓及暗部可读性检查。",
+          "software_fields": [
+            "reflection_correspondence",
+            "window_highlight",
+            "shadow_readability"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P420",
+              "P425"
+            ],
+            "secondary_record_ids": [
+              "D37",
+              "D38"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "童年往事（1985）",
+        "悲情城市（1989）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "edward_yang",
+      "name": "杨德昌",
+      "variants": [
+        {
+          "id": "yang.yiyi.city",
+          "label": "都市空间与多重关系",
+          "reference_works": [
+            "一一",
+            "青梅竹马"
+          ],
+          "source_ids": [
+            "S07"
+          ],
+          "fit_tags": [
+            "都市家庭",
+            "关系群像",
+            "疏离"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "yang.yiyi.city.narrative.1",
+                "text": "让城市环境成为关系处境的一部分",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S07"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "yang.yiyi.city.still_image.1",
+                "text": "人物与城市建筑同框",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S07"
+                ]
+              },
+              {
+                "id": "yang.yiyi.city.still_image.2",
+                "text": "在空间允许且含义明确时使用玻璃反射叠合内外",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S07"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "yang.yiyi.city.motion.1",
+                "text": "以人物位置和视线变化揭示关系距离",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S07"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "yang.yiyi.city.editing.1",
+                "text": "可用主题呼应和声桥连接并行人物经历",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S07"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "反射不是装饰清单；避免为了反射改变房间结构",
+            "30秒内不强塞多条支线"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.edward_yang.1",
+          "stage": "narrative",
+          "text": "先画关系图和当前视点，再说明同一事件对各人意义，限制群像同时交付的信息。",
+          "software_fields": [
+            "relationship_graph",
+            "active_viewpoint",
+            "information_load"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P112",
+              "P115"
+            ],
+            "secondary_record_ids": [
+              "D20",
+              "D21"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.edward_yang.2",
+          "stage": "still_image",
+          "text": "建筑单元安排前后两组人物，反射标注真实对应者，谨慎控制画面文字。",
+          "software_fields": [
+            "spatial_units",
+            "reflection_identity_map",
+            "text_visibility"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P113",
+              "P118"
+            ],
+            "secondary_record_ids": [
+              "D20",
+              "D21"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.edward_yang.3",
+          "stage": "motion",
+          "text": "人物穿越可转移主次；摄影机只在新信息后移动，固定与移位方案择一且不穿玻璃墙体。",
+          "software_fields": [
+            "attention_transfer_event",
+            "camera_trigger",
+            "path_obstacles"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P114",
+              "P119"
+            ],
+            "secondary_record_ids": [
+              "D20",
+              "D21"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.edward_yang.4",
+          "stage": "editing_sound",
+          "text": "平行生活线以共同事件或声桥连接，切换时明确时间和地理。",
+          "software_fields": [
+            "parallel_scene_link",
+            "time_marker",
+            "geography_marker"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P115",
+              "P120"
+            ],
+            "secondary_record_ids": [
+              "D20",
+              "D21"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.edward_yang.5",
+          "stage": "validation",
+          "text": "固定家具不跟人移动，反射不多角色，表演年龄与关系应匹配。",
+          "software_fields": [
+            "furniture_anchor",
+            "reflection_count",
+            "performance_role_fit"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P121",
+              "P335",
+              "P336"
+            ],
+            "secondary_record_ids": [
+              "D20",
+              "D21"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.edward_yang.6",
+          "stage": "case_extension",
+          "text": "反射象征讲解只被抽样观察，软件可校验对应关系但不能据标题自动补全意义。",
+          "software_fields": [
+            "interpretation_status",
+            "evidence_scope"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P339",
+              "P340",
+              "P341"
+            ],
+            "secondary_record_ids": [
+              "D20",
+              "D21"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "牯岭街少年杀人事件（1991）",
+        "一一（2000）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "hirokazu_koreeda",
+      "name": "是枝裕和",
+      "variants": [
+        {
+          "id": "koreeda.nobodyknows.details",
+          "label": "生活局部与克制情绪",
+          "reference_works": [
+            "无人知晓"
+          ],
+          "source_ids": [
+            "S09"
+          ],
+          "fit_tags": [
+            "家庭",
+            "成长",
+            "日常关系"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "koreeda.nobodyknows.details.narrative.1",
+                "text": "情绪落在动作中，不必每次用哭泣解释",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S09"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "koreeda.nobodyknows.details.still_image.1",
+                "text": "用中景观察人物关系",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S09"
+                ]
+              },
+              {
+                "id": "koreeda.nobodyknows.details.still_image.2",
+                "text": "有选择地插入手、脚和生活物件，承载时间与处境",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S09"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "koreeda.nobodyknows.details.motion.1",
+                "text": "以稳定观察为基础，是否移动由人物行为决定",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S09"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "koreeda.nobodyknows.details.editing.1",
+                "text": "反应镜头随各人物节奏安排，不强迫同速",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S09"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不把其全部作品固定为暖黄、静止或治愈",
+            "情感留白也要让人物行动清楚"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.hirokazu_koreeda.1",
+          "stage": "narrative",
+          "text": "共同任务体现照顾偏爱回避或旧伤，递物对象、等待与未接住均携带关系信息。",
+          "software_fields": [
+            "care_target",
+            "interaction_delay",
+            "unreceived_action"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P125"
+            ],
+            "secondary_record_ids": [
+              "D39",
+              "D40",
+              "D44"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hirokazu_koreeda.2",
+          "stage": "still_image",
+          "text": "中景保留双方手部互动距离，空位或第三人提供关系线索，普通家庭不广告化。",
+          "software_fields": [
+            "hand_interaction_space",
+            "empty_seat_function",
+            "domestic_material_state"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P126",
+              "P131"
+            ],
+            "secondary_record_ids": [
+              "D39",
+              "D40",
+              "D44"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hirokazu_koreeda.3",
+          "stage": "motion",
+          "text": "递物按先后执行，数量、双手位置与桌面布局锁定，细节插镜另生成。",
+          "software_fields": [
+            "handoff_sequence",
+            "hand_positions",
+            "prop_count",
+            "insert_setup"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P127",
+              "P132"
+            ],
+            "secondary_record_ids": [
+              "D39",
+              "D40",
+              "D44"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hirokazu_koreeda.4",
+          "stage": "editing_sound",
+          "text": "锅门餐具声给停顿具体对象，音乐在行为已建立情绪后才进入。",
+          "software_fields": [
+            "pause_object",
+            "domestic_sound_cue",
+            "music_entry_event"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P128",
+              "P133"
+            ],
+            "secondary_record_ids": [
+              "D39",
+              "D40",
+              "D44"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hirokazu_koreeda.5",
+          "stage": "validation",
+          "text": "克制仍需矛盾，物件交接应改变关系，音乐不可抢先规定情绪。",
+          "software_fields": [
+            "relationship_delta",
+            "handoff_continuity",
+            "music_emotion_timing"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P129",
+              "P134"
+            ],
+            "secondary_record_ids": [
+              "D39",
+              "D40",
+              "D44"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.hirokazu_koreeda.6",
+          "stage": "case_extension",
+          "text": "35mm、暖色或缓慢移动只是特定教程选择，不设为唯一焦段或治愈情绪。",
+          "software_fields": [
+            "scene_authored_optics",
+            "emotional_scope",
+            "simplification_warning"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P435",
+              "P455",
+              "P456"
+            ],
+            "secondary_record_ids": [
+              "D39",
+              "D40",
+              "D44"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "步履不停（2008）",
+        "海街日记（2015）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "shunji_iwai",
+      "name": "岩井俊二",
+      "variants": [
+        {
+          "id": "iwai.loveletter.memory",
+          "label": "记忆与情绪驱动的视点",
+          "reference_works": [
+            "情书"
+          ],
+          "source_ids": [
+            "S08"
+          ],
+          "fit_tags": [
+            "青春",
+            "记忆",
+            "书信与错认"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "iwai.loveletter.memory.narrative.1",
+                "text": "让现实环境和物件带出人物记忆",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S08"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "iwai.loveletter.memory.still_image.1",
+                "text": "选景、美术和具体生活细节决定画面气质",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S08"
+                ]
+              },
+              {
+                "id": "iwai.loveletter.memory.still_image.2",
+                "text": "保持人物可辨与材质自然，不依赖全屏柔光",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S08"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "iwai.loveletter.memory.motion.1",
+                "text": "在稳定与手持之间按情绪动机变化",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S08"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "iwai.loveletter.memory.editing.1",
+                "text": "用空间、动作或声音联系记忆段落",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S08"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不以过曝、樱花和柔焦替代情绪",
+            "不无理由更换天气或地点"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.shunji_iwai.1",
+          "stage": "narrative",
+          "text": "记忆段落记录发起者、触发物和对过去的误解，季节场所须连到人物经历。",
+          "software_fields": [
+            "memory_owner",
+            "memory_trigger",
+            "past_misunderstanding"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P138"
+            ],
+            "secondary_record_ids": [
+              "D25",
+              "D26",
+              "D27",
+              "D28",
+              "D29"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.shunji_iwai.2",
+          "stage": "still_image",
+          "text": "高光柔化限定区域，保留眼神衣物与触发物，不叠加无依据季节元素。",
+          "software_fields": [
+            "highlight_mask",
+            "critical_detail_protection",
+            "season_story_link"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P139",
+              "P144"
+            ],
+            "secondary_record_ids": [
+              "D25",
+              "D26",
+              "D27",
+              "D28",
+              "D29"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.shunji_iwai.3",
+          "stage": "motion",
+          "text": "轻缓运动指向触发物，今昔用独立镜切换，不能同镜无因换季换衣。",
+          "software_fields": [
+            "trigger_reveal_path",
+            "temporal_scene_boundary",
+            "season_lock"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P140",
+              "P145"
+            ],
+            "secondary_record_ids": [
+              "D25",
+              "D26",
+              "D27",
+              "D28",
+              "D29"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.shunji_iwai.4",
+          "stage": "editing_sound",
+          "text": "共同声音或物件连接今昔，保留风呼吸音乐层次，并设置清晰时段标记。",
+          "software_fields": [
+            "temporal_sound_bridge",
+            "timeline_marker",
+            "sound_layers"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P141",
+              "P146"
+            ],
+            "secondary_record_ids": [
+              "D25",
+              "D26",
+              "D27",
+              "D28",
+              "D29"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.shunji_iwai.5",
+          "stage": "validation",
+          "text": "检查回忆由谁触发、过去现在是否可分、过曝是否掩盖信息，不默认轻盈浪漫。",
+          "software_fields": [
+            "memory_readability",
+            "timeline_readability",
+            "highlight_information_loss"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P142",
+              "P147"
+            ],
+            "secondary_record_ids": [
+              "D25",
+              "D26",
+              "D27",
+              "D28",
+              "D29"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.shunji_iwai.6",
+          "stage": "case_extension",
+          "text": "过肩和奔跑样例加入肩膀错位、手背带粘连、风作用对象与局部过曝检查。",
+          "software_fields": [
+            "anatomy_contact",
+            "wind_response_objects",
+            "local_overexposure"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P365",
+              "P370",
+              "P380"
+            ],
+            "secondary_record_ids": [
+              "D25",
+              "D26",
+              "D27",
+              "D28",
+              "D29"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "情书（1995）",
+        "四月物语（1998）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "akira_kurosawa",
+      "name": "黑泽明",
+      "variants": [
+        {
+          "id": "kurosawa.sevensamurai.action",
+          "label": "群体调度与环境压力",
+          "reference_works": [
+            "七武士",
+            "野良犬"
+          ],
+          "source_ids": [
+            "S10"
+          ],
+          "fit_tags": [
+            "群像冲突",
+            "追逐",
+            "行动"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "kurosawa.sevensamurai.action.narrative.1",
+                "text": "让环境条件参与制造阻力与代价",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S10"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "kurosawa.sevensamurai.action.still_image.1",
+                "text": "先交代站位、方向和环境障碍",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S10"
+                ]
+              },
+              {
+                "id": "kurosawa.sevensamurai.action.still_image.2",
+                "text": "前中后景布置有意义的运动或遮挡",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S10"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "kurosawa.sevensamurai.action.motion.1",
+                "text": "多角度动作保持目标与方向可读",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S10"
+                ]
+              },
+              {
+                "id": "kurosawa.sevensamurai.action.motion.2",
+                "text": "已有天气应影响人物动作，不作独立装饰",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S10"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "kurosawa.sevensamurai.action.editing.1",
+                "text": "按行动因果衔接角度与反应",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S10"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不能随意给用户锁定的晴天加暴雨",
+            "不把混乱摄影等同于行动强度"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.akira_kurosawa.1",
+          "stage": "narrative",
+          "text": "每组有独立任务阻力与方向，关键决定在群体中产生可见后果。",
+          "software_fields": [
+            "faction_goals",
+            "faction_directions",
+            "collective_consequence"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P151"
+            ],
+            "secondary_record_ids": [
+              "D43",
+              "D44",
+              "D45",
+              "D46"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.akira_kurosawa.2",
+          "stage": "still_image",
+          "text": "先锁地形出口遮挡人数，再让前景主动作、中景反应、远景威胁分工。",
+          "software_fields": [
+            "terrain_map",
+            "exit_points",
+            "crowd_roster",
+            "depth_roles"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P152",
+              "P157"
+            ],
+            "secondary_record_ids": [
+              "D43",
+              "D44",
+              "D45",
+              "D46"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.akira_kurosawa.3",
+          "stage": "motion",
+          "text": "沿主行动线跟随，受阻触发停转；转轴前用独立镜交代新地理。",
+          "software_fields": [
+            "action_axis",
+            "turn_trigger",
+            "axis_reset_shot"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P153",
+              "P158"
+            ],
+            "secondary_record_ids": [
+              "D43",
+              "D44",
+              "D45",
+              "D46"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.akira_kurosawa.4",
+          "stage": "editing_sound",
+          "text": "先建立路线出口再加速，按动作方向与群体反应衔接，声音保留远近。",
+          "software_fields": [
+            "geography_before_acceleration",
+            "action_match",
+            "threat_sound_distance"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P154",
+              "P159"
+            ],
+            "secondary_record_ids": [
+              "D43",
+              "D44",
+              "D45",
+              "D46"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.akira_kurosawa.5",
+          "stage": "validation",
+          "text": "天气同时影响地面衣物和阻力，切镜后人数、武器与道具仍对应。",
+          "software_fields": [
+            "weather_physics_response",
+            "crowd_identity_continuity",
+            "prop_continuity"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P155",
+              "P160"
+            ],
+            "secondary_record_ids": [
+              "D43",
+              "D44",
+              "D45",
+              "D46"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.akira_kurosawa.6",
+          "stage": "case_extension",
+          "text": "《乱》彩色队伍冲突与黑白雨战分为候选场景卡，分析媒介或个人演绎不作为统一画风。",
+          "software_fields": [
+            "candidate_scene_variant",
+            "faction_color_map",
+            "source_medium_context"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P460",
+              "P461",
+              "P466",
+              "P467"
+            ],
+            "secondary_record_ids": [
+              "D43",
+              "D44",
+              "D45",
+              "D46"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "七武士（1954）",
+        "天国与地狱（1963）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "steven_spielberg",
+      "name": "斯皮尔伯格",
+      "variants": [
+        {
+          "id": "spielberg.westside.blocking",
+          "label": "人物与机位共同调度",
+          "reference_works": [
+            "西区故事（2021）"
+          ],
+          "source_ids": [
+            "S11"
+          ],
+          "fit_tags": [
+            "行动群像",
+            "冒险",
+            "关系变化"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "spielberg.westside.blocking.narrative.1",
+                "text": "人物行动使情绪与空间信息一起变化",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S11"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "spielberg.westside.blocking.still_image.1",
+                "text": "构图同时交代动作和情绪",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S11"
+                ]
+              },
+              {
+                "id": "spielberg.westside.blocking.still_image.2",
+                "text": "光色随场景情绪变化，并有合理光源",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S11"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "spielberg.westside.blocking.motion.1",
+                "text": "人物走位与摄影路线一起设计",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S11"
+                ]
+              },
+              {
+                "id": "spielberg.westside.blocking.motion.2",
+                "text": "可由有动机的移动从群体进入人物表演",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S11"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "spielberg.westside.blocking.editing.1",
+                "text": "按表演与信息揭示决定镜头是否保持连续",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S11"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不把其全部作品写成恒定逆光或炫技长镜",
+            "短视频生成时每段只保留一种主要运镜"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.steven_spielberg.1",
+          "stage": "narrative",
+          "text": "记录观众与人物各知何事，用一个新线索改变人物目标并安排发现顺序。",
+          "software_fields": [
+            "audience_knowledge",
+            "character_knowledge",
+            "discovery_sequence"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P164"
+            ],
+            "secondary_record_ids": [
+              "D12",
+              "D49"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.steven_spielberg.2",
+          "stage": "still_image",
+          "text": "布置可揭开的遮挡，人物反应和常见物尺度成为奇观入口。",
+          "software_fields": [
+            "reveal_occluder",
+            "visibility_schedule",
+            "scale_reference"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P165",
+              "P170"
+            ],
+            "secondary_record_ids": [
+              "D12",
+              "D49"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.steven_spielberg.3",
+          "stage": "motion",
+          "text": "人物先到标记点转头，相机后越过遮挡，终点同时显示反应与新对象关系。",
+          "software_fields": [
+            "actor_marks",
+            "actor_camera_timing",
+            "reveal_event",
+            "end_composition"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P166",
+              "P171"
+            ],
+            "secondary_record_ids": [
+              "D12",
+              "D49"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.steven_spielberg.4",
+          "stage": "editing_sound",
+          "text": "未知声音先入，必要时切反应；连续镜头须重组信息而非牺牲理解。",
+          "software_fields": [
+            "sound_before_reveal",
+            "reaction_cut",
+            "long_take_information_change"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P167",
+              "P172"
+            ],
+            "secondary_record_ids": [
+              "D12",
+              "D49"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.steven_spielberg.5",
+          "stage": "validation",
+          "text": "检查路线可走通、视线匹配及发现前线索，大推或仰望特写不能代替发现过程。",
+          "software_fields": [
+            "path_feasibility",
+            "eyeline_match",
+            "setup_before_reveal"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P168",
+              "P173"
+            ],
+            "secondary_record_ids": [
+              "D12",
+              "D49"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.steven_spielberg.6",
+          "stage": "case_extension",
+          "text": "《慕尼黑》车窗雨点与前景对话者案例补充观众可见范围、遮挡物与揭示时点，不限单一闯入标签。",
+          "software_fields": [
+            "audience_visibility",
+            "occluder_identity",
+            "reveal_time"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P484",
+              "P485",
+              "P486"
+            ],
+            "secondary_record_ids": [
+              "D12",
+              "D49"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "大白鲨（1975）",
+        "E.T.外星人（1982）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "christopher_nolan",
+      "name": "诺兰",
+      "variants": [
+        {
+          "id": "nolan.dunkirk.immediacy",
+          "label": "危机中的临场目标与距离",
+          "reference_works": [
+            "敦刻尔克"
+          ],
+          "source_ids": [
+            "S12"
+          ],
+          "fit_tags": [
+            "生存",
+            "危机",
+            "倒计时"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "nolan.dunkirk.immediacy.narrative.1",
+                "text": "通过具体阻碍与选择建立压力",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S12"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "nolan.dunkirk.immediacy.still_image.1",
+                "text": "交代眼前目标、威胁及距离",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S12"
+                ]
+              },
+              {
+                "id": "nolan.dunkirk.immediacy.still_image.2",
+                "text": "开阔空间与贴近人物的视点交替",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S12"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "nolan.dunkirk.immediacy.motion.1",
+                "text": "摄影机处于事件之中，跟随行动而非无目的升降",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S12"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "nolan.dunkirk.immediacy.editing.1",
+                "text": "围绕当下危险组织紧迫感，短片先保持时序清楚",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S12"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不强制复杂时间线、航拍或全程稳定镜头",
+            "此卡原始访谈全文受限，规则仅为待视觉验证的初版"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.christopher_nolan.1",
+          "stage": "narrative",
+          "text": "任务明确目标时限失败后果和角色已知信息，复杂结构服务选择而非隐瞒所有信息。",
+          "software_fields": [
+            "goal",
+            "deadline",
+            "failure_cost",
+            "knowledge_state"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P177"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D32",
+              "D34",
+              "D42"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.christopher_nolan.2",
+          "stage": "still_image",
+          "text": "用路线出口显示人物目标威胁距离，时钟燃料门锁等资源物件必须有依据。",
+          "software_fields": [
+            "target_distance",
+            "threat_distance",
+            "resource_evidence"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P178",
+              "P183"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D32",
+              "D34",
+              "D42"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.christopher_nolan.3",
+          "stage": "motion",
+          "text": "威胁触发转向决策，不靠瞬移或整体缩放压缩距离，同镜不临时换时间线。",
+          "software_fields": [
+            "decision_trigger",
+            "distance_continuity",
+            "timeline_lock"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P179",
+              "P184"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D32",
+              "D34",
+              "D42"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.christopher_nolan.4",
+          "stage": "editing_sound",
+          "text": "各线保存时标地标时间比例和同步事件，倒计时与画面动作可核对，不强加钟表声。",
+          "software_fields": [
+            "timeline_scale",
+            "sync_event",
+            "countdown_evidence"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P180",
+              "P185"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D32",
+              "D34",
+              "D42"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.christopher_nolan.5",
+          "stage": "validation",
+          "text": "检查目标可读、威胁距离、同步规则和人物选择，术语与音效不算叙事复杂度。",
+          "software_fields": [
+            "task_readability",
+            "parallel_timeline_check",
+            "decision_tracking"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P181",
+              "P186"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D32",
+              "D34",
+              "D42"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.christopher_nolan.6",
+          "stage": "case_extension",
+          "text": "《奥本海默》眼神近景与机械微距仅作候选卡；85mm和4秒是样例规划，D33低证据不升默认。",
+          "software_fields": [
+            "candidate_work_variant",
+            "scene_planning_numbers",
+            "weak_evidence_exclusion"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P395",
+              "P400",
+              "P405"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D32",
+              "D34",
+              "D42"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "盗梦空间（2010）",
+        "敦刻尔克（2017）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "wes_anderson",
+      "name": "韦斯·安德森",
+      "variants": [
+        {
+          "id": "anderson.budapest.order",
+          "label": "几何秩序与人物反差",
+          "reference_works": [
+            "布达佩斯大饭店"
+          ],
+          "source_ids": [
+            "S13"
+          ],
+          "fit_tags": [
+            "童话",
+            "喜剧",
+            "章回故事"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "anderson.budapest.order.narrative.1",
+                "text": "以可读的小行动制造喜剧反差",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S13"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "anderson.budapest.order.still_image.1",
+                "text": "预先确定正面构图与视觉轴线",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S13"
+                ]
+              },
+              {
+                "id": "anderson.budapest.order.still_image.2",
+                "text": "用人物、道具和空间几何组织画面秩序",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S13"
+                ]
+              },
+              {
+                "id": "anderson.budapest.order.still_image.3",
+                "text": "全场统一美术色彩，角色服装仍受连续性锁定",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S13"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "anderson.budapest.order.motion.1",
+                "text": "先做站位与机位预演，再用简单、明确的路径实现",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S13"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "anderson.budapest.order.editing.1",
+                "text": "用动作与构图秩序的反差形成节奏",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S13"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "对称不必覆盖每镜",
+            "不随机更换画幅；本片的时期画幅不能当作所有作品默认"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.wes_anderson.1",
+          "stage": "narrative",
+          "text": "认真执行规则的人物遭遇失控处境，形式秩序与真实欲望形成反差。",
+          "software_fields": [
+            "formal_rule",
+            "character_desire",
+            "disorder_event"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P190"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D30",
+              "D31"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wes_anderson.2",
+          "stage": "still_image",
+          "text": "有限色盘逐对象绑定，正面侧面俯拍按功能择一，道具位置表给人物留动作空间。",
+          "software_fields": [
+            "color_object_map",
+            "view_choice",
+            "prop_position_table"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P191",
+              "P196"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D30",
+              "D31"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wes_anderson.3",
+          "stage": "motion",
+          "text": "横向到精确标记点停止，固定或一次横移择一；甩镜另建连接镜校验两端。",
+          "software_fields": [
+            "lateral_actor_route",
+            "actor_stop_mark",
+            "geometric_end_state",
+            "whip_connection"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P192",
+              "P197"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D30",
+              "D31"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wes_anderson.4",
+          "stage": "editing_sound",
+          "text": "章节、硬切和图形呼应组织信息，小失误或停顿可有意打破形式节奏。",
+          "software_fields": [
+            "chapter_structure",
+            "graphic_match",
+            "rhythm_break_event"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P193",
+              "P198"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D30",
+              "D31"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wes_anderson.5",
+          "stage": "validation",
+          "text": "检查秩序与人物情绪关系、有限色盘和道具连续，角色仍有动作视线或空间功能。",
+          "software_fields": [
+            "emotion_form_relation",
+            "prop_continuity",
+            "character_function"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P194",
+              "P199"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D30",
+              "D31"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.wes_anderson.6",
+          "stage": "case_extension",
+          "text": "旅馆多人窗口样例加入人数、空窗无人、全身和行李接触校验，35至50mm仅为教程选择。",
+          "software_fields": [
+            "window_occupancy",
+            "exact_count",
+            "body_prop_contact",
+            "optics_scope"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P385",
+              "P390"
+            ],
+            "secondary_record_ids": [
+              "D13",
+              "D30",
+              "D31"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "月升王国（2012）",
+        "布达佩斯大饭店（2014）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "david_fincher",
+      "name": "大卫·芬奇",
+      "variants": [
+        {
+          "id": "fincher.killer.viewpoint",
+          "label": "控制感与主客观视点",
+          "reference_works": [
+            "杀手"
+          ],
+          "source_ids": [
+            "S14"
+          ],
+          "fit_tags": [
+            "心理悬疑",
+            "追踪",
+            "程序化行动"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "fincher.killer.viewpoint.narrative.1",
+                "text": "人物的控制与偏差通过行动可见",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S14"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "fincher.killer.viewpoint.still_image.1",
+                "text": "每镜先标明客观观察还是人物主观",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S14"
+                ]
+              },
+              {
+                "id": "fincher.killer.viewpoint.still_image.2",
+                "text": "光色依据具体地点建立，不统一套青绿",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S14"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "fincher.killer.viewpoint.motion.1",
+                "text": "机位变化与人物注意到的新信息绑定",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S14"
+                ]
+              },
+              {
+                "id": "fincher.killer.viewpoint.motion.2",
+                "text": "失控动作段落可按情绪有意增加不稳定",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S14"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "fincher.killer.viewpoint.editing.1",
+                "text": "剪辑保持动作程序和观众所知信息清楚",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S14"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不硬编码永不手持",
+            "《七宗罪》等作品须单独建变体"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.david_fincher.1",
+          "stage": "narrative",
+          "text": "明确控制者观察者和改变判断的细节，每次揭示都改变人物行动。",
+          "software_fields": [
+            "controller",
+            "observer",
+            "judgment_changing_detail"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P203"
+            ],
+            "secondary_record_ids": [
+              "D35",
+              "D36",
+              "D50"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.david_fincher.2",
+          "stage": "still_image",
+          "text": "有限光区保留证据人脸与暗部纹理，陈设有功能，客观与主观机位先标明。",
+          "software_fields": [
+            "evidence_visibility",
+            "viewpoint_type",
+            "functional_set_dressing"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P204",
+              "P209"
+            ],
+            "secondary_record_ids": [
+              "D35",
+              "D36",
+              "D50"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.david_fincher.3",
+          "stage": "motion",
+          "text": "发现线索后才小幅推进，主观镜另拍并匹配视线，不默认持续移动。",
+          "software_fields": [
+            "attention_trigger",
+            "push_extent",
+            "pov_setup",
+            "eyeline_match"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P205",
+              "P210"
+            ],
+            "secondary_record_ids": [
+              "D35",
+              "D36",
+              "D50"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.david_fincher.4",
+          "stage": "editing_sound",
+          "text": "对白切点跟随信息归属，保留迟疑和被打断反应，细节插镜可明确指向证据。",
+          "software_fields": [
+            "information_owner",
+            "hesitation_beat",
+            "evidence_insert",
+            "sound_intelligibility"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P206",
+              "P211"
+            ],
+            "secondary_record_ids": [
+              "D35",
+              "D36",
+              "D50"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.david_fincher.5",
+          "stage": "validation",
+          "text": "揭示须改变判断且证据可辨，精密稳定仍保留人物情绪目标。",
+          "software_fields": [
+            "judgment_delta",
+            "insert_information_gain",
+            "emotion_goal"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P207",
+              "P212"
+            ],
+            "secondary_record_ids": [
+              "D35",
+              "D36",
+              "D50"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.david_fincher.6",
+          "stage": "case_extension",
+          "text": "《搏击俱乐部》分析的拉宽可消解神秘；分析画面黑白不是原片色彩，重复镜须记录新增作用。",
+          "software_fields": [
+            "reveal_amount",
+            "repeat_shot_function",
+            "analysis_medium_correction"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P490",
+              "P491",
+              "P492"
+            ],
+            "secondary_record_ids": [
+              "D35",
+              "D36",
+              "D50"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "十二宫（2007）",
+        "社交网络（2010）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    },
+    {
+      "id": "denis_villeneuve",
+      "name": "丹尼斯·维伦纽瓦",
+      "variants": [
+        {
+          "id": "villeneuve.br2049.scale",
+          "label": "人物尺度与有限光区",
+          "reference_works": [
+            "银翼杀手2049"
+          ],
+          "source_ids": [
+            "S15"
+          ],
+          "fit_tags": [
+            "孤独",
+            "探索",
+            "宏大空间"
+          ],
+          "status": "editorial_seed_not_visually_validated",
+          "rules": {
+            "narrative": [
+              {
+                "id": "villeneuve.br2049.scale.narrative.1",
+                "text": "以人物对环境的感受串联空间",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S15"
+                ]
+              }
+            ],
+            "still_image": [
+              {
+                "id": "villeneuve.br2049.scale.still_image.1",
+                "text": "先确定人物处境与空间比例",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S15"
+                ]
+              },
+              {
+                "id": "villeneuve.br2049.scale.still_image.2",
+                "text": "每地点给出可解释的主要光源",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S15"
+                ]
+              },
+              {
+                "id": "villeneuve.br2049.scale.still_image.3",
+                "text": "以有限照明区域或剪影控制可见信息",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S15"
+                ]
+              }
+            ],
+            "motion": [
+              {
+                "id": "villeneuve.br2049.scale.motion.1",
+                "text": "运动缓急由发现信息的过程决定，路径保持明确",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S15"
+                ]
+              }
+            ],
+            "editing": [
+              {
+                "id": "villeneuve.br2049.scale.editing.1",
+                "text": "在人物停顿与空间揭示之间建立节奏",
+                "origin": "editorial_translation_from_public_evidence",
+                "source_ids": [
+                  "S15"
+                ]
+              }
+            ]
+          },
+          "pitfalls": [
+            "不将所有地点变成橙雾或霓虹",
+            "暗部要保留关键叙事与身份信息"
+          ],
+          "controls": {
+            "default_strength": "medium",
+            "allowed_strengths": [
+              "light",
+              "medium",
+              "strong"
+            ],
+            "strength_meaning": "选择规则的数量与优先级，不代表模型权重或导演相似度百分比",
+            "numeric_camera_defaults": "具体焦距、机位高度及秒数由镜头设计决定，不是导演固定公式"
+          },
+          "validation": {
+            "visual_comparisons": 0,
+            "user_approved": false
+          },
+          "invariants": [
+            "用户锁定的剧情事实优先",
+            "保持人物身份、服装、空间、天气和光源连续",
+            "风格不能擅自改写结局或新增对白",
+            "静态提示词只描述选定时刻，运镜与剪辑另存"
+          ]
+        }
+      ],
+      "manual_derived_rules": [
+        {
+          "id": "M03.denis_villeneuve.1",
+          "stage": "narrative",
+          "text": "先交代接近等待或越过的已知任务，再用未知系统扩大压力。",
+          "software_fields": [
+            "known_goal",
+            "unknown_system",
+            "approach_boundary"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P216"
+            ],
+            "secondary_record_ids": [
+              "D41",
+              "D42",
+              "D47",
+              "D48"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.denis_villeneuve.2",
+          "stage": "still_image",
+          "text": "人物门或车辆构成尺度参照，有限光区和雾尘有层次，石金属织物空气分别描述。",
+          "software_fields": [
+            "scale_anchor",
+            "light_visibility_zone",
+            "atmospheric_depth",
+            "material_channels"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P217",
+              "P222"
+            ],
+            "secondary_record_ids": [
+              "D41",
+              "D42",
+              "D47",
+              "D48"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.denis_villeneuve.3",
+          "stage": "motion",
+          "text": "单一路径接近边界并保留视差参照，巨物运动单设方向速度，不用画面整体缩放冒充位移。",
+          "software_fields": [
+            "camera_translation",
+            "parallax_anchors",
+            "large_object_motion",
+            "relative_speed"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P218",
+              "P223"
+            ],
+            "secondary_record_ids": [
+              "D41",
+              "D42",
+              "D47",
+              "D48"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.denis_villeneuve.4",
+          "stage": "editing_sound",
+          "text": "在决定或新信息时切人物细节，风呼吸机械低频分层，安静也能形成压力。",
+          "software_fields": [
+            "information_cut",
+            "sound_layers",
+            "silence_pressure",
+            "slow_motion_scope"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P219",
+              "P224"
+            ],
+            "secondary_record_ids": [
+              "D41",
+              "D42",
+              "D47",
+              "D48"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.denis_villeneuve.5",
+          "stage": "validation",
+          "text": "宏大空间不吞没人物任务，尺度参照稳定、暗部有信息、镜头时长有效。",
+          "software_fields": [
+            "human_goal_visibility",
+            "scale_consistency",
+            "shadow_information",
+            "duration_function"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P220",
+              "P225"
+            ],
+            "secondary_record_ids": [
+              "D41",
+              "D42",
+              "D47",
+              "D48"
+            ],
+            "evidence_role": "handbook_editorial_design"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": false
+        },
+        {
+          "id": "M03.denis_villeneuve.6",
+          "stage": "case_extension",
+          "text": "冷青建筑与橙黄尘雾分为候选配色，一镜只设一个主巨物；扁平设计约束不套写实影片。",
+          "software_fields": [
+            "palette_variant",
+            "dominant_structure_count",
+            "task_medium",
+            "shape_negative_constraints"
+          ],
+          "source": {
+            "document": "03_十五位导演风格与AI短剧制作预设手册.docx",
+            "paragraph_ids": [
+              "P440",
+              "P445",
+              "P472",
+              "P473",
+              "P478",
+              "P479"
+            ],
+            "secondary_record_ids": [
+              "D41",
+              "D42",
+              "D47",
+              "D48"
+            ],
+            "evidence_role": "handbook_secondary_case_observation"
+          },
+          "status": "proposed_not_generation_validated",
+          "case_only": true
+        }
+      ],
+      "manual_candidate_reference_works": [
+        "降临（2016）",
+        "沙丘（2021）"
+      ],
+      "manual_candidate_status": "candidate_anchors_not_film_verified",
+      "manual_merge_strategy": "保留旧作品级预设及其来源；新增为可选择扩展或另建候选卡，不静默替换scope。"
+    }
+  ],
+  "manual_extension_count": 90,
+  "manual_global_schema_additions": [
+    {
+      "id": "M03.global.evidence",
+      "source_anchors": [
+        "P007",
+        "P011",
+        "P030",
+        "P227"
+      ],
+      "fields": [
+        "reference_work",
+        "reference_period",
+        "clip_anchor",
+        "source_record_id",
+        "observation_scope",
+        "evidence_type",
+        "verification_status",
+        "revision_history"
+      ],
+      "rule": "来源观察、电影事实、产品设计分别记录；不将读取手册说成看过全部影片或视频。"
+    },
+    {
+      "id": "M03.global.layering",
+      "source_anchors": [
+        "P008",
+        "P009",
+        "P227"
+      ],
+      "fields": [
+        "narrative_intent",
+        "still_frame_spec",
+        "motion_events",
+        "post_plan",
+        "aspect_ratio",
+        "character_asset_id",
+        "scene_asset_id",
+        "asset_version",
+        "must_keep"
+      ],
+      "rule": "图像、运动、后期分层编译，不能同一段提示词喂给全部阶段。"
+    },
+    {
+      "id": "M03.global.order",
+      "source_anchors": [
+        "P229"
+      ],
+      "fields": [
+        "relationship_reveal",
+        "approved_assets",
+        "primary_shot_size",
+        "primary_focus",
+        "motivated_source",
+        "materials",
+        "camera_start",
+        "camera_end",
+        "post_requirements"
+      ],
+      "rule": "按关系揭示、确认资产、景别焦点、光线材质、起终机位、后期顺序填写，未选字段不输出空占位符。"
+    },
+    {
+      "id": "M03.global.conflicts",
+      "source_anchors": [
+        "P231"
+      ],
+      "fields": [
+        "hard_conflicts",
+        "intentional_contrasts",
+        "contrast_reason",
+        "resolved_rule_ids"
+      ],
+      "rule": "固定与持续环绕等几何硬冲突要选择或拆镜；混光、主客观、快慢交替先检查意图，不能机械拒绝。"
+    },
+    {
+      "id": "M03.global.evaluation",
+      "source_anchors": [
+        "P233",
+        "P234"
+      ],
+      "fields": [
+        "evaluation_scene_id",
+        "locked_asset_versions",
+        "model_version",
+        "budget",
+        "changed_dimension",
+        "blind_order",
+        "relationship_readability",
+        "identity_consistency",
+        "space_consistency",
+        "motion_completion",
+        "artifact_count",
+        "revisions",
+        "elapsed_time",
+        "cost_per_usable_shot"
+      ],
+      "rule": "固定素材模型画幅预算，比导演姓名输入与拆解技法；一次只改一个维度，随机盲评，多次多任务稳定后才提升推荐。"
+    },
+    {
+      "id": "M03.global.trial",
+      "source_anchors": [
+        "P235",
+        "P236"
+      ],
+      "fields": [
+        "establishing_shot",
+        "action_change_shot",
+        "result_or_unfinished_shot",
+        "still_approved",
+        "silent_video",
+        "post_audio"
+      ],
+      "rule": "三镜分别建立空间目标、改变关系、留下结果；每镜静态先确认，再无对白视频，最后声音。"
+    }
+  ],
+  "scope_and_conflict_notes": [
+    {
+      "id": "C01",
+      "source_anchors": [
+        "P007",
+        "P032",
+        "P045",
+        "P058",
+        "P071",
+        "P084",
+        "P097",
+        "P110",
+        "P123",
+        "P136",
+        "P149",
+        "P162",
+        "P175",
+        "P188",
+        "P201",
+        "P214"
+      ],
+      "severity": "scope",
+      "finding": "多数候选片目与旧预设不同；不可把《无人知晓》卡改名《步履不停》，或把《西区故事》规则标为《大白鲨》已核实事实。"
+    },
+    {
+      "id": "C02",
+      "source_anchors": [
+        "P300",
+        "P301",
+        "P395",
+        "P405"
+      ],
+      "severity": "correction",
+      "finding": "诺兰稳定推进卡与旧《敦刻尔克》临场感按作品区分；IMAX65mm是成像画幅概念，不与镜头焦距混放。"
+    },
+    {
+      "id": "C03",
+      "source_anchors": [
+        "P300",
+        "P301",
+        "P315"
+      ],
+      "severity": "reject_default",
+      "finding": "贾樟柯随机晃动、切半头不采纳为默认，生活不完美要具体到材质与行动。"
+    },
+    {
+      "id": "C04",
+      "source_anchors": [
+        "P325",
+        "P326"
+      ],
+      "severity": "attribution",
+      "finding": "D18金色戏台是作者个人改编，不升为陈凯歌或《霸王别姬》色彩结论。"
+    },
+    {
+      "id": "C05",
+      "source_anchors": [
+        "P345",
+        "P350",
+        "P385",
+        "P405",
+        "P435"
+      ],
+      "severity": "parameter_scope",
+      "finding": "5至10%人物比例与近景不通用，16比9/35mm/85mm/4秒等都只作条件化示例，不当导演唯一参数。"
+    },
+    {
+      "id": "C06",
+      "source_anchors": [
+        "P255",
+        "P275",
+        "P280",
+        "P445"
+      ],
+      "severity": "provider_scope",
+      "finding": "四分之一拍摄、拖影、MJ stylize/profile分离语义、后期与模型尾参，不保证文字能精确控制快门。"
+    },
+    {
+      "id": "C07",
+      "source_anchors": [
+        "P289",
+        "P290",
+        "P291",
+        "P305",
+        "P306",
+        "P399",
+        "P400",
+        "P401"
+      ],
+      "severity": "weak_evidence",
+      "finding": "冠名昆汀的跨城旅游、导演标签列表和D33树下背影都不足以成为对应导演事实；D33保持低证据候选。"
+    },
+    {
+      "id": "C08",
+      "source_anchors": [
+        "P339",
+        "P340",
+        "P341",
+        "P490",
+        "P492"
+      ],
+      "severity": "observation_limit",
+      "finding": "杨德昌象征讲解未听全，芬奇分析画面黑白不是原片黑白；不能据标题或媒介颜色推导原片。"
+    },
+    {
+      "id": "C09",
+      "source_anchors": [
+        "P472",
+        "P473",
+        "P478",
+        "P479"
+      ],
+      "severity": "conditional_conflict",
+      "finding": "维伦纽瓦冷青与橙黄选择主导方案，扁平设计约束不能套写实；混合导演逐维度说明。"
+    },
+    {
+      "id": "C10",
+      "source_anchors": [
+        "P231"
+      ],
+      "severity": "validator_design",
+      "finding": "硬几何冲突拆镜；有意混光、主客观与快慢交替记录意图后可允许，不用词表机械封禁。"
+    },
+    {
+      "id": "C11",
+      "source_anchors": [
+        "P233",
+        "P234"
+      ],
+      "severity": "validation_boundary",
+      "finding": "手册未提供当前模型多次独立复现成功率，全部新增项仍为待验证设计，不把来源抽样或结构测试当视觉验收。"
+    }
+  ],
+  "manual_application_policy": "手册规则由manualRuleIds显式选择；case_only不作为导演通用默认；原作品级范围不自动扩张"
+}

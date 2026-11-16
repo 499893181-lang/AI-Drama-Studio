@@ -1,0 +1,556 @@
+{
+  "schema_version": "0.1.0",
+  "source_document": "01_AI画面提示词与细节质感设计手册.docx",
+  "coverage": {
+    "read_all": true,
+    "paragraphs": 298,
+    "tables": [
+      "T001",
+      "T002",
+      "T003"
+    ],
+    "appendix_work_records": 50,
+    "source_observation_scope": "原文明确是50条不同作品的抽样片段／图文部分页／正文阅读，不是50条完整观看。",
+    "coverage_note": "全文P001–P298与全部3表已读；规则保留原文未实测边界。"
+  },
+  "grounding": {
+    "evidence_level": "user_supplied_manual_learning_synthesis",
+    "validation_status": "design_candidate_not_generation_validated",
+    "quotation_policy": "正向写法为本次软件设计示例，并非作者原始提示词。",
+    "technical_boundary": "光学概念可用于字段拆分；数值、模型专属语法与教程效果宣称均非生成保证，须按实际接口与样片验证。"
+  },
+  "rules": [
+    {
+      "id": "IMG-01",
+      "category": "提示词结构",
+      "rule": "先写叙事瞬间与观看顺序，再写质感",
+      "positive_wording": "老人刚放下电话，手仍停在听筒上，视线落在空椅子；画面先让观众注意手和肩部。",
+      "misuse_risk": "仅写悲伤、高级、电影感会留下人物行为与焦点空白。",
+      "stages": [
+        "script",
+        "storyboard",
+        "image_prompt"
+      ],
+      "source_refs": [
+        "P004",
+        "T001",
+        "P008",
+        "P099-P102"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-02",
+      "category": "提示词结构",
+      "rule": "一张静态图锁定一个关键瞬间",
+      "positive_wording": "人物刚跨下船，重心在前脚，目光看向脚下湿码头。",
+      "misuse_risk": "把接电话、起身、走出门、回头同时塞进一帧会造成动作互斥。",
+      "stages": [
+        "storyboard",
+        "image_prompt"
+      ],
+      "source_refs": [
+        "P029",
+        "P031",
+        "P149-P152"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-03",
+      "category": "构图空间",
+      "rule": "前中后景各有空间或叙事功能",
+      "positive_wording": "门框在前景形成有限遮挡；人物位于中景；窗外旧树说明室内外关系。",
+      "misuse_risk": "添加无意义前景，或所有层次一样清晰，会干扰主体。",
+      "stages": [
+        "scene_asset",
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P015",
+        "P017",
+        "T001",
+        "P284-P287"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-04",
+      "category": "构图空间",
+      "rule": "宏大场面使用可信尺度参照",
+      "positive_wording": "让一名人物、门窗与巨浪同框，交代人物到城墙及浪头的相对距离。",
+      "misuse_risk": "巨大、史诗等形容词不能建立比例，参照物位置也不能漂浮。",
+      "stages": [
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P017",
+        "P038-P039",
+        "P124-P127"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-05",
+      "category": "构图空间",
+      "rule": "把连续场景锚点作为固定资产",
+      "positive_wording": "场景COURTYARD_01锁定门窗朝向、台阶与树的位置、人物惯常座位，换镜位仍保留关系。",
+      "misuse_risk": "为单张美感新增出入口或移动树木，会造成跨镜空间穿帮。",
+      "stages": [
+        "scene_asset",
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P018",
+        "P036-P037"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-06",
+      "category": "构图空间",
+      "rule": "分开保存景别、距离、焦距、焦点与介质",
+      "positive_wording": "平视中景，人物占画面约三分之一，焦点在握听筒的手；焦距仅作辅助意图。",
+      "misuse_risk": "35mm镜头与35mm胶片不是同字段；IMAX不能填进焦距栏；数字不等于精密执行。",
+      "stages": [
+        "storyboard",
+        "image_prompt",
+        "capability_adapter"
+      ],
+      "source_refs": [
+        "P022",
+        "T002",
+        "P114-P117"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-07",
+      "category": "光线色彩",
+      "rule": "主光描述来源、方向、高低、软硬与受光对象",
+      "positive_wording": "右侧窗外的阴天散射光照亮半张脸，另一侧保留暗部层次，桌面只有弱反光。",
+      "misuse_risk": "唯美柔光没有交代光源；无来源光束和舞台式补光可能破坏场景。",
+      "stages": [
+        "scene_asset",
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P020",
+        "P154-P157",
+        "P279-P282"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-08",
+      "category": "光线色彩",
+      "rule": "光源色彩与成片调色分开控制",
+      "positive_wording": "画内暖灯是局部暖源，窗外较弱冷光照背景；人物肤色保留自然过渡。",
+      "misuse_risk": "全局青橙滤镜会抹掉现场差异；色温数值只作语义参考。",
+      "stages": [
+        "scene_asset",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P021",
+        "P059-P062",
+        "P079-P082"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-09",
+      "category": "光线色彩",
+      "rule": "柔光、雾、颗粒与黑位均为有条件的选择项",
+      "positive_wording": "仅在车灯周围保留轻微晕光，使灯体轮廓仍可辨；其他区域不扩散。",
+      "misuse_risk": "强锐化、重颗粒、HDR和大面积柔焦叠加，不是消除AI感的统一配方。",
+      "stages": [
+        "style_preset",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P023",
+        "T002",
+        "P049-P057"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-10",
+      "category": "光线色彩",
+      "rule": "眼部高光与其他局部反射服从现场光源",
+      "positive_wording": "眼中只保留与右侧窗户方位相符的小块反光，暗面不新增无来源亮点。",
+      "misuse_risk": "眼部、金属、湿地的高光方向与主光不一致，会削弱空间可信度。",
+      "stages": [
+        "character_asset",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P219-P222",
+        "P034-P035",
+        "P020"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-11",
+      "category": "材质人物",
+      "rule": "皮肤细节强度同时匹配年龄、距离与光线",
+      "positive_wording": "近景保留少量自然色差和细微起伏；远景优先保持年龄轮廓与身份特征。",
+      "misuse_risk": "年轻人物硬加深皱纹、粗毛孔与全脸油光会改变年龄；远景不必强调毛孔。",
+      "stages": [
+        "character_asset",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P011",
+        "P179-P187",
+        "P274-P277"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-12",
+      "category": "材质人物",
+      "rule": "用一个主导情绪及可见局部变化表达表情",
+      "positive_wording": "疲惫通过肩部下沉、目光偏低和轻抿嘴角表现。",
+      "misuse_risk": "同一静态图同时要求微笑、号哭和怒吼；模糊情绪词不提供可见表现。",
+      "stages": [
+        "script",
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P012",
+        "P129-P132",
+        "P159-P162"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-13",
+      "category": "材质人物",
+      "rule": "材质使用痕迹由经历与用途推导",
+      "positive_wording": "洗旧的围裙袖口有折痕，常被触摸的桌缘略亮，棉布随重量自然垂落。",
+      "misuse_risk": "随机堆灰尘、污渍、斑皱或磨损，会与人物职业、年代和保养状态矛盾。",
+      "stages": [
+        "character_asset",
+        "scene_asset",
+        "image_prompt"
+      ],
+      "source_refs": [
+        "P014",
+        "P239-P242",
+        "P289-P292"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-14",
+      "category": "材质人物",
+      "rule": "环境事件同步影响人物与周围材料",
+      "positive_wording": "江风使头发、衣角和近处草叶朝一致方向运动；雨夜衣物、地面和金属共同显湿。",
+      "misuse_risk": "仅头发受风或只有地面镜面湿润，会形成相互矛盾的环境反应。",
+      "stages": [
+        "scene_asset",
+        "storyboard",
+        "image_prompt",
+        "video_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P014",
+        "P139-P142",
+        "P164-P167",
+        "P229-P232"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-15",
+      "category": "材质人物",
+      "rule": "细节密度和清晰度服务注意力层次",
+      "positive_wording": "人物眼睛和手保留主要信息，近处织物有触感，远处以较简洁的明暗说明环境。",
+      "misuse_risk": "每个角落都同样锐利、干净、精细，或满屏纹理，会削弱焦点。",
+      "stages": [
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P015",
+        "P017",
+        "P024-P025"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-16",
+      "category": "材质人物",
+      "rule": "身份资产与表情、材质及画面任务分开管理",
+      "positive_wording": "先确认CHAR_01多视图与服装，再在引用该资产的单镜头中微调表情和材质。",
+      "misuse_risk": "逐镜重新文生图容易换脸；角色多视图与单镜头分镜混用会造成排版或身份漂移。",
+      "stages": [
+        "character_asset",
+        "storyboard",
+        "image_prompt",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P224-P227",
+        "P234-P237",
+        "P249-P257",
+        "P264-P267"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-17",
+      "category": "提示词结构",
+      "rule": "负面约束对应具体缺陷，并提供保留状态",
+      "positive_wording": "避免蜡质与过度磨皮，保留自然肤色及局部纹理；墙体与地面应有接触和遮挡。",
+      "misuse_risk": "长串无关缺陷词会挤占有效描述，禁止项也不能保证一定遵守。",
+      "stages": [
+        "image_prompt",
+        "capability_adapter",
+        "visual_review"
+      ],
+      "source_refs": [
+        "P025",
+        "P027"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-18",
+      "category": "提示词结构",
+      "rule": "生成前检测语义冲突并明确取舍",
+      "positive_wording": "全身照优先保留完整肢体；若要眼部特写，改成单独镜头。",
+      "misuse_risk": "全身照与面部占满、自然低反差与硬光剪影、摄影写实与明显油画笔触不能不加说明地并列。",
+      "stages": [
+        "storyboard_review",
+        "image_prompt",
+        "prompt_review"
+      ],
+      "source_refs": [
+        "P026",
+        "T002",
+        "P119-P122",
+        "P209-P212"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-19",
+      "category": "提示词结构",
+      "rule": "模型适配保留意图，转换专属参数",
+      "positive_wording": "内部保存构图、参考资产、限制与画幅；仅将目标接口确实支持的参数映射到请求。",
+      "misuse_risk": "不能把MJ参数、独立negative字段或参考权重原样搬到所有模型；英语不保证优于中文。",
+      "stages": [
+        "prompt_compiler",
+        "capability_adapter"
+      ],
+      "source_refs": [
+        "P027",
+        "P042",
+        "P089-P092",
+        "P139-P142",
+        "P154-P157"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-20",
+      "category": "提示词结构",
+      "rule": "参考图解析与已见证据分别记录",
+      "positive_wording": "把参考图分析为风格、笔触、肌理、色彩、线条、构图与氛围，再由人核对可见证据。",
+      "misuse_risk": "只看到参考画面不能声称获得可复现原提示词；作品标题或宣传不是效果证据。",
+      "stages": [
+        "reference_analysis",
+        "style_preset",
+        "image_prompt"
+      ],
+      "source_refs": [
+        "P214-P217",
+        "P259-P262",
+        "P294-P297",
+        "P005"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-21",
+      "category": "图像验收",
+      "rule": "每张真实返回图片检查五项可观察结果",
+      "positive_wording": "分别评价叙事焦点、人物资产一致性、空间光影、材质距离环境匹配、明显生成缺陷，并记录问题位置。",
+      "misuse_risk": "文字字段完整或生成成功回执不等于图像合格；自动审美排序不等于最终采用。",
+      "stages": [
+        "visual_review",
+        "evaluation"
+      ],
+      "source_refs": [
+        "P045-P046"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-22",
+      "category": "图像验收",
+      "rule": "同条件单变量对照验证规则",
+      "positive_wording": "固定人物、构图、模型与可用随机条件，仅改变光源描述；保存基础版、改动版及全部失败图。",
+      "misuse_risk": "单次偶然好图不能证明词有效；未生成样片不能把教程经验标为已验证。",
+      "stages": [
+        "evaluation",
+        "style_validation"
+      ],
+      "source_refs": [
+        "P043-P045",
+        "P194-P197"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-23",
+      "category": "图像验收",
+      "rule": "返修先定位失败，再只改受影响部分",
+      "positive_wording": "手部关系不清时，先减少同帧动作、调整构图或使用局部修改，同时锁定脸型和场景锚点。",
+      "misuse_risk": "不停增加否定词或整图重做可能修好局部却漂移身份、光线与空间。",
+      "stages": [
+        "visual_review",
+        "image_revision"
+      ],
+      "source_refs": [
+        "P026",
+        "P041",
+        "P251-P257"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    },
+    {
+      "id": "IMG-24",
+      "category": "图像验收",
+      "rule": "保存来源范围、提示词版本与可用图片成本",
+      "positive_wording": "记录素材ID、模型版本、参考资产版本、生成次数、实际花费、采用与否、问题标签和修改记录；计算可用率及每张可用图成本。",
+      "misuse_risk": "抽看片段不能记作完整观看；模型与版本不同的结果不能合并宣布规则普遍有效。",
+      "stages": [
+        "provenance",
+        "evaluation",
+        "asset_store"
+      ],
+      "source_refs": [
+        "P005",
+        "T003",
+        "P042",
+        "P044-P048"
+      ],
+      "validation_status": "design_candidate",
+      "numeric_parameters": "仅在镜头意图需要且目标接口支持时作为辅助，不设通用硬默认。"
+    }
+  ],
+  "implementation_recommendations": [
+    {
+      "component": "shot_intent",
+      "fields": [
+        "event_instant",
+        "primary_emotion",
+        "relationship_focus",
+        "attention_order"
+      ]
+    },
+    {
+      "component": "character_scene_assets",
+      "fields": [
+        "identity_features",
+        "age",
+        "costume",
+        "asset_version",
+        "fixed_spatial_anchors",
+        "environment_state"
+      ]
+    },
+    {
+      "component": "image_design",
+      "fields": [
+        "shot_size",
+        "camera_distance_intent",
+        "lens_intent",
+        "capture_medium_intent",
+        "focus_target",
+        "foreground",
+        "midground",
+        "background",
+        "scale_reference",
+        "light_source",
+        "light_direction",
+        "light_height",
+        "light_softness",
+        "lit_objects",
+        "light_color",
+        "grade_palette",
+        "material_response"
+      ]
+    },
+    {
+      "component": "prompt_adapter",
+      "fields": [
+        "target_model",
+        "model_version",
+        "supported_parameters",
+        "natural_language_prompt",
+        "structured_constraints",
+        "negative_parameter_supported",
+        "prompt_version"
+      ]
+    },
+    {
+      "component": "image_review",
+      "fields": [
+        "asset_id",
+        "reviewed_actual_image",
+        "five_dimension_scores",
+        "issue_locations",
+        "decision",
+        "revision_scope",
+        "actual_cost",
+        "usable_rate",
+        "cost_per_usable_image"
+      ]
+    }
+  ]
+}

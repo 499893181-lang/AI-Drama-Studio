@@ -1,0 +1,555 @@
+{
+  "schema_version": "0.1.0",
+  "title": "Huobao拆解转译的工作流约束",
+  "source": {
+    "repository": "499893181-lang/AI-Drama-Studio",
+    "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+    "path": "docs/huobao-breakdown-and-account-integration.md",
+    "url": "https://github.com/499893181-lang/AI-Drama-Studio/blob/80344b8d338d7ac6ba5af0958b15c4db89462123/docs/huobao-breakdown-and-account-integration.md",
+    "document_date": "2026-11-15",
+    "read_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "huobao_reference": {
+      "version": "v4.0.11",
+      "commit": "b48e6b2312166e25b1ff141832d2e82e5d63c142"
+    }
+  },
+  "scope": "仅转换指定同步文档，不复制Huobao源码，不将其设计目标、平台文档或历史账号记录当成本轮实测。",
+  "coverage": {
+    "read_all_sections": true,
+    "sections": 11,
+    "rules": 19
+  },
+  "formal_integration": {
+    "status": "incomplete_inputs",
+    "guard_format_available": false,
+    "ledger_format_available": false,
+    "formal_file_schemas_available": false,
+    "required_next_evidence": [
+      "本地短剧工作区当前AGENTS.md",
+      "drama-topic/script/visual/review各岗位技能全文",
+      "各岗位正式文件清单及真实Schema",
+      "guard/verify实际命令与输出契约",
+      "项目账本格式与既有有效报告"
+    ],
+    "prohibition": "这些输入取得并接入前，软件不得伪造完整四岗位已实现、可发布正式包或额度重置。"
+  },
+  "role_profiles": [
+    {
+      "role": "drama-topic",
+      "scope": [
+        "brief",
+        "选题卡",
+        "统一设定",
+        "自检",
+        "交接"
+      ],
+      "entry_to_next": "当前topic verify、PASS、无阻断、有效交接",
+      "format_source": "原岗位技能，本文未另定义"
+    },
+    {
+      "role": "drama-script",
+      "scope": [
+        "有效策划输入",
+        "时间轴剧本",
+        "自检",
+        "交接"
+      ],
+      "entry_to_next": "实际运行topic verify与script verify",
+      "format_source": "原岗位技能，本文未另定义"
+    },
+    {
+      "role": "drama-visual",
+      "scope": [
+        "有效上游",
+        "视觉设定",
+        "结构化分镜",
+        "图片提示词",
+        "运动提示词",
+        "自检",
+        "交接"
+      ],
+      "entry_to_next": "实际运行三个生产阶段verify",
+      "format_source": "原岗位技能，本文未另定义"
+    },
+    {
+      "role": "drama-review",
+      "scope": [
+        "当前15份输入",
+        "独立问题报告",
+        "责任回退",
+        "缺件时仍生成规定四份审稿文件"
+      ],
+      "entry_to_next": "三个上游有效、独立审查完成、自检和当前交接有效",
+      "blocked_result": {
+        "verdict": "REVISE",
+        "handoff_ready": false
+      },
+      "format_source": "真实15份输入及四份输出名称/格式必须从原岗位技能读取"
+    },
+    {
+      "role": "media_and_post",
+      "formal_four_role": false,
+      "scope": [
+        "实际生成/导入文件",
+        "声音字幕剪辑",
+        "媒体检查",
+        "导出"
+      ],
+      "entry_to_next": "前期包仍有效且真实媒体通过另行验收"
+    }
+  ],
+  "ledger_principles": {
+    "production_stages": [
+      "drama-topic",
+      "drama-script",
+      "drama-visual"
+    ],
+    "initial_check_index": 0,
+    "max_correction_rechecks": 2,
+    "correction_indices": [
+      1,
+      2
+    ],
+    "final_review_max_attempts": 2,
+    "blocked_formal_review_consumes_attempt": true,
+    "reset_on_connector_model_account_or_directory_change": false,
+    "missing_ledger_policy": "从有效正式报告导入可证明下限，不默认0",
+    "transport_recovery_is_distinct_from_content_correction": true,
+    "source_section": 3,
+    "implementation_status": "rules_to_carry_forward_real_ledger_contract_missing"
+  },
+  "task_package_fields": [
+    "projectId",
+    "episode",
+    "role",
+    "inputRevision",
+    "inputHashes",
+    "taskRequirements",
+    "factLocks",
+    "allowedChanges",
+    "requiredOutputFormat",
+    "actualAttachments"
+  ],
+  "application_job_fields": [
+    "jobId",
+    "connectorId",
+    "mode",
+    "stage",
+    "inputRevision",
+    "inputHashes",
+    "externalTaskId",
+    "rawResultPath",
+    "candidatePath",
+    "evidence",
+    "usageSource"
+  ],
+  "job_field_scope": "仅为应用记录建议，不覆盖原岗位正式JSON/账本/交接格式。",
+  "state_dimensions": {
+    "tool_auth": [
+      "not_installed",
+      "needs_login",
+      "logged_in",
+      "insufficient_authorization",
+      "connection_failed"
+    ],
+    "capability_evidence": [
+      "not_verified",
+      "documented",
+      "command_detected",
+      "real_task_verified"
+    ],
+    "execution": [
+      "pending_send",
+      "waiting_user",
+      "running",
+      "waiting_import",
+      "received",
+      "failed",
+      "cancelled",
+      "interrupted",
+      "unknown"
+    ],
+    "candidate": [
+      "raw_import",
+      "format_valid",
+      "semantic_review_pending",
+      "pending_adoption",
+      "adopted",
+      "stale_input"
+    ],
+    "formal_stage": [
+      "not_started",
+      "REVISE",
+      "current_valid_PASS",
+      "handoff_invalid"
+    ],
+    "media": [
+      "pending_generation",
+      "imported",
+      "pending_review",
+      "passed",
+      "needs_redo"
+    ]
+  },
+  "connectors_from_document_snapshot": [
+    {
+      "id": "local_codex_cli",
+      "snapshot": "文档称现有代码已实现创作说明扩写，0.2.1另有独立审阅；不扩大到四岗位",
+      "current_turn_verification": "not_executed"
+    },
+    {
+      "id": "chatgpt_official_auth",
+      "snapshot": "文档支持开源本机应用账号路线候选；预览媒体限制按平台当前官方说明再核实",
+      "integration_state": "documented_pending_integration",
+      "current_turn_verification": "not_executed"
+    },
+    {
+      "id": "deepseek_harness_account",
+      "snapshot": "平台账号和钱包路线候选，不是复用免费聊天权益",
+      "integration_state": "documented_pending_integration",
+      "current_turn_verification": "not_executed"
+    },
+    {
+      "id": "doubao_web_collaboration",
+      "snapshot": "首版网页协作需用户发送和导入；插件方向不证明桌面通用推理入口",
+      "integration_state": "manual_design",
+      "current_turn_verification": "not_executed"
+    },
+    {
+      "id": "image_video_tools",
+      "snapshot": "实际输入、认证、额度和逐媒体能力分别检查；手工导入与自动入口分开",
+      "integration_state": "per_capability_verification_required",
+      "current_turn_verification": "not_executed"
+    }
+  ],
+  "rules": [
+    {
+      "id": "WF-01",
+      "category": "作品与执行分层",
+      "rule": "项目、分集、角色、场景、道具和分镜属于作品结构，模型、CLI与FFmpeg属于执行工具；更换工具不改写作品身份。",
+      "implementation": "作品结构与生成尝试分开存储，工具切换只改变连接器配置。",
+      "misuse_risk": "不能用某次外部任务ID充当人物、场景或分镜本身。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          2
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-02",
+      "category": "事实与资产权威",
+      "rule": "稳定实体ID、来源、事实锁和允许变化由正式策划继承；界面项目只作草稿和索引。",
+      "implementation": "界面项目映射到正式工作区，角色场景设定引用上游权威记录。",
+      "misuse_risk": "不得在GUI索引建立另一套可独立改写的剧情与角色事实；新事实交回责任阶段。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          2,
+          3
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-03",
+      "category": "四岗位责任与进入条件",
+      "rule": "每个岗位只修改自己负责的文件；收到模型结果、六段说明或独立审阅文本不等于正式岗位PASS。",
+      "implementation": "候选采用后进入对应岗位的规定verify、报告、交接和账本流程。",
+      "misuse_risk": "没有实际guard/verify与正式文件，不能靠界面状态发布正式包。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          3,
+          5,
+          8
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-04",
+      "category": "缺件时仍需正式审稿记录",
+      "rule": "最终审稿遇门禁失败、缺件或损坏，仍按原岗位约定生成outputs/04-review下四份规定文件，结论REVISE并记录责任及不可审范围。",
+      "implementation": "将handoff_ready=false作为原文要求记录；四份文件的真实名称和格式应从原技能取得。",
+      "misuse_risk": "不能发明四份正式文件名；这类正式审稿仍计入最终审稿最多两次额度。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          3
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-05",
+      "category": "生产阶段修正额度",
+      "rule": "三个生产阶段各自首检为0，最多允许修正并复检1、2两轮；次数由项目账本持续管理。",
+      "implementation": "正式内容修正及正式复检按原规则计数，额度耗尽停止对应自动循环。",
+      "misuse_risk": "不得把诊断读取或传输恢复随意当作正式内容修正，也不得为绕过额度把修正伪装成新任务。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          3
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-06",
+      "category": "最终审稿额度与跨工具一致性",
+      "rule": "最终独立审稿最多两次；切换账号、模型、自动/手工方式、任务号或目录不重置任何阶段额度。",
+      "implementation": "每次正式审稿先读取同一项目账本，包含缺件REVISE在内的正式审查均正确累计。",
+      "misuse_risk": "历史任务或模型不同不能重新计零；各岗位自检不替代最终独立审稿。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          3,
+          5,
+          10
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-07",
+      "category": "账本缺失与格式边界",
+      "rule": "旧账本缺失时从有效正式报告导入可证明的预算下限；整合时必须读取原工作区AGENTS和岗位技能的现有格式。",
+      "implementation": "缺少原guard/账本格式时保留integration_pending，不发布正式阶段。",
+      "misuse_risk": "此仓库尚缺完整四岗位guard/账本真实格式；禁止默认额度为0、伪造格式或虚报整合完成。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          3,
+          8
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-08",
+      "category": "通用候选入口",
+      "rule": "自动连接器与网页协作都先产生候选，经过相同的结构、版本、事实锁、差异和责任岗位检查。",
+      "implementation": "保存原回答，解析后展示缺项、冲突与差异，采用只追加新版本。",
+      "misuse_risk": "模型输出的PASS只是文本，不是本地guard结果；不得静默改写剧情来满足格式。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          5,
+          6,
+          8
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-09",
+      "category": "任务包与附件发送边界",
+      "rule": "任务包绑定项目、分集、岗位、有效输入哈希、事实锁、允许变化、输出格式和实际附件清单。",
+      "implementation": "发送前展示哪个镜头/岗位、哪版输入及哪些真实文件；上下文过大时打包并明确用户上传动作。",
+      "misuse_risk": "网站上传限制不得导致约束静默丢失；仅保存文件名时不能声称模型已经读取正文或图片。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          6
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-10",
+      "category": "连接器标准能力",
+      "rule": "连接器提供检测、能力报告、任务准备、连接、提交、观察/查询、尽力取消、主动导入和候选交接。",
+      "implementation": "不支持自动发送的连接器只暴露manual协作；publishCandidate只调用责任岗位检查与发布链。",
+      "misuse_risk": "应用任务JSON不是正式岗位JSON、账本或交接单的替代格式。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          8
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-11",
+      "category": "能力证据与账号边界",
+      "rule": "安装、登录、授权、额度、模型访问和文字/读图/生图/生视频分别核验。",
+      "implementation": "使用未核实、文档支持、命令已检测、真实任务已验证四级证据并保存检查时间。",
+      "misuse_risk": "已登录不证明所有模型和媒体可用；文档中的各平台路线仅为当时设计快照，不能写作本轮实测成功。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          4,
+          5,
+          7,
+          8,
+          10
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-12",
+      "category": "免填Key与实际用量",
+      "rule": "普通界面按工作分配展示已有工具；免填APIKey不等于免费，真实额度来源与计费单位需单独记录。",
+      "implementation": "额度不足时明确展示等待、换已连接工具、网页协作或手工编辑的选项。",
+      "misuse_risk": "不得暗中切换付费API；额度未知时不能声称已执行账户级费用硬限制。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          4,
+          5,
+          11
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-13",
+      "category": "持久任务与断点恢复",
+      "rule": "外部提交与本地作品对象分开；每次尝试持久化输入版本、连接器、任务号、状态及原始响应。",
+      "implementation": "有公开查询能力时恢复原任务；未知发送状态先保留unknown，核对后才决定重发。",
+      "misuse_risk": "不能因超时、重启或丢失内存状态自动创建新生成任务。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          2,
+          7,
+          9
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-14",
+      "category": "下载和取消不是重新生成",
+      "rule": "下载重试不创建生成任务；取消本地等待不表示远端任务必然取消或费用已退。",
+      "implementation": "将传输恢复、远端执行状态与内容重生成分开记录，保存可查询的原任务身份。",
+      "misuse_risk": "没有远端取消或退款回执时，不显示取消完成/已退款。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          6,
+          7
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-15",
+      "category": "原子发布与手工保护",
+      "rule": "完整验证候选后一次发布；提取或重拆分镜不先删除旧数据，不覆盖用户锁定和人工修改。",
+      "implementation": "旧正式版保持可恢复；不合格候选、字段冲突和上游变化阻止替换并保留原文。",
+      "misuse_risk": "重新提取、重拆分镜不得清空已有角色/场景或先删后验。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          6,
+          9
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-16",
+      "category": "来源身份与用户主动导入",
+      "rule": "自动连接器保存服务端返回的模型、请求号和工具版本；手工平台/模型名仅记为用户声明。",
+      "implementation": "剪贴板只在用户主动点击复制/导入时访问；凭据交给官方工具或系统安全存储。",
+      "misuse_risk": "不得把用户填写来源冒称服务端核验，不后台持续监听剪贴板，不在任务记录放令牌。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          6,
+          8
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-17",
+      "category": "媒体与后期独立验收",
+      "rule": "实际媒体文件存在且检查通过才进入最终交付；配音、字幕、混音和完整时间线另做模块。",
+      "implementation": "导入后保存哈希，用FFprobe实测时长、尺寸、帧率、音轨；导出记录固定素材版本和轨道。",
+      "misuse_risk": "不能根据图片/视频URL、对象数量或Huobao宣传推断媒体合格、TTS已实现或成片完整。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          2,
+          6,
+          7,
+          9,
+          10
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-18",
+      "category": "逐步整合已有实现",
+      "rule": "先工具分配/任务包与导入，再候选保护，再读取原四岗位guard与账本，之后扩连接器、媒体及后期。",
+      "implementation": "复用0.2.1已有的CLI、稿件版本、输入哈希、任务适配、独立审阅与候选保护。",
+      "misuse_risk": "历史单笔Codex扩写/审阅成功不证明完整四岗位、其他账号或视频导出已验收；不为说明反复提交付费任务。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          10
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    },
+    {
+      "id": "WF-19",
+      "category": "独立实现与接入条件",
+      "rule": "参考Huobao的流程及对象设计，保持本项目独立实现；复用其源码、素材或衍生代码前另核许可与授权。",
+      "implementation": "把参考版本、来源和本项目原创设计分开记录；按平台与部署方式核对账号接入条件。",
+      "misuse_risk": "文档中的CC BY-NC-SA与平台资格陈述属于来源快照，本轮不新增法律判断，也不复制Huobao代码。",
+      "source": {
+        "commit": "80344b8d338d7ac6ba5af0958b15c4db89462123",
+        "path": "docs/huobao-breakdown-and-account-integration.md",
+        "sections": [
+          1,
+          11
+        ]
+      },
+      "status": "design_input_pending_integration_and_runtime_verification"
+    }
+  ]
+}

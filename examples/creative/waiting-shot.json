@@ -1,0 +1,87 @@
+{
+  "projectId": "demo-waiting",
+  "episodeId": "EP-01",
+  "sourceRevision": 1,
+  "inputHashes": {
+    "brief": "46d383a3c675af97b62e91208b3e9dd2a42d8713e4f2ad12aee1253b2453563b",
+    "script": "e96f7283713d50e55d58654171d7e11451202b6d6318d4c3d6db28c979e9beb0"
+  },
+  "stylePresetId": "jia.platform.distance",
+  "shot": {
+    "id": "SHOT-01",
+    "purpose": "让等待通过手部停顿与空椅子的关系被看见",
+    "moment": "老人刚把听筒放回底座，手仍停在旁边",
+    "subject": "角色CHAR-01，灰蓝长衫；容貌以尚待附加的定妆图为准",
+    "action": "手停在听筒旁，肩膀微垂，视线落向空椅子",
+    "framing": "中景，保留老人、木桌与空椅子",
+    "emotion": "等待中的疲惫，通过肩部和手的停顿表达",
+    "composition": "老人位于左侧，右侧空椅子保持可读",
+    "foreground": "门框提供空间边界",
+    "midground": "老人、电话与旧木桌",
+    "background": "窗外灰砖墙与树叶",
+    "focus": "手与听筒，老人和空椅子仍可辨认",
+    "lighting": {
+      "source": "窗外阴天散射光",
+      "direction": "画面左侧斜入，照到桌面与半边面部",
+      "softness": "柔和，保留轻微阴影层次"
+    },
+    "materials": [
+      "灰蓝粗布有洗旧折痕，皮肤细节服从中景距离",
+      "旧木桌有低光泽和边缘磨损"
+    ],
+    "palette": "灰蓝与暖灰，避免所有区域同样饱和",
+    "weather": "阴天",
+    "timeOfDay": "傍晚",
+    "durationSeconds": 6,
+    "camera": {
+      "motionId": "CAM_FIXED",
+      "start": "中景老人、旧木桌与空椅子同框",
+      "end": "保持原构图，手从听筒旁缓缓落到桌上",
+      "path": {
+        "mode": "none",
+        "description": "固定机位，无位移"
+      },
+      "speed": "固定，动作结束后保留停顿",
+      "subjectMotion": "手离开听筒后停在桌面，肩部轻落",
+      "environmentMotion": "窗外少量树叶随微风轻动",
+      "viewpoint": "桌边平视",
+      "stability": "锁定机位",
+      "focalChange": "固定焦距，无变焦",
+      "focusPlan": {
+        "start": "手与听筒区域",
+        "change": "保持，不追逐树叶",
+        "end": "手与听筒区域"
+      }
+    },
+    "avoid": [
+      "避免新增人物，保持空椅子无人",
+      "避免磨皮与全屏锐化，保留合理距离下的自然质感"
+    ]
+  },
+  "locks": [
+    {
+      "path": "shot.weather",
+      "value": "阴天"
+    },
+    {
+      "path": "shot.timeOfDay",
+      "value": "傍晚"
+    },
+    {
+      "path": "shot.subject",
+      "value": "角色CHAR-01，灰蓝长衫；容貌以尚待附加的定妆图为准"
+    }
+  ],
+  "references": [
+    {
+      "id": "CHAR-01",
+      "version": "v1-pending",
+      "attached": false
+    }
+  ],
+  "providerCapabilities": {
+    "supportedParameters": [],
+    "parameters": {},
+    "negativePrompt": false
+  }
+}

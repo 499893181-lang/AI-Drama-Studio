@@ -1,0 +1,974 @@
+{
+  "source_file": "02_AI短剧运镜设计与提示词手册.docx",
+  "source_type": "user_supplied_learning_manual",
+  "source_scope": "正文 P001–P060、表 T001–T006、来源附录 P061–P221 均已阅读",
+  "evidence_boundary": "手册报告50条去重抖音作品的片段／字幕／正文观察，非逐条完整观看，未实际验证生成效果；下列模板是对手册软件建议的结构化转译。",
+  "version": "0.1.0",
+  "numeric_policy": "距离、角度、秒数不设全局硬默认；手册中的5秒、约1米、90度等只作为示例，实际由镜头目的、空间与模型能力决定。",
+  "execution_boundary": "字段表达创作意图，不代表任一生成模型支持同名API参数或能精确执行；provider适配器须分别核实模型能力。",
+  "camera_vocabulary": [
+    {
+      "id": "CAM_FIXED",
+      "name": "固定",
+      "dimension": "camera_motion",
+      "intent": "观察表演、等待反应，给停顿留下空间",
+      "start_state": {
+        "camera_position": "指定且固定",
+        "camera_orientation": "指定且固定",
+        "framing": "明确景别、主体占位和空间锚点"
+      },
+      "end_state": {
+        "camera_position": "与起始相同",
+        "camera_orientation": "与起始相同",
+        "framing": "构图稳定；主体可在既定空间内动作"
+      },
+      "path_plan": {
+        "mode": "none",
+        "waypoints": [],
+        "orientation_change": false
+      },
+      "subject_motion": {
+        "allowed": "主体可动",
+        "requirements": "单独记录动作起终态，不能把主体转身误记为环绕"
+      },
+      "speed_plan": {
+        "mode": "stationary"
+      },
+      "still_image_preparation": [
+        "首帧给出完整且可读的静止构图",
+        "保留主体动作终点所需空间"
+      ],
+      "misuse_checks": [
+        "同一阶段同时写相机固定和围绕人物旋转",
+        "角色移动被误当作摄影机移动"
+      ],
+      "source_anchors": [
+        "T001",
+        "P068",
+        "T005"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_DOLLY_IN",
+      "name": "推进",
+      "dimension": "camera_motion",
+      "intent": "集中注意或放大人物情绪",
+      "start_state": {
+        "framing": "指定起始景别",
+        "camera_position": "起点",
+        "focus_target": "指定目标"
+      },
+      "end_state": {
+        "framing": "指定更近的落幅",
+        "camera_position": "沿路径接近主体后的终点",
+        "subject_pose": "约定姿态与视线"
+      },
+      "path_plan": {
+        "mode": "translation_toward_subject",
+        "waypoints": "起点→沿路径接近→终点；如需停稳另列阶段"
+      },
+      "subject_motion": {
+        "requirements": "主体动作单列；示例可只握紧物件，不额外转头"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "options": [
+          "uniform",
+          "gradual",
+          "stop_at_end"
+        ],
+        "duration_seconds": "镜头设计决定"
+      },
+      "still_image_preparation": [
+        "图中锁定脸、衣服、背景关系与焦点目标",
+        "首帧保留推进后的近景仍可成立的构图"
+      ],
+      "misuse_checks": [
+        "只写高级慢推而无起幅与落幅",
+        "近景没有新增情绪或信息",
+        "推进引起背景、服装或视线漂移"
+      ],
+      "source_anchors": [
+        "T001",
+        "T003",
+        "P027",
+        "P028"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_DOLLY_OUT",
+      "name": "后拉",
+      "dimension": "camera_motion",
+      "intent": "显露环境或表现疏离",
+      "start_state": {
+        "framing": "指定较近景别",
+        "visible_information": "当前主体与已知局部"
+      },
+      "end_state": {
+        "framing": "指定更开阔落幅",
+        "new_information": "必须列出新显露的背景信息"
+      },
+      "path_plan": {
+        "mode": "translation_away_from_subject",
+        "waypoints": "主体附近起点→后退路径→环境落幅"
+      },
+      "subject_motion": {
+        "requirements": "人物是否停留或动作另行填写"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "速度与环境揭示节奏一致"
+      },
+      "still_image_preparation": [
+        "场景参考应包含后退后要显露的空间",
+        "首帧和场景锚点能对应同一地点"
+      ],
+      "misuse_checks": [
+        "退后空间无依据",
+        "后拉只放大空白而没有叙事信息",
+        "将后拉与无说明的变焦缩小混为同一控制"
+      ],
+      "source_anchors": [
+        "T001",
+        "P122"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_PAN_TILT",
+      "name": "摇镜",
+      "dimension": "camera_orientation",
+      "intent": "从一个目标转向另一个，或逐层揭示",
+      "start_state": {
+        "camera_position": "固定位置",
+        "camera_orientation": "朝向目标A",
+        "framing": "明确A的起始景别"
+      },
+      "end_state": {
+        "camera_position": "与起始位置相同",
+        "camera_orientation": "朝向目标B",
+        "framing": "明确B的落幅"
+      },
+      "path_plan": {
+        "mode": "orientation_change",
+        "translation": false,
+        "orientation_path": "指定水平或上下朝向变化及经过对象"
+      },
+      "subject_motion": {
+        "requirements": "主体动作独立；可静止，也可在场内移动"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "给发现新目标的时点"
+      },
+      "still_image_preparation": [
+        "同一场景参考须支持A与B的空间关系",
+        "若首帧看不到B，不能据此捏造B周围空间"
+      ],
+      "misuse_checks": [
+        "把摇镜写成机位横移",
+        "未说明方向和目标",
+        "将上下摇与相机升降混写"
+      ],
+      "source_anchors": [
+        "T001",
+        "P065",
+        "P103"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_LATERAL",
+      "name": "横移",
+      "dimension": "camera_motion",
+      "intent": "建立空间层次、关系或前景视差",
+      "start_state": {
+        "camera_position": "起始侧向位置",
+        "framing": "指定前中后景与主体位置"
+      },
+      "end_state": {
+        "camera_position": "侧向终点",
+        "framing": "指定显露信息或主体新的画幅占位"
+      },
+      "path_plan": {
+        "mode": "lateral_translation",
+        "waypoints": "起点→侧向路径→终点",
+        "occlusion": "如有前景擦过，标出进入、覆盖和显露节点"
+      },
+      "subject_motion": {
+        "requirements": "主体是否移动单列；焦点可保持在中景人物"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "保持视差变化可读"
+      },
+      "still_image_preparation": [
+        "设置有依据的前景物和主体距离层次",
+        "锁定中景人物及场景锚点"
+      ],
+      "misuse_checks": [
+        "为制造擦过临时增加无依据的遮挡物",
+        "把前景擦过与主体换位混为一体",
+        "焦点无说明地跳向前景"
+      ],
+      "source_anchors": [
+        "T001",
+        "T003",
+        "P077",
+        "P119"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_FOLLOW",
+      "name": "跟拍",
+      "dimension": "camera_motion",
+      "intent": "伴随人物行进并保持代入",
+      "start_state": {
+        "camera_position": "相对人物的前／后／侧后等位置",
+        "relative_distance": "按镜头需要填写",
+        "framing": "指定主体画幅占比"
+      },
+      "end_state": {
+        "camera_position": "与人物约定的相对位置",
+        "framing": "指定停止或发现目标后的落幅"
+      },
+      "path_plan": {
+        "mode": "subject_relative_tracking",
+        "waypoints": "人物路线与镜头路线分别填写；经过的地点或遮挡列节点"
+      },
+      "subject_motion": {
+        "requirements": "填写人物行进方向、速度、终点以及是否停下"
+      },
+      "speed_plan": {
+        "mode": "relative_to_subject",
+        "relation": "按需求同速或明确改变距离",
+        "stop_relation": "人物停下时相机是否同步减速需写明"
+      },
+      "still_image_preparation": [
+        "首帧须允许看到人物行进方向或可理解的路径",
+        "保留终点信息所需的场景参考"
+      ],
+      "misuse_checks": [
+        "只写丝滑跟拍而无相对位置和距离",
+        "主体路线与相机路线混写",
+        "同速跟随与揭示新对象同时无法成立时不简化"
+      ],
+      "source_anchors": [
+        "T001",
+        "T003",
+        "P030",
+        "P031",
+        "P081",
+        "P093",
+        "P129",
+        "P164"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_CRANE",
+      "name": "升降",
+      "dimension": "camera_motion",
+      "intent": "逐层揭示人物或环境",
+      "start_state": {
+        "camera_height": "起始高度",
+        "camera_position": "起始平面位置",
+        "framing": "明确起幅"
+      },
+      "end_state": {
+        "camera_height": "结束高度",
+        "camera_position": "若平面位置变化则单独列出",
+        "framing": "明确揭示后的落幅"
+      },
+      "path_plan": {
+        "mode": "height_translation",
+        "waypoints": "记录高度变化及揭示对象的顺序"
+      },
+      "subject_motion": {
+        "requirements": "人物动作单独填写"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "高度变化与揭示节点关联"
+      },
+      "still_image_preparation": [
+        "场景参考包含向上或向下移动经过的结构",
+        "锁定墙面、窗口等连续锚点"
+      ],
+      "misuse_checks": [
+        "把升降等同于上下摇",
+        "沿墙上升时墙面细节或室内关系漂移",
+        "相机越过墙体而没有可行通道"
+      ],
+      "source_anchors": [
+        "T001",
+        "P151",
+        "T005"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_ORBIT",
+      "name": "环绕",
+      "dimension": "camera_motion",
+      "intent": "强调人物登场或双人关系",
+      "start_state": {
+        "camera_position": "相对中心的起始方位",
+        "framing": "指定主体和景别"
+      },
+      "end_state": {
+        "camera_position": "相对中心的终止方位",
+        "framing": "明确落幅及视线关系"
+      },
+      "path_plan": {
+        "mode": "orbit",
+        "center": "人物或明确关系中心",
+        "direction": "填写方向",
+        "angular_span": "按需要填写而非固定90度",
+        "waypoints": "起始方位→中间节点→终止方位"
+      },
+      "subject_motion": {
+        "requirements": "主体是否转身单独填写；相机移动与主体转身不同"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "运动过程中保持身份与服装稳定"
+      },
+      "still_image_preparation": [
+        "角色参考需支持将出现的角度",
+        "场景参考须支撑路径两侧信息",
+        "遮挡复杂时先减少角度或遮挡"
+      ],
+      "misuse_checks": [
+        "固定机位与环绕同时存在",
+        "实际结果仅缩放却标为环绕",
+        "遮挡后换脸或服装变化"
+      ],
+      "source_anchors": [
+        "T001",
+        "T003",
+        "P103",
+        "P161",
+        "T005"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_HANDHELD",
+      "name": "手持",
+      "dimension": "camera_stability",
+      "intent": "建立紧张或现场感",
+      "start_state": {
+        "framing": "明确可读的主体与环境",
+        "camera_position": "指定基本视点"
+      },
+      "end_state": {
+        "framing": "明确动作结束及注意力落点",
+        "camera_position": "若移动则需另有基础路径"
+      },
+      "path_plan": {
+        "mode": "stability_modifier",
+        "base_path": "单独选择固定／跟拍等基础运动",
+        "shake_amplitude": "按场景需要控制"
+      },
+      "subject_motion": {
+        "requirements": "主体动作仍需清楚，避免相机和主体同时过度剧烈运动"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "抖动强度不盖过动作信息"
+      },
+      "still_image_preparation": [
+        "首帧保证主体辨识和空间锚点可读",
+        "不把模糊或倾斜当成必需的首帧画风"
+      ],
+      "misuse_checks": [
+        "手持不等于必须倾斜15至20度",
+        "主体与相机都剧烈运动而失去叙事重点",
+        "画面好看但动作无法识别"
+      ],
+      "source_anchors": [
+        "T001",
+        "P125",
+        "T005",
+        "P049"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "LENS_ZOOM",
+      "name": "变焦",
+      "dimension": "lens_change",
+      "intent": "改变画幅；与机位推进区分",
+      "start_state": {
+        "camera_position": "明确保持或另行规划",
+        "framing": "起始景别",
+        "zoom_state": "起始取景状态"
+      },
+      "end_state": {
+        "camera_position": "是否改变须明确",
+        "framing": "结束景别",
+        "zoom_state": "结束取景状态"
+      },
+      "path_plan": {
+        "mode": "lens_or_framing_change",
+        "camera_translation": "未联动时不写入推进路径",
+        "linked_motion": "需要推进联动时转用明确复合模板"
+      },
+      "subject_motion": {
+        "requirements": "人物动作单列"
+      },
+      "speed_plan": {
+        "mode": "user_defined",
+        "requirements": "变化时点与叙事反应关联"
+      },
+      "still_image_preparation": [
+        "保留主体和纵深背景作为比较参考",
+        "首帧以锁定画幅为准，不把未来变化写成静态画面"
+      ],
+      "misuse_checks": [
+        "直接用推进代替变焦",
+        "没有联动说明却同时推近拉远",
+        "仅凭提示词名称声称实际运动正确"
+      ],
+      "source_anchors": [
+        "T001",
+        "P071",
+        "P189",
+        "T005"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "VIEW_POV",
+      "name": "第一视角",
+      "dimension": "viewpoint",
+      "intent": "让观众进入人物视线",
+      "start_state": {
+        "camera_viewpoint": "角色视线",
+        "view_direction": "角色当前观看方向",
+        "visible_body_parts": "按场景列明，例如手部"
+      },
+      "end_state": {
+        "camera_viewpoint": "同一角色",
+        "view_direction": "角色新的注意目标",
+        "visible_body_parts": "连续且有动作依据"
+      },
+      "path_plan": {
+        "mode": "viewpoint_constraint",
+        "base_motion": "另选固定／跟随／穿越等运动，不把视角当成运动路径"
+      },
+      "subject_motion": {
+        "requirements": "视线和可见身体部位的动作各自填写"
+      },
+      "speed_plan": {
+        "mode": "inherits_base_motion"
+      },
+      "still_image_preparation": [
+        "首帧以角色看到的景象组织构图",
+        "可见手部与道具需绑定同一身份和动作"
+      ],
+      "misuse_checks": [
+        "把第一视角与特定运镜绑定为唯一组合",
+        "无依据更换身体部位、道具或视线"
+      ],
+      "source_anchors": [
+        "T001",
+        "P016",
+        "P109"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_FPV",
+      "name": "FPV穿越",
+      "dimension": "camera_trajectory_mode",
+      "intent": "奇观或快速空间穿梭",
+      "start_state": {
+        "camera_position": "明确入口位置与高度",
+        "framing": "起始目标或通道"
+      },
+      "end_state": {
+        "camera_position": "明确出口与高度",
+        "framing": "落幅目标"
+      },
+      "path_plan": {
+        "mode": "waypoint_flight",
+        "waypoints": "按实际空间记录入口、出口、障碍和经过节点",
+        "collision_check": "路线须绕过实体或使用真实通道"
+      },
+      "subject_motion": {
+        "requirements": "场内主体路线与相机路线分别记录"
+      },
+      "speed_plan": {
+        "mode": "piecewise",
+        "speed_changes": "快慢变化绑定路径节点，不只写高速"
+      },
+      "still_image_preparation": [
+        "准备可理解的全场景或经过节点参考",
+        "必要时补白模或轨迹图，不能凭单张首帧假定全部隐藏空间"
+      ],
+      "misuse_checks": [
+        "穿墙、瞬移或无依据跳切",
+        "只罗列地名没有路径",
+        "不稳定复杂穿越仍叠加大量角色动作"
+      ],
+      "source_anchors": [
+        "T001",
+        "P097",
+        "P116",
+        "P148",
+        "P170",
+        "P177",
+        "P180",
+        "P209",
+        "P212",
+        "P215"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null
+    },
+    {
+      "id": "CAM_DOLLY_ZOOM",
+      "name": "推进与反向变焦联动",
+      "dimension": "compound_camera_lens",
+      "intent": "保持人物画幅占比，同时改变背景空间观感",
+      "start_state": {
+        "camera_position": "推进或后退的起点",
+        "subject_scale": "目标画幅占比",
+        "zoom_state": "配合起点的取景"
+      },
+      "end_state": {
+        "camera_position": "联动后的终点",
+        "subject_scale": "按目标保持",
+        "background": "背景变化须可见",
+        "zoom_state": "反向调整后的取景"
+      },
+      "path_plan": {
+        "mode": "explicit_linked_translation_and_zoom",
+        "translation": "相机推进时变焦拉远，或经明确设计的相反联动",
+        "constraint": "主体画幅占比保持的意图须写明"
+      },
+      "subject_motion": {
+        "requirements": "主体动作尽量明确可控，不同时添加多项剧烈运动"
+      },
+      "speed_plan": {
+        "mode": "linked",
+        "requirements": "机位与变焦阶段一致；实际模型能力需验证"
+      },
+      "still_image_preparation": [
+        "首帧保留主体与可观察纵深背景",
+        "对照起终画面检查人物大小和背景关系"
+      ],
+      "misuse_checks": [
+        "没有联动说明却把推近拉远当作普通一项",
+        "将人物大小保持视为已精确执行",
+        "任何模型未实测便宣称支持"
+      ],
+      "source_anchors": [
+        "P071",
+        "P189",
+        "T005"
+      ],
+      "origin": "structured_translation_of_manual",
+      "numeric_defaults": null,
+      "complexity": "advanced",
+      "capability_status": "requires_provider_test",
+      "not_a_generic_api_flag": true
+    }
+  ],
+  "focus_plan": {
+    "dimension": "focus",
+    "fields": [
+      "initial_target",
+      "change_required",
+      "change_time_or_event",
+      "final_target"
+    ],
+    "note": "移焦与相机移动不是同一维度；有前中后景对象时写清何时看清谁。",
+    "source_anchors": [
+      "T002",
+      "P032",
+      "P161"
+    ]
+  },
+  "transitions": [
+    {
+      "id": "TRANS_OCCLUSION",
+      "name": "遮挡转场",
+      "end_condition": "遮挡物覆盖前镜画面",
+      "start_condition": "后镜由相容的遮挡显露",
+      "checks": [
+        "覆盖区域与显露方向相容",
+        "人物与场景变化有可理解依据"
+      ],
+      "source_anchors": [
+        "T004",
+        "P138"
+      ]
+    },
+    {
+      "id": "TRANS_WHIP",
+      "name": "甩镜转场",
+      "end_condition": "前镜快速朝约定方向甩动",
+      "start_condition": "后镜方向与运动模糊相容",
+      "checks": [
+        "避免突然反向",
+        "避免无说明从强运动落到静止"
+      ],
+      "source_anchors": [
+        "T004",
+        "P138"
+      ]
+    },
+    {
+      "id": "TRANS_ACTION",
+      "name": "动作匹配",
+      "end_condition": "前镜动作处于约定阶段",
+      "start_condition": "后镜接续相容的动作阶段",
+      "checks": [
+        "阶段、方向、速度与主体位置尽量连续",
+        "跳时或重复动作需明确"
+      ],
+      "source_anchors": [
+        "T004",
+        "P138",
+        "P157"
+      ]
+    },
+    {
+      "id": "TRANS_COMPOSITION",
+      "name": "相似构图",
+      "end_condition": "前镜关键形状或主体占位清楚",
+      "start_condition": "后镜形状或占位相似",
+      "checks": [
+        "形状／占位构成匹配",
+        "时间地点变化仍可理解"
+      ],
+      "source_anchors": [
+        "T004",
+        "P138",
+        "P157"
+      ]
+    }
+  ],
+  "general_rules": [
+    {
+      "id": "M02_R01",
+      "rule": "先写叙事任务，再分开选择景别、机位、运动和时间效果。",
+      "stage": [
+        "storyboard",
+        "motion_design"
+      ],
+      "source_anchors": [
+        "P003",
+        "P008",
+        "P015",
+        "P016"
+      ],
+      "check": "purpose、framing、viewpoint、movement不能只由一个风格标签替代。"
+    },
+    {
+      "id": "M02_R02",
+      "rule": "人物动作与相机运动分轨记录。",
+      "stage": [
+        "storyboard",
+        "video_prompt"
+      ],
+      "source_anchors": [
+        "P010",
+        "T002",
+        "P164"
+      ],
+      "check": "subject_action_timeline与camera_plan均可单独编辑，人物转身不自动成为镜头环绕。"
+    },
+    {
+      "id": "M02_R03",
+      "rule": "相机路径写明起点、节点、速度与终点；跨空间长镜头还需入口、出口和高度。",
+      "stage": [
+        "motion_design",
+        "video_prompt"
+      ],
+      "source_anchors": [
+        "P020",
+        "T003",
+        "P148",
+        "T006"
+      ],
+      "check": "不能用场景名列表代替轨迹，不能无依据穿墙。"
+    },
+    {
+      "id": "M02_R04",
+      "rule": "静态分镜提示词和动态视频提示词分别保存并版本追踪。",
+      "stage": [
+        "image_prompt",
+        "video_prompt"
+      ],
+      "source_anchors": [
+        "P021",
+        "P022"
+      ],
+      "check": "只改运镜时不顺带修改已锁定的服装、场景和材质。"
+    },
+    {
+      "id": "M02_R05",
+      "rule": "焦点目标及移焦时点独立于相机路线。",
+      "stage": [
+        "motion_design",
+        "video_prompt"
+      ],
+      "source_anchors": [
+        "T002",
+        "P032",
+        "P161"
+      ],
+      "check": "明确相机看到哪里与观众此时看清谁；固定焦点和移焦不可同阶段互相矛盾。"
+    },
+    {
+      "id": "M02_R06",
+      "rule": "起幅、主体动作、路径与落幅必须相容；复合运动显式分阶段或联动。",
+      "stage": [
+        "compile",
+        "review"
+      ],
+      "source_anchors": [
+        "P018",
+        "T005"
+      ],
+      "check": "固定与环绕冲突、无说明推近又拉远、远景微表情等应报可解释冲突；有明确分阶段则分别校验。"
+    },
+    {
+      "id": "M02_R07",
+      "rule": "切镜核对人物、空间、方向、时间和注意力五项。",
+      "stage": [
+        "storyboard_review",
+        "video_review"
+      ],
+      "source_anchors": [
+        "P035",
+        "P036",
+        "P037",
+        "P038",
+        "P039",
+        "P040"
+      ],
+      "check": "脸、发型、衣服、道具、动作进度、布局、光源、视线与出画方向都保留前后状态。"
+    },
+    {
+      "id": "M02_R08",
+      "rule": "双人场面记录站位连线与摄影机所在侧；有意越轴须有过渡或标记。",
+      "stage": [
+        "scene_layout",
+        "storyboard_review"
+      ],
+      "source_anchors": [
+        "P041",
+        "P042"
+      ],
+      "check": "本项来自手册的软件设计建议，不能声称50条样片逐项验证；几何证据不足时标记人工复核。",
+      "evidence_level": "manual_software_recommendation"
+    },
+    {
+      "id": "M02_R09",
+      "rule": "转场只在有前后状态依据时使用，普通直接切换也应保留。",
+      "stage": [
+        "editing_design",
+        "video_prompt"
+      ],
+      "source_anchors": [
+        "T004",
+        "P044"
+      ],
+      "check": "遮挡、甩镜、动作匹配、相似构图均有各自匹配条件，不设每镜必选。"
+    },
+    {
+      "id": "M02_R10",
+      "rule": "复杂度优先留给叙事必要动作；不稳定时先减少一个控制量。",
+      "stage": [
+        "motion_design",
+        "retry"
+      ],
+      "source_anchors": [
+        "T005",
+        "P031",
+        "P047"
+      ],
+      "check": "主体与相机同时剧烈运动、遮挡与转身等造成失稳时，按问题只调整一项；保留成功镜头。"
+    },
+    {
+      "id": "M02_R11",
+      "rule": "运镜按可见结果判定，不能凭提示词或字幕命名确认成功。",
+      "stage": [
+        "video_review"
+      ],
+      "source_anchors": [
+        "T005",
+        "P049",
+        "P060"
+      ],
+      "check": "例如环绕结果只是缩放则记运动不符合；创作中的距离和角度不当作实测轨迹。"
+    },
+    {
+      "id": "M02_R12",
+      "rule": "验收先看动作，再看人物场景连续、叙事运动，最后看画面瑕疵及音画时序。",
+      "stage": [
+        "video_review"
+      ],
+      "source_anchors": [
+        "P048",
+        "P049"
+      ],
+      "check": "图像清晰或画质好不能覆盖动作和连续性失败。"
+    },
+    {
+      "id": "M02_R13",
+      "rule": "六个质量维度分别给出通过、需修改或不可用及原因，速度和价格单列。",
+      "stage": [
+        "evaluation"
+      ],
+      "source_anchors": [
+        "P059",
+        "P060"
+      ],
+      "check": "叙事清晰、运动符合、角色连续、空间稳定、动作完成、画面完整不能只合成一个无证据总分。"
+    },
+    {
+      "id": "M02_R14",
+      "rule": "保存模型、参考、提示词版本、结果、失败原因和各阶段耗时。",
+      "stage": [
+        "generation",
+        "logging"
+      ],
+      "source_anchors": [
+        "P011",
+        "P051",
+        "P058",
+        "T006"
+      ],
+      "check": "区分一次成功与多次挑选后的成功，不把作者宣传写成产品成功率或价格承诺。"
+    },
+    {
+      "id": "M02_R15",
+      "rule": "复杂空间需要更多经过节点、参考或白模辅助；先用基础镜头建立实测样本。",
+      "stage": [
+        "asset_planning",
+        "evaluation"
+      ],
+      "source_anchors": [
+        "P047",
+        "P053",
+        "P055",
+        "P056",
+        "P057"
+      ],
+      "check": "第一轮分别验证固定、慢推、侧后跟拍、双人机位及一种遮挡转场，而不是一开始验证超复杂长镜头。"
+    }
+  ],
+  "shot_schema_fields": {
+    "narrative_assets": [
+      "shot_id",
+      "scene_id",
+      "beat_id",
+      "purpose",
+      "character_refs",
+      "scene_ref"
+    ],
+    "start_view": [
+      "start_framing",
+      "camera_height",
+      "camera_angle",
+      "subject_position"
+    ],
+    "camera_plan": [
+      "movement",
+      "path_nodes",
+      "duration",
+      "speed_profile",
+      "end_framing"
+    ],
+    "performance_focus": [
+      "subject_action_timeline",
+      "focus_target",
+      "focus_change"
+    ],
+    "continuity_edit": [
+      "stable_assets",
+      "screen_direction",
+      "end_state",
+      "transition_to_next"
+    ],
+    "execution_review": [
+      "provider",
+      "model",
+      "prompt_version",
+      "result_ref",
+      "review_status",
+      "retry_reason"
+    ],
+    "source_anchors": [
+      "T002",
+      "T006"
+    ]
+  },
+  "evaluation": {
+    "dimensions": [
+      "叙事清晰",
+      "运动符合",
+      "角色连续",
+      "空间稳定",
+      "动作完成",
+      "画面完整"
+    ],
+    "statuses": [
+      "通过",
+      "需修改",
+      "不可用"
+    ],
+    "required_reason": true,
+    "separate_measurements": [
+      "价格",
+      "速度",
+      "提交耗时",
+      "等待耗时",
+      "生成耗时",
+      "重试耗时",
+      "人工审阅耗时"
+    ],
+    "source_anchors": [
+      "P058",
+      "P060"
+    ]
+  },
+  "coverage": {
+    "paragraph_range": [
+      "P001",
+      "P221"
+    ],
+    "tables": [
+      "T001",
+      "T002",
+      "T003",
+      "T004",
+      "T005",
+      "T006"
+    ],
+    "appendix_observation_ids": "C01–C50",
+    "camera_entries": 13,
+    "general_rules": 15,
+    "transitions": 4
+  }
+}
