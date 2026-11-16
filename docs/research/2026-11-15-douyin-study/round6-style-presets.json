@@ -1,0 +1,369 @@
+{
+  "metadata": {
+    "round": 6,
+    "topic": "AI画风类型",
+    "observed_date": "2026-11-17",
+    "opened_unique_videos": 50,
+    "new_unique_sources": 49,
+    "prior_source_revisits": 1,
+    "overall_unique_sources": 281,
+    "likes_wan_display_count": 20,
+    "scope": "方便软件预设设计的样本归纳，不是穷尽分类、平台流行度排名或生成能力实测",
+    "generation_tested": false,
+    "software_integrated": false,
+    "style_preset_count": 22
+  },
+  "status": "研究设计，未接入软件或验证生成",
+  "presets": [
+    {
+      "style_id": "STY01",
+      "name": "写实生活／纪实",
+      "features_own": "真实人体比例、可辨日常道具、自然材质与环境层次；避免所有人都像棚拍模特。",
+      "suitable_topics_own": "亲情、校园、普通职场",
+      "prompt_fragment_original": "平视中景，旧木桌与窗位置沿用参考，阴天窗光，肤色自然，布料保持生活褶皱，背景有生活痕迹而不杂乱。",
+      "review_risks_own": "皮肤蜡化、环境豪华化、道具漂移",
+      "source_ids": [
+        "R6S09",
+        "R6S16"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY02",
+      "name": "写实电影光影",
+      "features_own": "摄影外观加明确主光、暗区信息和景深；电影感不是固定青橙滤镜。",
+      "suitable_topics_own": "悬疑、历史、剧情高潮",
+      "prompt_fragment_original": "单侧窗光照亮眼睛和手，背墙保持暗但门框可辨，前景轻虚，主体与关键道具清楚，色盘收敛。",
+      "review_risks_own": "暗部全黑、到处体积光、假镜头眩光",
+      "source_ids": [
+        "R6S03",
+        "R6S09",
+        "R6S16"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY03",
+      "name": "二维线稿／赛璐璐方向",
+      "features_own": "明确轮廓、概括色面和分区阴影；赛璐璐程度需单独指定，日系不是充分条件。",
+      "suitable_topics_own": "校园、热血、轻喜剧",
+      "prompt_fragment_original": "清晰二维线稿，人物色块干净，阴影按两级块面分区，背景简化，保留角色既定脸型与服装。",
+      "review_risks_own": "三维皮肤高光、渐变把色块冲散",
+      "source_ids": [
+        "R6S14",
+        "R6S02"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY04",
+      "name": "二维治愈绘本",
+      "features_own": "简化人物、温暖限色、纸颗粒与有节制的手绘边缘。",
+      "suitable_topics_own": "宠物日常、亲情、睡前故事",
+      "prompt_fragment_original": "乡间小路上的同一只猫，奶油白、芥末黄和鼠尾草绿，扁平块面，局部干刷，远景细节少。",
+      "review_risks_own": "满画面纸噪点、主角过度幼化",
+      "source_ids": [
+        "R6S06",
+        "R6S19"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY05",
+      "name": "几何扁平插画",
+      "features_own": "用圆、梯形、三角块概括身体和环境，强调比例、模块和装饰秩序。",
+      "suitable_topics_own": "民俗科普、品牌与文创",
+      "prompt_fragment_original": "正面戏曲人物，夸张长袖以几何面概括，粉绿限色，局部渐变，背景留白，不加摄影式皮肤纹理。",
+      "review_risks_own": "平面中混入真实脸、线宽不统一",
+      "source_ids": [
+        "R6S35",
+        "R6S24"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY06",
+      "name": "黑线平涂卡通",
+      "features_own": "可辨黑色轮廓、平整颜色、夸张但清楚的表情；可加少量拟人装饰。",
+      "suitable_topics_own": "情侣日常、旅行、漫画",
+      "prompt_fragment_original": "两人并坐木椅，均匀黑线，蓝绿黄主色，人物表情清楚；背景装饰不盖过双手和道具。",
+      "review_risks_own": "复杂反光、每个物体都长眼睛",
+      "source_ids": [
+        "R6S34",
+        "R6S19"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY07",
+      "name": "丑萌涂鸦",
+      "features_own": "故意不规则的线与填色、夸张表情和零散手写符号。",
+      "suitable_topics_own": "搞笑、吐槽、手账",
+      "prompt_fragment_original": "保留人物辨识点，略歪轮廓、简短四肢和夸张眼神，蜡笔涂色，装饰限定在四角。",
+      "review_risks_own": "无意义人体错误、标题遮脸",
+      "source_ids": [
+        "R6S07"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY08",
+      "name": "稚拙蜡笔／彩铅感",
+      "features_own": "笔触可见、纸底透出、线条不完全闭合，轮廓与填色适度错位。",
+      "suitable_topics_own": "儿童感记忆、贴纸、生活小物",
+      "prompt_fragment_original": "奶油纸上画蓝色咖啡杯与一朵花，彩线略不规则，蜡笔颗粒沿物体结构，背景干净。",
+      "review_risks_own": "把低清当手绘、均匀机械噪声",
+      "source_ids": [
+        "R6S32",
+        "R6S07"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY09",
+      "name": "版画／木刻感",
+      "features_own": "黑白或少数套色、剪影和刻痕、明确正负形；不等于普通灰度图。",
+      "suitable_topics_own": "历史意象、文旅、寓言",
+      "prompt_fragment_original": "红黑米白三色，人物剪影和粗刻痕，山与建筑以整块正负形组织，保留主次。",
+      "review_risks_own": "随机划痕破坏人物、字形变形",
+      "source_ids": [
+        "R6S11"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY10",
+      "name": "水墨写意",
+      "features_own": "墨色浓淡、干湿变化、飞白和留白，以笔势概括形体。",
+      "suitable_topics_own": "古诗词、山水、武侠意境",
+      "prompt_fragment_original": "青年立在江岸，淡墨远山，近石浓墨，衣角少量干笔，天空留白，宣纸纹理轻微。",
+      "review_risks_own": "全图灰雾、毛笔纹理盖脸",
+      "source_ids": [
+        "R6S08"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY11",
+      "name": "透明淡彩／水彩方向",
+      "features_own": "目标为透明叠色、软硬边结合与纸白；样本中的水彩标签有时更接近数字动漫淡彩。",
+      "suitable_topics_own": "宠物肖像、旅行记忆、温柔生活",
+      "prompt_fragment_original": "猫咪侧脸，稀薄暖灰与浅蓝层染，眼鼻小范围清楚，毛发边缘局部融入纸白，纸纹适量。",
+      "review_risks_own": "厚重不透明油漆、全边缘融化",
+      "source_ids": [
+        "R6S36",
+        "R6S37",
+        "R6S31"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY12",
+      "name": "柔笔油画／印象色光",
+      "features_own": "松散笔触、颜色之间的关系和软边，形体以色光归纳。",
+      "suitable_topics_own": "回忆、田园、情绪短片",
+      "prompt_fragment_original": "傍晚田野白衣背影，暖光与蓝紫影相邻，短笔触顺形，人物轮廓适度松散，焦点仍可辨。",
+      "review_risks_own": "全幅高频碎点、面部随帧改形",
+      "source_ids": [
+        "R6S20"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY13",
+      "name": "厚涂／刮刀微缩",
+      "features_own": "较不透明的颜料块、刮刀棱与堆积厚度；微缩是空间尺度选项。",
+      "suitable_topics_own": "艺术旅行卡、幻想场景",
+      "prompt_fragment_original": "把小屋做成可见颜料堆积的微缩景观，屋顶刮刀面、山体大色块，侧光显示厚度。",
+      "review_risks_own": "只加锐化而无笔触结构、细节挤满",
+      "source_ids": [
+        "R6S31"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY14",
+      "name": "三维卡通电影",
+      "features_own": "夸张面部比例与可读表情，连续体积光影，材质可以比形体更写实。",
+      "suitable_topics_own": "宠物故事、合家欢、喜剧",
+      "prompt_fragment_original": "成年角色略大头，眉眼清楚，棉布衣服与皮椅反光分开，柔窗光，手与物体接触可靠。",
+      "review_risks_own": "每人同一张脸、塑料全材质",
+      "source_ids": [
+        "R6S03",
+        "R6S05",
+        "R6S44"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY15",
+      "name": "半写实人物／国漫CG方向",
+      "features_own": "动漫式理想化比例与较真实的光影材质结合，边界由项目样片确定。",
+      "suitable_topics_own": "仙侠、都市幻想、偶像短剧",
+      "prompt_fragment_original": "沿用人物脸型，大眼程度适中，发丝和织物精细，肤面反光克制，背景与角色清晰度协调。",
+      "review_risks_own": "磨皮蜡面、饰件增加、全员同脸",
+      "source_ids": [
+        "R6S12",
+        "R6S13",
+        "R6S15",
+        "R6S22",
+        "R6S23"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY16",
+      "name": "三维体积＋绘画表面",
+      "features_own": "体积与透视明确，表面保留手绘笔触或分面；三渲二外观不证明实际生产管线。",
+      "suitable_topics_own": "奇幻冒险、动作剧情",
+      "prompt_fragment_original": "角色体积清楚，明暗以大面分组，衣物有手绘色块与少量边线，避免照片皮肤毛孔。",
+      "review_risks_own": "绘画表面闪烁、轮廓每帧跳动",
+      "source_ids": [
+        "R6S21",
+        "R6S14"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY17",
+      "name": "黏土／塑形玩偶",
+      "features_own": "圆钝体块、手捏或雕刻痕、哑光到轻蜡感；毛发可做成条束。",
+      "suitable_topics_own": "萌宠、搞笑、生活寓言",
+      "prompt_fragment_original": "同一只狗做成黏土玩偶，毛发以雕刻片束表达，小量手捏凹痕，柔灯和微缩布景。",
+      "review_risks_own": "真实毛纤维、镜面塑料、过量指纹",
+      "source_ids": [
+        "R6S43"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY18",
+      "name": "羊毛毡／针毡",
+      "features_own": "短纤维、针毡压实面、柔毛边；需指定人物、道具与环境覆盖范围。",
+      "suitable_topics_own": "萌宠、手作童话、怪诞也可",
+      "prompt_fragment_original": "小狗与菜园全为针毡，短纤维方向顺形，眼睛为小珠，房屋和蔬菜同样毡化，微缩柔影。",
+      "review_risks_own": "毛毡变长绒毛、材质只覆盖一半却未说明",
+      "source_ids": [
+        "R6S26",
+        "R6S27",
+        "R6S28",
+        "R6S29",
+        "R6S30"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY19",
+      "name": "层叠剪纸／立体书",
+      "features_own": "层片轮廓、纸厚度、裁切边与层间投影，布景可平面也可立体展开。",
+      "suitable_topics_own": "科普、民俗、记忆与音乐",
+      "prompt_fragment_original": "纸层搭成旧院落，树与人物分层立起，纸边清楚，柔和侧光显示厚度，烟雾也用灰纸片。",
+      "review_risks_own": "纸片转塑料、层片穿插、复杂轨迹扭曲",
+      "source_ids": [
+        "R6S41",
+        "R6S47",
+        "R6S48",
+        "R6S50"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY20",
+      "name": "折纸／硬纸模型",
+      "features_own": "明确折面、折痕、切口与薄片结构，局部可以保留粗纸面。",
+      "suitable_topics_own": "动作创意、产品、微缩城市",
+      "prompt_fragment_original": "硬纸摩托与街区，薄片头发、折面衣袖，纸质车轮结构清楚，统一侧光，不长出真实金属零件。",
+      "review_risks_own": "折面被磨成圆面、纸厚忽粗忽细",
+      "source_ids": [
+        "R6S46",
+        "R6S49"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY21",
+      "name": "像素艺术",
+      "features_own": "固定网格、阶梯轮廓、限色与像素簇；压缩马赛克不是充分条件。",
+      "suitable_topics_own": "游戏式叙事、怀旧、轻松MV",
+      "prompt_fragment_original": "小画布像素场景，绿色限色、山脉分层，人物同一像素尺度；放大后保持方格边缘。",
+      "review_risks_own": "平滑插值、不同网格混用、文字糊成噪声",
+      "source_ids": [
+        "R6S39",
+        "R6S40",
+        "R6S42"
+      ],
+      "tested": false
+    },
+    {
+      "style_id": "STY22",
+      "name": "极简拼贴／编辑式纸感",
+      "features_own": "大留白、小主体、少量剪影和纸张纹理，排版与图像共同组织。",
+      "suitable_topics_own": "诗歌、片头、艺术海报",
+      "prompt_fragment_original": "米白纤维纸，大留白，黑鸟剪影与一块灰蓝云，限定三个主色，图形不超过三组。",
+      "review_risks_own": "随意装饰泛滥、生成乱码字",
+      "source_ids": [
+        "R6S10"
+      ],
+      "tested": false
+    }
+  ],
+  "facets": {
+    "representation": [
+      "摄影外观",
+      "二维绘画",
+      "三维体积",
+      "混合"
+    ],
+    "shape": [
+      "真实比例",
+      "动漫比例",
+      "Q版",
+      "几何概括"
+    ],
+    "surface": [
+      "纸",
+      "颜料",
+      "墨",
+      "黏土",
+      "短纤维",
+      "像素网格"
+    ],
+    "color_light": [
+      "色盘",
+      "反差",
+      "主光源",
+      "边缘软硬"
+    ],
+    "world_mood": [
+      "日常",
+      "仙侠",
+      "东方幻想",
+      "超现实",
+      "梦核",
+      "怪诞"
+    ]
+  },
+  "optional_directions_not_validated": [
+    "赛博朋克：可叠加霓虹、密集都市与技术元素",
+    "蒸汽朋克：可叠加机械、黄铜与历史服装",
+    "哥特：可叠加尖拱、暗色与仪式感",
+    "工笔重彩：需另补细线勾勒与设色样片",
+    "美式漫画：需另补黑线、网点与分格样片",
+    "针织刺绣：需另补针法走向与接缝样片"
+  ],
+  "rules": [
+    "一部片先选一种主表现方式，再选造型和材料。",
+    "风格参考与人物身份、服装、布局参考分开指定。",
+    "材质注明覆盖人物、道具、背景哪些区域。",
+    "保留固定色盘、线宽、边缘处理和比例锚点。",
+    "视频需另验收纹理闪烁、脸型与厚度漂移。",
+    "显示名称不假装实际模型接口参数。"
+  ],
+  "workflow_proposal": [
+    "同一镜头同一角色，生成3个主风格候选。",
+    "固定角色身份与构图，再各改一种材质或色光。",
+    "检查脸、手、接触、环境布局和风格特征。",
+    "选定风格后保存母版、参考、模型版本与提示词。",
+    "先做短视频检查纹理和比例连续性，再扩大生产。"
+  ]
+}
