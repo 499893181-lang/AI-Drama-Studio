@@ -10,7 +10,7 @@ const projectId = process.env.UI_TEST_PROJECT_ID ?? '437306c6-d0b8-4b1b-86b4-6c2
 const directory = path.resolve('tests/.artifacts/ui-c-main'); fs.mkdirSync(directory, { recursive: true });
 const get = async route => { const response = await fetch(base + route); assert.equal(response.status, 200, route); return response.json(); };
 const health = await get('/api/health'), project = await get(`/api/projects/${projectId}`);
-assert.equal(health.version, '0.9.0'); assert.equal((await get(`/api/projects/${projectId}/workflow`)).testFixture, true, '验收必须使用已有明确标注TEST媒体');
+assert.match(health.version, /^0\.(9|10)\./); assert.equal((await get(`/api/projects/${projectId}/workflow`)).testFixture, true, '验收必须使用已有明确标注TEST媒体');
 const report = { checkedAt: new Date().toISOString(), serviceVersion: health.version, existingProjectReadOnly: true, usesLabeledTestMedia: true, screenshotsPrivateUntilReviewed: true, readOnly: true, newModelCalls: 0, newMediaCalls: 0, newConfirmations: 0, pages: [] };
 const browser = await launchBrowser(path.join(directory, `chrome-${Date.now()}`));
 try {

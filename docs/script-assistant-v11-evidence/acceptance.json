@@ -1,0 +1,1082 @@
+{
+  "checkedAt": "2026-11-16T17:27:17.544Z",
+  "clientDate": "2026-11-17",
+  "version": "0.10.0",
+  "base": {
+    "branch": "codex/ui-c-adjusted-v10-20261116",
+    "sha": "b3a683c5b00017fa66b406ece50205cafd61c3b8",
+    "dependencyPR": 9
+  },
+  "branch": "codex/script-assistant-v11-20261117",
+  "softwareImplemented": true,
+  "staticCheck": {
+    "modules": 14,
+    "html": 9,
+    "passed": true
+  },
+  "isolatedRegression": {
+    "tests": 347,
+    "pass": 347,
+    "fail": 0,
+    "skipped": 0
+  },
+  "isolatedBrowserSuites": [
+    {
+      "name": "script-tabs",
+      "checks": [
+        "四标签默认正文、完整C版左侧及右侧助手在1366/1440可用，正文没有嵌套滚动，底栏不遮挡",
+        "场景目录实际点击定位第二场，多个短场景各有目录入口；查看不改变完整正文",
+        "选文后切页会清空旧选区，下一条对话仅携带当前全文；隔离助手失败不覆盖正文",
+        "第一页和第二页分别编辑，切页/保存/刷新恢复完整全文及结尾，无截断或覆盖其它页",
+        "历史版本点击选择和翻页为只读，不覆盖当前编辑稿或采用来源",
+        "独立检查绑定当前完整正文，一次生成一份报告，六类建议逐项点击查看，未自动改稿",
+        "正文修改使旧检查立即提示需要复查，保存后仍保留旧报告和旧版本",
+        "无稿主操作生成剧本，串联一次独立检查并自动进入可编辑正文；没有提前采用、复制或手选来源",
+        "一次确认完成版本保存/采用/分镜来源绑定，原始候选保留；分镜上一镜/下一镜和缩略图不自动轮播",
+        "分镜页讨论前静默保存人工编辑，不因侧栏重挂或助手失败丢失当前分镜",
+        "服务重启恢复完整正文/报告/版本，两个项目上下文和正文隔离"
+      ],
+      "passed": true,
+      "consoleExceptions": 0,
+      "finishedAt": "2026-11-16T17:24:51.781Z"
+    },
+    {
+      "name": "assistant",
+      "checks": [
+        "1366×768和1440×900展开助手时完整双层左栏/七步骤保留，中间正文可读，输入固定可见，无区域覆盖或页面横向溢出",
+        "普通讨论没有改写或新增采用版本；长回复点击分页、史实不确定性可读，未把来源检查冒充史实核验",
+        "多轮上下文携带当前项目/完整正文/准确选段及原问题；前后对照先保留原稿，点击应用才更新全文并保存新版本",
+        "刷新恢复完整对话与应用后的正文版本；上一条/下一条点击查看，不自动轮播",
+        "通过真实项目面板切换后上下文和对话隔离；项目B没有读取项目A历史与正文",
+        "正文改变后旧建议标需重新讨论并禁用应用，旧回复与原稿仍保留",
+        "认证失败保留真实错误状态与记录，不返回预设成功，不出现可应用假建议",
+        "窄屏默认折叠辅助面板，可手动展开且输入仍可见",
+        "服务重启恢复项目对话及失败记录，不自动重复调用"
+      ],
+      "passed": true,
+      "consoleExceptions": 0,
+      "finishedAt": "2026-11-16T17:12:56.834Z"
+    },
+    {
+      "name": "original-creative",
+      "checks": [
+        "从已保存构思执行文字创作并串联一次独立检查，自动进入可编辑正文，未访问即梦报价或提前采用",
+        "真实Chrome显示15导演/17预设数据、显式手册勾选默认关闭、三镜头三区编辑；两种预设规则差异可见，人物天气保持",
+        "生成分镜候选与独立审阅分别保存；模型PASS未自动采用或冒充正式岗位PASS",
+        "人工点击采用候选，人工修改另存不可变版本；轮询不覆盖未保存输入",
+        "人工剧本新版本成为实际分镜来源，继续生成绑定新版本而非旧候选",
+        "新要求使旧分镜和审阅过期，后端拒绝旧候选采用并保留人工稿",
+        "重启恢复原任务、原候选、人工版本及审阅过期状态；无重复调用，无未处理页面异常"
+      ],
+      "passed": true,
+      "consoleExceptions": 0,
+      "finishedAt": "2026-11-16T17:13:22.274Z"
+    },
+    {
+      "name": "c-layout-storyboard",
+      "checks": [
+        "1366×768完整窄图标栏+项目面板+七步流程，主预览/右编辑/缩略图/底栏无重叠或横溢出，实际TEST PNG解码",
+        "1440×900完整窄图标栏+项目面板+七步流程，主预览/右编辑/缩略图/底栏无重叠或横溢出，实际TEST PNG解码",
+        "两次无改动的剧本继续与分镜确认复用当前有效版本，未增加历史版本，三张已选画面保持当前有效",
+        "历史选用图片改判拒绝后保留实际预览，明确人工检查不通过，不误标当前已选；恢复通过后按真实审核显示",
+        "角色资源深链接首次自动展开并定位实体编辑区，刷新不反复展开或滚动打断用户",
+        "长画面文字与第二镜衔接跨镜头切换、保存、刷新逐字保留，不覆盖其它镜头人工稿",
+        "右侧风格选择真实修改作品预设并保存，提示词规则改变且人工画面不丢失",
+        "剧本页面直接编辑当前正文，保存检查快照为不可变版本并独立审阅，历史点击查看，未提前采用",
+        "12镜头缩略图在自身区域横向滚动，最后镜头可编辑，页面没有横向溢出",
+        "空白项目明确等待剧本/分镜，不展示示例图片或预设成功状态",
+        "图片接口读取失败明确显示失败与恢复说明，不冒充尚未生成或成功占位图",
+        "重启保留人工长文本、历史与审阅；上游/预设改动后的需复核状态继续显示",
+        "底部确认分镜实际追加人工版本并进入图片步骤，不提交出图或其它生成任务"
+      ],
+      "passed": true,
+      "consoleExceptions": 0,
+      "finishedAt": "2026-11-16T17:13:22.457Z"
+    }
+  ],
+  "mainServiceReadOnly": {
+    "checkedAt": "2026-11-16T17:22:55.265Z",
+    "serviceVersion": "0.10.0",
+    "existingProjectReadOnly": true,
+    "usesLabeledTestMedia": true,
+    "screenshotsPrivateUntilReviewed": true,
+    "readOnly": true,
+    "newModelCalls": 0,
+    "newMediaCalls": 0,
+    "newConfirmations": 0,
+    "pages": [
+      {
+        "name": "story",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-story-1366x768.png"
+      },
+      {
+        "name": "script",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-script-1366x768.png"
+      },
+      {
+        "name": "storyboard",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-storyboard-1366x768.png"
+      },
+      {
+        "name": "images",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-images-1366x768.png"
+      },
+      {
+        "name": "video",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-video-1366x768.png"
+      },
+      {
+        "name": "finishing",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-finishing-1366x768.png"
+      },
+      {
+        "name": "export",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-export-1366x768.png"
+      },
+      {
+        "name": "entities",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-entities-1366x768.png"
+      },
+      {
+        "name": "style",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-style-1366x768.png"
+      },
+      {
+        "name": "budget",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-budget-1366x768.png"
+      },
+      {
+        "name": "settings",
+        "width": 1366,
+        "height": 768,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-settings-1366x768.png"
+      },
+      {
+        "name": "story",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-story-1440x900.png"
+      },
+      {
+        "name": "script",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-script-1440x900.png"
+      },
+      {
+        "name": "storyboard",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-storyboard-1440x900.png"
+      },
+      {
+        "name": "images",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-images-1440x900.png"
+      },
+      {
+        "name": "video",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-video-1440x900.png"
+      },
+      {
+        "name": "finishing",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-finishing-1440x900.png"
+      },
+      {
+        "name": "export",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-export-1440x900.png"
+      },
+      {
+        "name": "entities",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-entities-1440x900.png"
+      },
+      {
+        "name": "style",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-style-1440x900.png"
+      },
+      {
+        "name": "budget",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-budget-1440x900.png"
+      },
+      {
+        "name": "settings",
+        "width": 1440,
+        "height": 900,
+        "noOverlap": true,
+        "noHorizontalScroll": true,
+        "steps": [
+          {
+            "label": "故事",
+            "status": "completed"
+          },
+          {
+            "label": "剧本",
+            "status": "pending"
+          },
+          {
+            "label": "分镜",
+            "status": "needs_review"
+          },
+          {
+            "label": "画面",
+            "status": "needs_review"
+          },
+          {
+            "label": "视频",
+            "status": "needs_review"
+          },
+          {
+            "label": "配音剪辑",
+            "status": "needs_review"
+          },
+          {
+            "label": "导出",
+            "status": "needs_review"
+          }
+        ],
+        "screenshot": "after-settings-1440x900.png"
+      }
+    ],
+    "actualTestExport": {
+      "width": 1280,
+      "height": 720,
+      "duration": 15
+    },
+    "originalImageUsage": {
+      "maxSubmissions": 1,
+      "submitted": 1,
+      "remaining": 0,
+      "restartResetsBudget": false,
+      "historyVerified": true,
+      "warnings": []
+    },
+    "originalFailurePreserved": true,
+    "originalData": {
+      "sameDirectory": true,
+      "existingFilesVerified": 570,
+      "allHashesUnchanged": true,
+      "lockFileExcluded": true
+    },
+    "consoleExceptions": 0,
+    "passed": true,
+    "finishedAt": "2026-11-16T17:23:55.745Z"
+  },
+  "realTextAcceptance": {
+    "state": "partial_not_passed",
+    "approvedMaximum": 2,
+    "cliInvocations": 2,
+    "completedTurns": 1,
+    "interruptedTurns": 1,
+    "contextReadVerified": true,
+    "multiTurnInputVerified": true,
+    "realProposalAndApplyVerified": false,
+    "additionalInvocation": false,
+    "diagnosis": "real-diagnosis.json",
+    "readOnlyRecovery": "real-readonly-recovery.json"
+  },
+  "noNewMediaOrPaidApi": {
+    "images": 0,
+    "videos": 0,
+    "voice": 0,
+    "canvasConfirm": 0,
+    "canvasRun": 0,
+    "additionalApiKeyConfigured": false
+  },
+  "screenshots": [
+    {
+      "file": "before-c-script.png",
+      "bytes": 243001,
+      "sha256": "340e853d9fb6f1f95b8c4e3a1e4992add3a847dad0f78a6303aed5422de0d606",
+      "kind": "previous-c-ui-test-story"
+    },
+    {
+      "file": "script-1366x768.png",
+      "bytes": 223120,
+      "sha256": "70168a34e258b1ae9405ef2d3c948ae8de323c76d241c153a3dcc4409b6ea587",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "script-1440x900.png",
+      "bytes": 268366,
+      "sha256": "d118b61aa98c544d3c794e7322a72abb880f1d9434c0daca2f040d9b089bbe80",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "scene-directory.png",
+      "bytes": 264703,
+      "sha256": "243bea0d9ac62abb6f42568ef9ca4508d0569620b1465cc8ca119b469e47ec0a",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "generated-script.png",
+      "bytes": 289390,
+      "sha256": "a62364789ecd6db5f103a6e92839c5f6d316b82b504e9a71f3c88534c9e74940",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "failure.png",
+      "bytes": 282198,
+      "sha256": "a86107324ec6fc3b1a1387e80988625dc074bc881e37482867deccffc20fcd22",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "assistant-layout-1366x768.png",
+      "bytes": 236570,
+      "sha256": "3f841d92cf896565381869a9b19475330d89020d0759120d86580b3b6fae60ed",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "proposal-before-apply.png",
+      "bytes": 284316,
+      "sha256": "4565d203b66669e5adb21b58323d2a282eaabc1b47550ccef1ca6fe274cb4506",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "applied-version.png",
+      "bytes": 296004,
+      "sha256": "43572d613056c9b00ecec27649abfdfddd30b6d325bb773fdadbbf23079ac537",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "stale-proposal.png",
+      "bytes": 293456,
+      "sha256": "6cdac498ac375f17bc4f14551cd423efc9797f9974ff209b4bed80e6fd283f34",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "configuration-failure.png",
+      "bytes": 281036,
+      "sha256": "c80a68f982b932e4e51f5a56637abf72a81fe2313bf131d1449f0f83511b77c8",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "discussion-paging.png",
+      "bytes": 286532,
+      "sha256": "75dbde0520710ae6d166da243e4ae61e2382edd6c777f663f70e6c4836d5ca37",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "narrow-assistant.png",
+      "bytes": 194340,
+      "sha256": "88c26287fe386e61454ea735dc3e7af3f56b47d3c24b189331349238e68e4463",
+      "kind": "isolated-test-story"
+    },
+    {
+      "file": "real-first-recovered.png",
+      "bytes": 283325,
+      "sha256": "425138873ea67095c2cea7e80c8234fe340a60c242534ca9c4daa4b1c1d52d67",
+      "kind": "existing-real-text-records"
+    },
+    {
+      "file": "real-interrupted-recovered.png",
+      "bytes": 270034,
+      "sha256": "e9ffe6ec7c95a573bc640f154c13f8ebfa2fd72006ac8aee03ac9f2eb5b99174",
+      "kind": "existing-real-text-records"
+    }
+  ]
+}

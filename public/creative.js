@@ -1,4 +1,6 @@
 import { mountStudio, invalidateStudioWorkflow } from './studio-shell.js';
+import { scriptPages, replaceScriptPage, pageForOffset } from './script-pages.js';
+import { mountCreativeAssistant } from './creative-assistant.js';
 
 const $ = selector => document.querySelector(selector);
 const app = $('#creative-app');
@@ -6,6 +8,8 @@ const esc = (value = '') => String(value ?? '').replace(/[&<>"']/g, c => ({ '&':
 const copy = value => structuredClone(value);
 const date = value => value ? new Date(value).toLocaleString('zh-CN', { hour12: false }) : '尚无记录';
 const state = { projects: [], project: null, ws: null, catalog: null, tool: null, input: null, dirty: false, busy: false, selectedVersionId: null, selectedTaskId: null, selectedShotId: null, images: null, imageError: '', error: '', poll: null };
+Object.assign(state, { editor: null, editorDirty: false, requirementsDirty: false, scriptTab: null, pageIndex: 0, historyPage: 0, reviewId: null, issueIndex: 0, historyId: null, generation: null, selection: null });
+let assistantHandle = null;
 let requestedSection = new URLSearchParams(location.search).get('section');
 const stage = () => new URLSearchParams(location.search).get('stage') === 'storyboard' ? 'storyboard' : 'script';
 const projectHref = (file, extra = '') => `${file}?projectId=${encodeURIComponent(state.project.id)}${extra}`;
@@ -74,13 +78,16 @@ function setWorkspace(ws, preserve = false) {
 }
 function render() {
   const board = stage() === 'storyboard';
+  assistantHandle?.destroy(); assistantHandle = null;
   app.innerHTML = `<div class="layout"><main class="main"><header class="topbar"><div class="top-actions"><button class="secondary-button" data-action="refresh" data-testid="creative-refresh">刷新状态</button>${state.ws ? '<button class="secondary-button" data-action="save" data-testid="creative-save">保存当前修改</button>' : ''}</div></header><div class="content creative-c-content"><div class="page-heading"><div><h1>${board ? '确认分镜' : '创作剧本'}</h1><p>${board ? '检查每个镜头的画面与衔接，确认后开始制作图片。' : '补充创作要求，生成剧本候选，审阅后修改并保存。'}</p></div></div><div id="creative-error"></div>${state.ws && state.project ? workspace() : '<section class="panel creative-no-project"><h2>选择一个故事，开始创作</h2><p>在项目面板选择已有项目，或先新建故事。</p><a class="primary-button" href="/">新建故事</a></section>'}</div></main></div>`;
-  const canContinueScript = Boolean(state.input?.scriptDraft?.trim() || state.ws?.activeScriptId || state.input?.selectedScriptTaskId);
+  const canContinueScript = Boolean(state.input?.scriptDraft?.trim());
   mountStudio(app, { step: board ? 'storyboard' : 'script', project: state.project, projects: state.projects,
-    primary: !state.ws ? { label: '新建故事', href: '/' } : board ? { label: shotList().length ? '确认分镜并继续' : '生成分镜', selector: shotList().length ? '[data-action="confirm-board"]' : '[data-action="generate-storyboard"]' } : canContinueScript ? { label: '保存剧本并继续', selector: '[data-action="continue-script"]' } : { label: '生成剧本', selector: '[data-action="generate-script"]' },
-    secondary: state.ws ? { label: board ? '保存分镜修改' : '保存当前修改', selector: '[data-testid="creative-save"]' } : undefined,
-    nextText: board ? '下一步：制作分镜图片；只保存分镜，不启动出图。' : '下一步：确认分镜；生成前会说明账号用量并请你确认。' });
-  renderError(); renderRuntime(); setBusy(state.busy);
+    primary: !state.ws ? { label: '新建故事', href: '/' } : board ? { label: shotList().length ? '确认分镜并继续' : '生成分镜', selector: shotList().length ? '[data-action="confirm-board"]' : '[data-action="generate-storyboard"]' } : canContinueScript ? { label: '确认剧本，进入分镜', selector: '[data-action="continue-script"]' } : { label: '生成剧本', selector: '[data-action="generate-script"]' },
+    secondary: state.ws ? { label: board ? '保存分镜修改' : '保存草稿', selector: '[data-testid="creative-save"]' } : undefined,
+    nextText: board ? '下一步：制作分镜图片；只保存分镜，不启动出图。' : canContinueScript ? '确认后统一保存版本、采用并绑定分镜来源；旧稿保留。' : '生成包含一次独立检查，使用现有Codex账号用量；不自动采用。' });
+  renderError(); renderRuntime(); if (board) renderBoardPagination(); setBusy(state.busy);
+  if (state.project && state.ws) assistantHandle = mountCreativeAssistant({ container: app.querySelector('.studio-frame'), projectId: state.project.id, getContext: assistantContext, onApplied: async payload => { acceptWorkbench(payload); state.scriptTab = 'body'; state.pageIndex = 0; state.selection = null; render(); toast('已应用建议并保存新版本，旧稿和来源保留。'); }, contextLabel: board ? '当前分镜与剧本来源' : '当前剧本与选中段落' });
+  resizeScriptPage();
 }
 function requirementsPanel() {
   const p = state.project;
@@ -93,7 +100,86 @@ function collaborationPanels() {
 function workspace() {
   const controls = '<button hidden data-action="continue-script" data-testid="creative-continue-script">保存剧本并继续</button><button hidden data-action="confirm-board" data-testid="creative-confirm-board">确认分镜并继续</button>';
   if (stage() === 'storyboard') return `<div id="creative-stale">${staleMarkup()}</div>${boardWorkspace()}<details class="creative-disclosure creative-fee-settings" data-testid="creative-fee-settings"><summary>费用与生成设置 <span>制作图片前另行确认</span></summary><p class="creative-note">当前只保存文字分镜。Codex文字使用现有账号用量，具体费用未返回；项目人民币预算${state.project.budgetCap == null ? '尚未设置' : `为${esc(state.project.budgetCap)}元`}。不把预算、积分余额或未知费用当作免费。</p>${stylePanel()}</details><details class="creative-disclosure" id="creative-full-shots"><summary>完整镜头参数 · 静态画面 / 动态摄影 / 后期声音</summary>${shotPanel()}</details><details class="creative-disclosure"><summary>剧本原稿与创作要求</summary><div class="creative-script-layout">${requirementsPanel()}${draftPanel()}</div></details>${collaborationPanels()}${controls}`;
-  return `<div id="creative-stale">${staleMarkup()}</div><div class="creative-script-layout">${requirementsPanel()}${draftPanel()}</div><details class="creative-disclosure"><summary>导演与风格预设</summary>${stylePanel()}</details>${collaborationPanels()}<details class="creative-disclosure"><summary>结构化镜头与分镜设置</summary>${shotPanel()}</details>${controls}`;
+  return scriptWorkspace() + controls + (state.scriptTab !== 'requirements' ? '<button hidden data-action="generate-script">生成剧本</button>' : '');
+}
+function scriptWorkspace() {
+  const tabs = [['requirements','创作要求'],['body','剧本正文'],['checks','检查建议'],['history','历史版本']];
+  state.scriptTab ||= state.input.scriptDraft.trim() ? 'body' : 'requirements';
+  const running = state.generation && !['succeeded','completed','failed','review_failed','cancelled','interrupted'].includes(state.generation.status);
+  const active = running ? `<p class="script-operation-note" role="status">${esc(state.generation.message || '正在创作文字并进行一次独立检查，结果不会提前采用。')} ${state.input.scriptDraft.trim() ? '正文仍可编辑；请等待本次检查结束后，再确认进入分镜。' : '请等待原任务完成，不要重复提交。'}</p>` : '';
+  const failed = ['failed','review_failed','interrupted','cancelled'].includes(state.generation?.status) ? `<div class="script-block-reason" role="alert"><strong>${esc(state.generation.status === 'review_failed' ? '剧本已返回，独立检查未完成' : state.generation.status === 'interrupted' ? '上次文字任务已中断' : state.generation.status === 'cancelled' ? '本地等待已取消' : '本次文字任务未完成')}</strong><p>${esc(state.generation.error || state.generation.message || '没有获得完整成功终态；原稿与任务仍保留。')}</p><p>不会自动重试。确认本机Codex登录和连接后，可明确重新生成；已有正文也可继续编辑或单独检查。</p></div>` : '';
+  return `<section class="script-workbench" data-testid="script-workbench"><nav class="script-tabs" role="tablist" aria-label="剧本工作区">${tabs.map(([id,label]) => `<button type="button" role="tab" id="script-tab-${id}" aria-controls="script-tab-content" aria-selected="${state.scriptTab === id}" data-script-tab="${id}" class="${state.scriptTab === id ? 'is-current' : ''}">${label}${id === 'checks' && currentScriptReview()?.stale ? '<span class="script-tab-dot" title="旧检查需要复查"></span>' : ''}</button>`).join('')}</nav>${active}${failed}<div id="creative-stale">${scriptStaleMarkup()}</div><div id="script-tab-content" role="tabpanel" aria-labelledby="script-tab-${esc(state.scriptTab)}">${({requirements: scriptRequirements,body: scriptEditor,checks: scriptChecks,history: scriptHistory}[state.scriptTab] || scriptRequirements)()}</div><details class="script-advanced"><summary>高级：结构化设定、原始候选与诊断</summary>${scriptAdvanced()}</details></section>`;
+}
+function scriptStaleMarkup() {
+  if (state.conflict) return '<div class="warning-box" role="alert">其他窗口已保存新版本。本页编辑仍保留；请先下载当前草稿，再刷新核对，不能覆盖磁盘新稿。<button class="secondary-button small-button" data-action="download-script">下载本页完整草稿</button></div>';
+  if (state.editor?.stale) return `<div class="warning-box" role="alert">${esc(state.editor.staleReason || '故事或创作要求已变化，当前剧本需要复核。')}<p>旧稿和来源保留。核对正文后可明确确认当前人工稿；受影响的旧检查不再代表新正文。</p></div>`;
+  return '';
+}
+function entitySummary() {
+  const candidate = taskList().find(item => item.id === state.editor?.sourceTaskId), version = state.ws.versions?.find(item => item.id === state.editor?.baseVersionId);
+  const rows = candidate?.result?.entities || version?.data?.entities || state.ws.effectiveEntities || state.input.entities || [], provenance = candidate?.entityProvenance || state.ws.entityProvenance;
+  if (!rows.length) return '<p class="creative-note">生成时会整理人物、场景、道具和稳定编号。你也可在右侧用文字说明需要纠正的设定。</p>';
+  return `<ul class="script-entity-summary">${rows.map(entity => { const row = provenance?.entries?.find(item => item.entityId === entity.id && item.version === entity.version); return `<li><span>${esc(({character:'人物',scene:'场景',prop:'道具'})[entity.type] || '设定')}</span><p>${esc(entity.description)}</p><small>${esc(({user:'用户输入有来源证据',ai:'AI补充',pending:'来源待确认'})[row?.resolvedSource] || (entity.source === 'ai' ? 'AI补充' : '来源待确认'))}</small></li>`; }).join('')}</ul>`;
+}
+function scriptRequirements() {
+  const p = state.project;
+  return `<section class="script-requirements"><div class="script-section-heading"><h2>这次想写成什么样</h2><span class="creative-save-state" data-dirty-state></span></div><p class="script-task-explanation">保留故事要求，补充需要强调的情绪、节奏与结尾。人物和场景由AI整理，来源不明的内容保持待确认。</p><label for="creative-instructions">创作要求</label><textarea id="creative-instructions" data-input="instructions" data-testid="creative-instructions" class="script-requirements-input" maxlength="30000" placeholder="例如：30秒内完成，保留结尾，前半段节奏更有力量。">${esc(state.input.instructions)}</textarea><div class="script-requirements-facts"><span>目标${esc(p.durationSeconds)}秒</span><span>${esc(p.aspectRatio)}</span><span>${esc(state.input.shotCount)}镜头计划</span></div><details class="script-source"><summary>查看已保存的故事与创作说明</summary><p>${esc(p.idea || '尚未填写故事构思')}</p>${p.creativeBrief ? Object.entries({synopsis:'故事梗概',background:'背景',characters:'人物关系',conflict:'核心冲突',emotion:'情绪发展',ending:'结局'}).map(([key,label]) => `<h3>${label}</h3><p>${esc(p.creativeBrief[key])}</p>`).join('') : ''}</details><details class="script-source"><summary>人物、场景与道具摘要</summary>${entitySummary()}</details><div class="script-inline-actions"><button class="secondary-button" data-action="generate-script" data-testid="creative-generate-script">${state.input.scriptDraft.trim() ? '另写一版剧本' : '生成剧本'}</button><span>包含一次新会话独立检查；使用现有Codex账号用量，不含媒体生成。</span></div>${!p.idea?.trim() ? '<p class="script-block-reason">先返回“故事”填写并保存构思，再生成剧本。</p>' : ''}</section>`;
+}
+function editorPages() { return scriptPages(state.input?.scriptDraft || ''); }
+function pageNavigation(pages, index, kind) {
+  return `<div class="script-page-navigation"><button type="button" class="secondary-button small-button" data-page-kind="${kind}" data-page-step="-1" ${index <= 0 ? 'disabled' : ''}>上一页</button><span data-testid="${kind}-page-number">第${index + 1} / ${pages.length}页</span><button type="button" class="secondary-button small-button" data-page-kind="${kind}" data-page-step="1" ${index >= pages.length - 1 ? 'disabled' : ''}>下一页</button><label class="script-page-select">场景目录<select data-page-directory="${kind}" aria-label="${kind === 'editor' ? '剧本' : '历史稿'}场景目录">${pages.map((page,i) => `<option value="${i}" ${i === index ? 'selected' : ''}>${i + 1} · ${esc(page.title)}</option>`).join('')}</select></label></div>`;
+}
+function scriptEditor() {
+  const pages = editorPages(); state.pageIndex = Math.min(Math.max(0,state.pageIndex),pages.length - 1); const page = pages[state.pageIndex];
+  state.renderedPage = { ...page };
+  return `<section class="script-document" data-testid="script-document"><div class="script-section-heading"><h2>剧本正文</h2><span class="creative-save-state" data-dirty-state></span></div><p class="script-task-explanation">逐页检查与修改。切页保留全文，确认后系统统一保存版本并作为分镜来源。${state.editor?.sourceTaskId ? '当前正文来自候选；原始候选单独保留。' : ''}</p>${pageNavigation(pages,state.pageIndex,'editor')}<label class="script-page-label" for="creative-script-draft">${esc(page.scene || `正文第${state.pageIndex + 1}页`)}</label><textarea id="creative-script-draft" class="script-page-editor" data-testid="creative-script-draft" data-script-page="${state.pageIndex}" placeholder="在这里写剧本，或在创作要求中生成一版。" spellcheck="false">${esc(page.text)}</textarea><div class="script-document-status"><span>${state.input.scriptDraft.length}字 · 完整正文保存，不截断其他页</span><span>${state.editorDirty ? '正文修改后，相关检查需要复查' : state.editor?.sourceTaskId ? '候选待你确认' : '人工编辑稿'}</span></div><div class="script-inline-actions"><button class="secondary-button" data-action="save" data-testid="script-save-draft">保存草稿</button><button class="ghost-button" data-action="review-current-script">独立检查当前正文</button></div><p class="creative-note">检查是文字建议；来源证据有效不代表史实已核验。可能涉及史实的内容仍需核对可靠资料。</p></section>`;
+}
+function scriptReviews() { return (state.ws.reviews || taskList().filter(item => item.kind === 'review')).filter(review => review.inputSnapshot?.target?.kind !== 'storyboard'); }
+function currentScriptReview() { const reviews = scriptReviews(); return reviews.find(item => item.id === state.reviewId) || [...reviews].sort((a,b) => String(b.createdAt).localeCompare(String(a.createdAt)))[0] || null; }
+function reviewBody(review) { return review?.inputSnapshot?.target?.result?.body ?? review?.inputSnapshot?.target?.body ?? null; }
+function scriptChecks() {
+  const reviews = scriptReviews(), review = currentScriptReview(), report = review?.report || review?.result;
+  const needsRecheck = state.editorDirty || isStale(review) || Boolean(reviewBody(review) !== null && reviewBody(review) !== state.input.scriptDraft);
+  const issues = report?.issues?.length ? report.issues : (report?.criteria || []).map((item,index) => ({ id: item.id, location: criteria[item.id] || item.id, evidence: item.evidence, suggestion: item.issues?.join('；') || '本项没有提出修改建议；仍需人工判断。', verdict: item.verdict, index }));
+  state.issueIndex = Math.min(Math.max(0,state.issueIndex), Math.max(0,issues.length - 1)); const issue = issues[state.issueIndex];
+  return `<section class="script-checks"><div class="script-section-heading"><h2>检查建议</h2>${needsRecheck ? badge('需要复查','warn') : badge('独立文字建议')}</div><p class="script-task-explanation">每次点击查看一项问题及处理建议。检查只绑定当时的正文；不自动改稿，也不把来源检查当作史实核验。</p>${reviews.length ? `<label class="script-review-picker">检查记录<select id="script-review-select">${[...reviews].reverse().map(item => `<option value="${esc(item.id)}" ${item.id === review?.id ? 'selected' : ''}>${esc(date(item.createdAt))} · ${esc(statuses[item.status] || item.status)}${isStale(item) ? ' · 需复查' : ''}</option>`).join('')}</select></label>` : ''}${!review ? '<div class="creative-empty"><strong>尚无检查建议</strong>生成剧本后将串联一次独立检查。也可先保存人工正文，再发起一次检查。</div>' : review.status !== 'succeeded' ? `<div class="creative-empty" role="status"><strong>${esc(statuses[review.status] || review.status)}</strong>${esc(review.error || review.message || '等待独立检查结果；不会提前显示通过。')}</div>` : `<p class="script-review-summary">${esc(report?.summary || '检查报告已保存。')}</p>${needsRecheck ? '<p class="script-block-reason">正文或上游要求已变化，这份建议只能作旧稿参考。保存修改后可重新检查当前正文。</p>' : ''}<div class="script-issue-tabs" aria-label="逐项检查建议">${issues.map((item,index) => `<button class="${index === state.issueIndex ? 'is-current' : ''}" data-review-issue="${index}" aria-pressed="${index === state.issueIndex}">${index + 1} · ${esc(item.location || item.id)}</button>`).join('')}</div>${issue ? `<article class="script-issue-detail" data-testid="script-current-issue"><h3>${esc(issue.location || issue.id)}${issue.verdict ? ` · ${esc(issue.verdict)}` : ''}</h3><p><strong>依据</strong>${esc(issue.evidence || issue.description || '报告未给充分依据，请人工核对。')}</p><p><strong>建议</strong>${esc(issue.suggestion || '请核对原文后决定是否修改。')}</p></article>` : '<p>报告没有返回可定位问题；不能据此断言史实全部正确。</p>'}<p class="creative-note">文本时长估计：${report?.estimatedDurationSeconds == null ? '未确定' : `${esc(report.estimatedDurationSeconds)}秒`}；${esc(report?.durationBasis || '不是实际媒体测量。')}</p>`}<div class="script-inline-actions"><button class="secondary-button" data-action="review-current-script" ${!state.input.scriptDraft.trim() ? 'disabled' : ''}>检查当前正文</button>${!state.input.scriptDraft.trim() ? '<span>先生成或填写正文，再检查。</span>' : '<span>新会话检查一次，使用现有账号用量；不自动重写。</span>'}</div></section>`;
+}
+function historyEntries() {
+  return [...(state.ws.versions || []).filter(item => item.kind === 'script').map(item => ({...item, historyKind:'version',label: item.origin === 'codex-cli' ? '已确认候选' : item.origin === 'ai-assistant' ? '已应用助手修改' : item.awaitingConfirmation ? '待确认的检查快照' : '人工版本'})), ...taskList().filter(item => item.kind === 'script' && item.result?.body).map(item => ({...item,body:item.result.body,historyKind:'candidate',label:'原始候选'})), ...(state.ws.scriptEditorHistory || []).map((item,index) => ({...item,id:`draft-${item.revision}-${index}`,createdAt:item.archivedAt || item.updatedAt,historyKind:'draft',label:'保存前的草稿快照'}))].sort((a,b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+}
+function scriptHistory() {
+  const entries = historyEntries(), chosen = entries.find(item => item.id === state.historyId) || entries[0];
+  if (!chosen) return '<section><h2>历史版本</h2><div class="creative-empty">尚无版本。原始候选、确认稿和应用后的修改版本都会保留，不覆盖旧稿。</div></section>';
+  state.historyId = chosen.id; const pages = scriptPages(chosen.body || ''); state.historyPage = Math.min(Math.max(0,state.historyPage),pages.length - 1);
+  return `<section class="script-history-view"><h2>历史版本</h2><p class="script-task-explanation">点击选择后查看该稿，查看不会覆盖当前正文或改变分镜来源。</p><label>选择候选或已保存版本<select id="script-history-select" data-testid="creative-version-select">${entries.map(item => `<option value="${esc(item.id)}" ${item.id === chosen.id ? 'selected' : ''}>${esc(item.label)} · ${esc(date(item.createdAt))}${isStale(item) ? ' · 需复核' : ''}</option>`).join('')}</select></label><div class="script-history-meta">${esc(chosen.label)} ${isStale(chosen) ? badge('历史稿 · 需复核','warn') : ''} · ${chosen.body.length}字</div>${pageNavigation(pages,state.historyPage,'history')}<pre class="script-history-page" data-testid="script-history-body">${esc(pages[state.historyPage].text)}</pre><p class="creative-note">只读查看；原始候选与人工编辑历史分别保留。</p></section>`;
+}
+function scriptAdvanced() {
+  return `<div class="script-advanced-grid"><section><h3>结构化设定与锁定项</h3><p class="creative-note">普通纠正可直接编辑文字或在右侧说明。这里保留原高级编辑能力；来源声明不能将AI补充自动提升为用户事实。</p><label>稳定人物 / 场景 / 道具数据</label><textarea data-json="entities" data-testid="creative-entities" spellcheck="false">${esc(JSON.stringify(state.input.entities,null,2))}</textarea><label>用户锁定项</label><textarea data-json="locks" data-testid="creative-locks" spellcheck="false">${esc(JSON.stringify(state.input.locks,null,2))}</textarea><div class="form-row"><label>分集ID<input data-input="episodeId" value="${esc(state.input.episodeId)}"></label><label>镜头目标<input data-input="shotCount" data-testid="creative-shot-count" type="number" min="1" max="30" value="${esc(state.input.shotCount)}"></label></div>${provenanceMarkup(state.ws.entityProvenance)}</section><section><h3>真实任务与诊断</h3><p class="creative-note">所有任务均保留原始候选和实际运行状态。失败不伪造正文，重启不自动重提。</p><div class="script-job-list">${taskList().map(task => `<details><summary>${esc(kinds[task.kind] || task.kind)} · ${esc(statuses[task.status] || task.status)} · ${esc(date(task.createdAt))}</summary><p>${esc(task.error || task.message || '')}</p><p>任务 ${esc(task.id)}<br>会话 ${esc(task.threadId || '尚未返回')}</p><pre>${esc(redacted(task))}</pre>${['queued','running'].includes(task.status) ? `<button class="secondary-button" data-cancel-task="${esc(task.id)}">取消本地等待</button>` : ''}</details>`).join('') || '<p>尚无任务。</p>'}</div></section></div><details><summary>导演与风格预设</summary>${stylePanel()}</details>`;
+}
+function acceptWorkbench(payload, preserve = false) {
+  const wasBody = state.input?.scriptDraft, oldEditor = state.editor;
+  if (payload.workspace) setWorkspace(payload.workspace,preserve);
+  if (!preserve && payload.editor) { state.editor = copy(payload.editor); state.input.scriptDraft = payload.editor.body || ''; state.editorDirty = false; state.requirementsDirty = false; state.dirty = false; }
+  else if (payload.editor && state.editor && payload.editor.revision !== state.editor.revision) state.conflict = true;
+  if (Object.hasOwn(payload,'generation')) state.generation = payload.generation;
+  if (!state.scriptTab || !preserve && payload.editor?.sourceTaskId && (oldEditor?.sourceTaskId !== payload.editor.sourceTaskId || wasBody !== payload.editor.body)) { state.scriptTab = payload.editor?.body?.trim() ? 'body' : 'requirements'; state.pageIndex = 0; state.selection = null; }
+}
+function resizeScriptPage() { const node = $('#creative-script-draft.script-page-editor'); if (node) { node.style.height = 'auto'; node.style.height = `${Math.max(220,node.scrollHeight + 2)}px`; } }
+function captureScriptSelection() {
+  const node = $('#creative-script-draft.script-page-editor'), page = state.renderedPage;
+  if (node && page) state.selection = node.selectionEnd > node.selectionStart ? { start:page.start + node.selectionStart,end:page.start + node.selectionEnd } : null;
+  return state.selection;
+}
+function renderBoardPagination() {
+  const holder = app.querySelector('.creative-board-stage'), shots = shotList(); if (!holder || !shots.length) return;
+  const index = Math.max(0,shots.findIndex(shot => shot.id === state.selectedShotId));
+  holder.insertAdjacentHTML('afterbegin',`<nav class="creative-shot-pagination" aria-label="逐镜查看分镜"><button class="secondary-button small-button" data-step-shot="-1" ${index <= 0 ? 'disabled' : ''}>上一镜</button><span>第${index + 1} / ${shots.length}镜</span><button class="secondary-button small-button" data-step-shot="1" ${index >= shots.length - 1 ? 'disabled' : ''}>下一镜</button><small>点击切换，不自动播放</small></nav>`);
+}
+async function assistantContext() {
+  const selection = captureScriptSelection(), selected = selection ? state.input.scriptDraft.slice(selection.start,selection.end) : '';
+  if (state.dirty) await save({silent:true});
+  if (!state.editor) { const payload = await api(`${base()}/script-workbench`); state.editor = payload.editor; }
+  return { projectId:state.project.id,stage:stage(), projectName:state.project.name, workspaceRevision:state.ws.revision, projectRevision:state.project.revision, editorRevision:state.editor?.revision ?? 0, editorBody:stage() === 'script' ? state.input.scriptDraft : state.editor?.body || '', selectedText:selected, selectionStart:selection?.start ?? 0,selectionEnd:selection?.end ?? 0 };
 }
 function shotAsset(shotId) {
   const assets = state.images?.assets?.filter(asset => asset.role === 'shot' && asset.targetId === shotId) || [];
@@ -179,40 +265,59 @@ function renderRuntime() {
   const count = $('#creative-task-count'); if (count) count.textContent = `${taskList().filter(t => t.kind !== 'review').length} 次`;
   const reviews = $('#creative-reviews'); if (reviews) reviews.innerHTML = reviewCards();
   const status = $('#creative-statuses'); if (status) status.innerHTML = statusGrid();
-  const stale = $('#creative-stale'); if (stale) stale.innerHTML = staleMarkup();
+  const stale = $('#creative-stale'); if (stale) stale.innerHTML = stage() === 'script' ? scriptStaleMarkup() : staleMarkup();
 }
 function updateDirty() {
   for (const el of app.querySelectorAll('[data-dirty-state]')) { el.textContent = state.dirty ? '有未保存修改' : '已保存'; el.classList.toggle('dirty', state.dirty); }
-  for (const el of app.querySelectorAll('[data-action="generate-script"],[data-action="generate-storyboard"],[data-action="export"]')) { el.disabled = state.busy || state.dirty; el.title = state.dirty ? '先保存当前编辑，再执行此操作' : ''; }
+  if (stage() === 'script') for (const el of app.querySelectorAll('[data-action="continue-script"]')) {
+    const activeGeneration = Boolean(state.generation && !['succeeded','completed','failed','review_failed','cancelled','interrupted'].includes(state.generation.status));
+    el.disabled = state.busy || activeGeneration; el.title = activeGeneration ? '本次文字创作或独立检查仍在进行，完成后可确认；正文仍可编辑。' : '';
+  }
+  for (const el of app.querySelectorAll('[data-action="generate-script"],[data-action="generate-storyboard"],[data-action="export"]')) {
+    const scriptGeneration = stage() === 'script' && el.dataset.action === 'generate-script';
+    const activeGeneration = Boolean(state.generation && !['succeeded','completed','failed','review_failed','cancelled','interrupted'].includes(state.generation.status));
+    el.disabled = state.busy || (scriptGeneration ? !state.project?.idea?.trim() || activeGeneration : state.dirty);
+    el.title = scriptGeneration ? !state.project?.idea?.trim() ? '先返回故事填写并保存构思。' : activeGeneration ? '本次文字创作或独立检查仍在进行，请等待原任务。' : '' : state.dirty ? '先保存当前编辑，再执行此操作' : '';
+  }
   for (const el of app.querySelectorAll('[data-adopt-task],[data-review-task],[data-review-version],[data-retry-task]')) if (state.dirty) el.disabled = true;
 }
 function setBusy(value) { state.busy = value; for (const el of app.querySelectorAll('button,input,textarea,select')) { if (value) { if (!el.disabled) el.dataset.busyDisabled = 'true'; el.disabled = true; } else if (el.dataset.busyDisabled) { el.disabled = false; delete el.dataset.busyDisabled; } } if (!value) updateDirty(); }
-function markDirty() { state.dirty = true; updateDirty(); }
+function markDirty(kind = 'requirements') { state.dirty = true; if (stage() === 'script') { if (kind === 'body') state.editorDirty = true; else state.requirementsDirty = true; } updateDirty(); }
 function collectJson() {
   for (const el of app.querySelectorAll('[data-json]')) { let value; try { value = JSON.parse(el.value); } catch { throw new Error(`${el.dataset.json === 'locks' ? '用户锁定设定' : '实体列表'}不是有效 JSON；原稿已保留，请修正后保存。`); } if (!Array.isArray(value)) throw new Error('锁定设定与实体列表都须为 JSON 数组。'); state.input[el.dataset.json] = value; }
   for (const el of app.querySelectorAll('[data-shot-extra]')) { let value; try { value = JSON.parse(el.value); } catch { throw new Error(`镜头 ${Number(el.dataset.shotExtra) + 1} 的其他字段不是有效 JSON。`); } if (!value || Array.isArray(value) || typeof value !== 'object') throw new Error('镜头其他字段须为 JSON 对象。'); Object.assign(state.input.shots[Number(el.dataset.shotExtra)], value); }
 }
 async function readImages(id) { try { state.images = await api(`/api/projects/${encodeURIComponent(id)}/images`); state.imageError = ''; } catch (error) { state.images = null; state.imageError = error.message; } }
-async function refresh(preserve = true) { const ws = await api(base()); setWorkspace(ws, preserve && state.dirty); await readImages(state.project.id); render(); schedulePoll(); }
-async function save() {
+async function refresh(preserve = true) { if (stage() === 'script') { const payload = await api(`${base()}/script-workbench`); acceptWorkbench(payload,preserve && state.dirty); } else { const ws = await api(base()); setWorkspace(ws, preserve && state.dirty); } await readImages(state.project.id); render(); schedulePoll(); }
+async function save({silent=false} = {}) {
   collectJson();
+  if (stage() === 'script') {
+    const draft = state.input.scriptDraft;
+    if (state.requirementsDirty) {
+      const values = Object.fromEntries(fields.filter(key => !['scriptDraft','selectedScriptTaskId','storyboardDraft'].includes(key)).map(key => [key,copy(state.input[key])]));
+      const ws = await api(base(), {revision:state.ws.revision,...values}, 'PUT');
+      setWorkspace(ws); state.input.scriptDraft = draft; state.requirementsDirty = false; state.dirty = state.editorDirty;
+    }
+    const result = await api(`${base()}/script-editor`, {editorRevision:state.editor?.revision ?? 0,workspaceRevision:state.ws.revision,projectRevision:state.project.revision,body:draft}, 'PUT');
+    acceptWorkbench(result); state.error = ''; if (!silent) { render(); toast('完整剧本草稿已保存，尚未自动确认或采用。'); } else updateDirty(); return;
+  }
   const ws = await api(base(), { revision: state.ws.revision, ...copy(state.input) }, 'PUT');
-  setWorkspace(ws); state.error = ''; render(); toast('工作台与人工草稿已保存');
+  setWorkspace(ws); state.error = ''; if (!silent) { render(); toast('工作台与人工草稿已保存'); } else updateDirty();
 }
 async function loadProject(id, bypass = false) {
   if (!bypass && !await canLeave()) return;
   if (state.busy) return;
   clearTimeout(state.poll); setBusy(true);
-  try { const [project, ws] = await Promise.all([api(`/api/projects/${encodeURIComponent(id)}`), api(`/api/projects/${encodeURIComponent(id)}/creative`)]); state.project = project; state.selectedTaskId = null; state.selectedVersionId = null; state.selectedShotId = null; setWorkspace(ws); await readImages(id); state.error = ''; localStorage.setItem('ai-drama-studio:last-project', id); history.replaceState(null, '', `/creative.html?projectId=${encodeURIComponent(id)}&stage=${stage()}`); render(); schedulePoll(); } catch (error) { failure(error); } finally { setBusy(false); showRequestedSection(); }
+  try { const [project, payload] = await Promise.all([api(`/api/projects/${encodeURIComponent(id)}`), api(`/api/projects/${encodeURIComponent(id)}/creative${stage() === 'script' ? '/script-workbench' : ''}`)]); state.project = project; state.selectedTaskId = null; state.selectedVersionId = null; state.selectedShotId = null; state.editor = null; state.editorDirty = false; state.requirementsDirty = false; state.scriptTab = null; state.pageIndex = 0; state.historyPage = 0; state.reviewId = null; state.historyId = null; state.issueIndex = 0; state.selection = null; state.generation = null; if (stage() === 'script') acceptWorkbench(payload); else setWorkspace(payload); await readImages(id); state.error = ''; localStorage.setItem('ai-drama-studio:last-project', id); history.replaceState(null, '', `/creative.html?projectId=${encodeURIComponent(id)}&stage=${stage()}`); render(); schedulePoll(); } catch (error) { failure(error); } finally { setBusy(false); showRequestedSection(); }
 }
 function schedulePoll() {
   clearTimeout(state.poll);
-  if (!state.project || !taskList().some(task => ['queued','running'].includes(task.status))) return;
+  if (!state.project || !taskList().some(task => ['queued','running'].includes(task.status)) && !(stage() === 'script' && state.generation && !['succeeded','completed','failed','review_failed','cancelled','interrupted'].includes(state.generation.status))) return;
   state.poll = setTimeout(async () => {
     if (state.busy) { schedulePoll(); return; }
     try {
       const before = taskList().map(t => `${t.id}:${t.status}`).join('|');
-      const ws = await api(base()); setWorkspace(ws, state.dirty);
+      if (stage() === 'script') { const payload = await api(`${base()}/script-workbench`); acceptWorkbench(payload,state.dirty); } else { const ws = await api(base()); setWorkspace(ws, state.dirty); }
       const after = taskList().map(t => `${t.id}:${t.status}`).join('|');
       if (before !== after && !state.dirty) render(); else renderRuntime();
       updateDirty();
@@ -221,6 +326,12 @@ function schedulePoll() {
   }, 2200);
 }
 async function start(kind, extra = {}) {
+  if (kind === 'script' && stage() === 'script') {
+    if (state.dirty) await save();
+    if (!await confirmAction('生成剧本并独立检查一次', '将发送当前项目的故事、创作要求和设定给本机Codex。包含一次创作和一次新会话独立检查，使用现有账号用量；没有返回人民币或积分费用，不代表免费。候选可直接编辑，但不会提前采用，也不自动循环改写或重试。', '生成并检查一次')) return;
+    const result = await api(`${base()}/script-generate`, {revision:state.ws.revision,projectRevision:state.project.revision,includeReview:true,requestId:crypto.randomUUID(),retry:['failed','review_failed','interrupted','cancelled'].includes(state.generation?.status)});
+    state.generation = result.generation || result; await refresh(); toast('剧本任务已保存，完成后直接进入可编辑正文。'); return;
+  }
   if (state.dirty) throw new Error('请先保存人工修改，再创建任务；未保存内容不会被覆盖。');
   const accepted = await confirmAction(`${extra.retry ? '明确重新尝试 · ' : ''}${kind === 'review' ? '发起新会话独立审阅' : `调用 Codex 创作${kinds[kind]}候选`}`, `${extra.retry ? '这是新的执行尝试，会再次使用账号用量；原任务与原始结果保留。' : ''}将发送当前项目文字、锁定设定与相关镜头资料给本机已登录的 Codex，使用现有账号用量。任务只生成文字，不提交任何图片、视频、配音或即梦画布请求。`, kind === 'review' ? '开始独立审阅' : '开始文字创作');
   if (!accepted) return;
@@ -235,6 +346,14 @@ async function saveVersion(kind) {
   await api(`${base()}/versions`, { revision: state.ws.revision, kind, body }); await refresh(false); state.selectedVersionId = kind === 'script' ? state.ws.activeScriptId : state.ws.activeStoryboardId; render(); toast(`人工${kinds[kind]}已保存为新版本，历史稿保留`);
 }
 async function continueScript() {
+  if (stage() === 'script') {
+    collectJson();
+    if (state.requirementsDirty) await save();
+    const pending = state.ws.entityProvenance?.pendingCount || taskList().find(item => item.id === state.editor?.sourceTaskId)?.entityProvenance?.pendingCount;
+    if ((pending || state.editor?.stale) && !await confirmAction(state.editor?.stale ? '复核并确认当前人工稿' : '保留待确认来源并确认剧本', `${state.editor?.stale ? '当前上游要求已改变，请核对完整正文符合新要求。继续会形成当前人工版本，旧稿及旧检查保留。' : ''}${pending ? '部分设定来源仍待确认。确认只保存剧本，不将AI补充或待确认设定提升为用户指定事实。' : ''}`, '确认当前稿并进入分镜')) return;
+    const result = await api(`${base()}/script-confirm`,{editorRevision:state.editor?.revision ?? 0,workspaceRevision:state.ws.revision,projectRevision:state.project.revision,body:state.input.scriptDraft,confirmPendingSources:Boolean(pending),acknowledgeStale:state.editor?.stale === true});
+    acceptWorkbench(result); location.href = projectHref('/creative.html','&stage=storyboard'); return;
+  }
   collectJson();
   const current = state.ws.versions.find(version => version.id === state.ws.activeScriptId && version.kind === 'script');
   const unchanged = !state.dirty && current && !isStale(current) && current.body === state.input.scriptDraft;
@@ -257,7 +376,14 @@ function setPath(object, field, value) { const keys = field.split('.'); let curr
 app.addEventListener('input', event => {
   const el = event.target;
   if (!state.input) return;
-  if (el.dataset.input) { state.input[el.dataset.input] = el.dataset.input === 'shotCount' ? Number(el.value) : el.value; markDirty(); }
+  if (el.dataset.scriptPage !== undefined) {
+    const page = state.renderedPage, hadBody = Boolean(state.input.scriptDraft.trim());
+    const cursor = page.start + el.selectionStart;
+    state.input.scriptDraft = replaceScriptPage(state.input.scriptDraft,page,el.value); state.renderedPage = {...page,end:page.start+el.value.length,text:el.value}; state.selection = null; markDirty('body');
+    if (hadBody !== Boolean(state.input.scriptDraft.trim()) || el.value.length > 480 || (el.value.match(/\n/g) || []).length > 10) { state.pageIndex = pageForOffset(editorPages(),cursor); render(); const next = $('#creative-script-draft'); next?.focus({preventScroll:true}); const current = editorPages()[state.pageIndex]; next?.setSelectionRange(Math.max(0,cursor-current.start),Math.max(0,cursor-current.start)); }
+    else { resizeScriptPage(); const status = app.querySelector('.script-document-status'); if (status) status.innerHTML = `<span>${state.input.scriptDraft.length}字 · 完整正文保存，不截断其他页</span><span>正文修改后，相关检查需要复查</span>`; }
+  }
+  else if (el.dataset.input) { state.input[el.dataset.input] = el.dataset.input === 'shotCount' ? Number(el.value) : el.value; markDirty(); }
   else if (el.dataset.json || el.dataset.shotExtra !== undefined) markDirty();
   else if (el.dataset.shotField) {
     let value = el.value;
@@ -267,10 +393,14 @@ app.addEventListener('input', event => {
     const total = $('#creative-total-duration'); if (total) total.textContent = `${shotList().length} 个镜头 · 设计时长 ${shotList().reduce((sum,s) => sum + Number(s.durationSeconds || 0),0)} / ${state.project.durationSeconds} 秒`;
   }
 });
+app.addEventListener('select',event => { if (event.target.matches('.script-page-editor')) captureScriptSelection(); });
 app.addEventListener('change', event => {
   const el = event.target;
   try {
-  if (el.id === 'creative-director') { const chosen = state.catalog.presets.find(p => p.directorId === el.value); if (chosen) { collectJson(); state.input.stylePresetId = chosen.id; state.input.manualRuleIds = []; markDirty(); render(); } }
+  if (el.dataset.pageDirectory) { if (el.dataset.pageDirectory === 'editor') state.pageIndex = Number(el.value); else state.historyPage = Number(el.value); state.selection = null; render(); }
+  else if (el.id === 'script-history-select') { state.historyId = el.value; state.historyPage = 0; render(); }
+  else if (el.id === 'script-review-select') { state.reviewId = el.value; state.issueIndex = 0; render(); }
+  else if (el.id === 'creative-director') { const chosen = state.catalog.presets.find(p => p.directorId === el.value); if (chosen) { collectJson(); state.input.stylePresetId = chosen.id; state.input.manualRuleIds = []; markDirty(); render(); } }
   else if (el.id === 'creative-preset' || el.id === 'creative-preview-preset') { collectJson(); const old = preset()?.directorId; state.input.stylePresetId = el.value; if (old !== preset()?.directorId) state.input.manualRuleIds = []; markDirty(); render(); }
   else if (el.dataset.manualRule) { const ids = new Set(state.input.manualRuleIds); if (el.checked) ids.add(el.dataset.manualRule); else ids.delete(el.dataset.manualRule); state.input.manualRuleIds = [...ids]; markDirty(); }
   else if (el.id === 'creative-version-select') { collectJson(); state.selectedVersionId = el.value || null; render(); }
@@ -280,6 +410,10 @@ app.addEventListener('click', async event => {
   const button = event.target.closest('button,a'); if (!button) return;
   if (button.matches('[data-leave]')) { event.preventDefault(); if (await canLeave()) location.href = button.href; return; }
   if (state.busy) return;
+  if (button.dataset.scriptTab) { collectJson(); state.selection = null; state.scriptTab = button.dataset.scriptTab; render(); return; }
+  if (button.dataset.pageStep) { const index = button.dataset.pageKind === 'editor' ? 'pageIndex' : 'historyPage'; state[index] = Math.max(0,state[index] + Number(button.dataset.pageStep)); state.selection = null; render(); return; }
+  if (button.dataset.reviewIssue !== undefined) { state.issueIndex = Number(button.dataset.reviewIssue); render(); return; }
+  if (button.dataset.stepShot) { collectJson(); const index = shotList().findIndex(shot => shot.id === state.selectedShotId); state.selectedShotId = shotList()[Math.min(Math.max(0,index + Number(button.dataset.stepShot)),shotList().length - 1)]?.id; render(); return; }
   if (button.dataset.projectId) { await loadProject(button.dataset.projectId); return; }
   if (button.dataset.chooseShot) { try { collectJson(); state.selectedShotId = button.dataset.chooseShot; render(); } catch (error) { failure(error); } return; }
   if (button.dataset.versionId) { try { collectJson(); state.selectedVersionId = button.dataset.versionId; render(); } catch (error) { failure(error); } return; }
@@ -287,6 +421,14 @@ app.addEventListener('click', async event => {
   setBusy(true);
   try {
     if (button.dataset.action === 'save') await save();
+    else if (button.dataset.action === 'download-script') download(state.input.scriptDraft,`AI短剧-${state.project.id}-未覆盖的完整剧本.txt`);
+    else if (button.dataset.action === 'review-current-script') {
+      if (!state.input.scriptDraft.trim()) throw new Error('请先生成或填写正文，再检查。');
+      if (state.dirty) await save();
+      if (!await confirmAction('检查当前正文一次','使用现有Codex账号用量，以新会话独立检查当前保存的完整正文。不自动改写、不自动重试，结论只绑定本次正文。','开始本次检查')) return;
+      const result = await api(`${base()}/script-check`,{editorRevision:state.editor?.revision ?? 0,workspaceRevision:state.ws.revision,projectRevision:state.project.revision,body:state.input.scriptDraft});
+      if (result.workspace) acceptWorkbench(result); state.scriptTab = 'checks'; await refresh(); toast('本次检查已保存，等待真实结果。');
+    }
     else if (button.dataset.action === 'continue-script') await continueScript();
     else if (button.dataset.action === 'confirm-board') await confirmBoard();
     else if (button.dataset.action === 'load-current-script') { collectJson(); const current = taskList().find(task => task.id === state.input.selectedScriptTaskId)?.result?.body || state.ws.versions.find(version => version.id === state.ws.activeScriptId)?.body; if (!current) throw new Error('当前没有可载入的已保存剧本。'); state.input.scriptDraft = current; markDirty(); render(); }

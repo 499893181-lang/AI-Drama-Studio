@@ -26,7 +26,7 @@ const browser = await launchBrowser(path.join(directory, `chrome-${Date.now()}`)
 const q = value => `[data-testid="${value}"]`;
 const report = { checkedAt: new Date().toISOString(), fixtureOnly: true, realModelCalls: 0, realMediaCalls: 0, checks: [] };
 const pause = ms => new Promise(resolve => setTimeout(resolve, ms));
-async function nav(stage = 'storyboard', id = project.id, section = '') { await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${id}&stage=${stage}${section ? `&section=${encodeURIComponent(section)}` : ''}` }); await browser.waitFor("!!document.querySelector('.studio-frame')&&!!document.querySelector('[data-testid=creative-save]')"); }
+async function nav(stage = 'storyboard', id = project.id, section = '') { await browser.evaluate("document.documentElement.dataset.departing='true'"); await browser.call('Page.navigate', { url: `${base}/creative.html?projectId=${id}&stage=${stage}${section ? `&section=${encodeURIComponent(section)}` : ''}` }); await browser.waitFor("!document.documentElement.dataset.departing&&!!document.querySelector('.studio-frame')&&!!document.querySelector('[data-testid=creative-save]')&&!document.querySelector('[data-testid=creative-save]').disabled"); }
 async function screenshot(name) { const result = await browser.call('Page.captureScreenshot', { format: 'png' }); fs.writeFileSync(path.join(directory, name), Buffer.from(result.data, 'base64')); }
 async function click(selector) { await browser.waitFor(`!!document.querySelector(${JSON.stringify(selector)})&&!document.querySelector(${JSON.stringify(selector)}).disabled`); await browser.evaluate(`{const element=document.querySelector(${JSON.stringify(selector)});let parent=element.parentElement;while(parent){if(parent.tagName==='DETAILS')parent.open=true;parent=parent.parentElement;}element.click();}`); }
 async function fill(selector, value, event = 'input') { await browser.evaluate(`{const element=document.querySelector(${JSON.stringify(selector)});element.value=${JSON.stringify(value)};element.dispatchEvent(new Event(${JSON.stringify(event)},{bubbles:true}));}`); }
@@ -80,13 +80,13 @@ try {
   await fill(q('creative-preview-preset'), 'anderson.budapest.order', 'change'); await click(q('creative-save')); const second = await saved(ws => ws.stylePresetId === 'anderson.budapest.order');
   assert.notEqual(first.compiled[0].design.imagePrompt, second.compiled[0].design.imagePrompt); assert.equal(second.shots[0].moment, long); report.checks.push('右侧风格选择真实修改作品预设并保存，提示词规则改变且人工画面不丢失');
   const beforeScript = app.creative.view(project.id); app.creative.update(project.id, { revision: beforeScript.revision, scriptDraft: '' });
-  await nav('script'); assert.ok(await browser.evaluate("document.querySelector('[data-testid=creative-current-script]').textContent.includes('隔离软件测试夹具')"));
-  assert.equal(await browser.evaluate("document.querySelector('[data-testid=creative-script-draft]').value"), ''); await click('[data-action="load-current-script"]');
-  assert.ok(await browser.evaluate("document.querySelector('[data-testid=creative-script-draft]').value.includes('隔离软件测试夹具')"));
-  await fill(q('creative-script-draft'), '【人工剧本TEST】老人等待女儿报平安，保留已确认的故事设定。'); await click(q('creative-save-script-version'));
+  await nav('script'); assert.ok(await browser.evaluate("document.querySelector('[data-testid=creative-script-draft]').value.includes('隔离软件测试夹具')"));
+  assert.equal(await browser.evaluate("document.querySelectorAll('[data-action=load-current-script],[data-copy-script],[data-select-script]').length"),0);
+  await fill(q('creative-script-draft'), '【人工剧本TEST】老人等待女儿报平安，保留已确认的故事设定。'); await click(q('creative-save'));
+  await click('[data-action=review-current-script]'); await click(q('creative-confirm-submit'));
   const version = (await saved(ws => ws.versions.some(version => version.body.startsWith('【人工剧本TEST】')))).versions.find(version => version.body.startsWith('【人工剧本TEST】'));
-  await click(`[data-review-version="${version.id}"]`); await click(q('creative-confirm-submit')); await saved(ws => ws.reviews.some(review => review.status === 'succeeded'));
-  await browser.waitFor("document.body.textContent.includes('隔离独立审阅显示夹具')"); assert.ok(await browser.evaluate("document.body.textContent.includes('采用版本与历史')")); report.checks.push('剧本页面人工保存追加不可变版本，独立审阅入口正常，报告真实来自隔离runner而非样例填值');
+  await saved(ws => ws.reviews.some(review => review.references?.targetVersionId===version.id&&review.status === 'succeeded'));
+  await browser.waitFor("document.body.textContent.includes('隔离独立审阅显示夹具')"); await click('[data-script-tab=history]'); assert.ok(await browser.evaluate("document.querySelector('#script-history-select').options.length>0")); report.checks.push('剧本页面直接编辑当前正文，保存检查快照为不可变版本并独立审阅，历史点击查看，未提前采用');
   const current = app.creative.view(project.id);
   app.creative.update(project.id, { revision: current.revision, shotCount: 12, shots: Array.from({ length: 12 }, (_, index) => ({ ...structuredClone(current.shots[index % current.shots.length]), id: `SHOT-${String(index + 1).padStart(2,'0')}`, durationSeconds: 2.5 })) });
   await nav('storyboard'); await browser.waitFor("document.querySelectorAll('[data-testid=creative-shot-thumb]').length===12");

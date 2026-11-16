@@ -111,8 +111,8 @@ export class CreativeWorkspace {
     const shots = workspace.shots.length ? workspace.shots : (parent?.data?.shotSeeds ?? []).map(seedToShot);
     return { entities: entities.map(entity => { const entry = provenance.entries.find(row => row.entityId === entity.id && row.version === entity.version); return { ...copy(entity), resolvedSource: entry.resolvedSource, sourceProvenance: copy(entry) }; }), shots: copy(shots), provenance };
   }
-  context(id, kind, { scriptTaskId, targetTaskId, targetVersionId } = {}) {
-    const workspace = this.get(id), project = this.store.read('projects', id), knowledge = this.knowledge();
+  context(id, kind, { scriptTaskId, targetTaskId, targetVersionId } = {}, workspaceOverride = null) {
+    const workspace = workspaceOverride ?? this.get(id), project = this.store.read('projects', id), knowledge = this.knowledge();
     const source = { ...generationInput(project), creativeBrief: project.creativeBrief, projectRevision: project.revision };
     const sourceHash = creativeHash(source);
     const common = { projectId: id, episodeId: workspace.episodeId, source, instructions: workspace.instructions, shotCount: workspace.shotCount, locks: workspace.locks, entities: workspace.entities, scriptDraft: workspace.scriptDraft, knowledgeHash: knowledge.hash };
@@ -150,7 +150,28 @@ export class CreativeWorkspace {
     // cannot supersede a source the user has subsequently chosen or saved.
     return !actual || actual.id === job.inputSnapshot.parent?.id && actual.type === job.inputSnapshot.parent?.type;
   }
-  fresh(job) { try { const current = this.context(job.projectId, job.kind, job.references); return this.matchesSelectedParent(job, current.workspace) && current.inputHash === job.inputHash; } catch { return false; } }
+  editorReviewScope(id, workspace = this.get(id)) {
+    const context=this.context(id,'script',{},workspace);
+    return creativeHash({source:context.sourceHash,knowledge:context.knowledge.hash,episodeId:workspace.episodeId,instructions:workspace.instructions,shotCount:workspace.shotCount,locks:workspace.locks,entities:workspace.entities,entityInputEvidence:workspace.entityInputEvidence??{},stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds});
+  }
+  editorReviewProof(target, workspace) {
+    if(target?.type==='task'){const task=this.store.read('creative-jobs',target.id);return creativeHash({inputHash:task.inputHash,inputSnapshot:task.inputSnapshot,entityProvenance:task.entityProvenance??null});}
+    const version=workspace.versions.find(item=>item.id===target?.id);
+    return creativeHash(version?.entityProvenanceBases??[]);
+  }
+  fresh(job) {
+    try {
+      const current = this.context(job.projectId, job.kind, job.references);
+      if(job.kind==='review'&&job.editorReviewBinding){
+        const binding=job.editorReviewBinding,body=current.workspace.scriptEditor?.body??current.workspace.scriptDraft;
+        // Confirming an unchanged script moves a source pointer, not its text.
+        // Keep this explicitly bound editor review current only while both the
+        // immutable target and actual editor text/requirements still match.
+        return creativeHash(job.inputSnapshot)===job.inputHash&&binding.targetHash===creativeHash(current.target)&&binding.proofHash===this.editorReviewProof(current.target,current.workspace)&&binding.bodyHash===creativeHash(body)&&binding.scopeHash===this.editorReviewScope(job.projectId,current.workspace);
+      }
+      return this.matchesSelectedParent(job, current.workspace) && current.inputHash === job.inputHash;
+    } catch { return false; }
+  }
   validateCurrent(job, current) {
     if (current.parent?.entityProvenance?.entries.some(entry => entry.bindingValid === false)) throw new AppError('当前剧本来源证据绑定损坏，不能采用下游结果。', 409);
     if (creativeHash(job.inputSnapshot) !== job.inputHash) throw new AppError('原任务输入快照已改变，来源证据失效，不能采用。', 409);

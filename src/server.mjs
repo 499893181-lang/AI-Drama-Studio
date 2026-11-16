@@ -15,6 +15,8 @@ import { TimelineService } from './timeline-jobs.mjs';
 import { readCanvasVideoEvidence } from './canvas-video.mjs';
 import { CanvasVideoService } from './canvas-video-jobs.mjs';
 import { inspectWorkflow } from './workflow.mjs';
+import { ScriptWorkbench } from './script-workbench.mjs';
+import { CreativeAssistantService } from './creative-assistant.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -53,6 +55,8 @@ export function createStudio(options = {}) {
   const jobs = new CodexJobs(store);
   const scripts = new ScriptService(store, options.scriptOptions);
   const creative = new CreativeService(store, options.creativeOptions);
+  const scriptWorkbench = new ScriptWorkbench(store, { creative, ...options.scriptWorkbenchOptions });
+  const assistant = new CreativeAssistantService(store, { creative, scriptWorkbench, ...options.assistantOptions });
   const images = new ImageWorkspace(store, { creativeWorkspace: creative.workspace, ...options.imageOptions });
   const imageGeneration = new ImageGenerationJobs(store, { images, ...options.imageGenerationOptions });
   const videos = new VideoService(store, { images, ...options.videoOptions });
@@ -98,7 +102,7 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.9.0', phase: 'c-adjusted-creative-workbench', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video'], now: now() }); return; }
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.10.0', phase: 'script-tabs-and-creative-assistant', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video', 'creative-assistant'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/video-channels/canvas') {
         if (method !== 'GET') throw new AppError('渠道证据仅供只读查看，生成和授权入口关闭。', 405);
@@ -176,15 +180,30 @@ export function createStudio(options = {}) {
           response.writeHead(200, { 'Content-Type': file.mimeType, 'Content-Disposition': `inline; filename*=UTF-8''${encodeURIComponent(file.name)}`, 'Content-Length': fs.statSync(file.path).size, 'Cache-Control': 'no-store' });
           fs.createReadStream(file.path).pipe(response); return;
         }
+        if (segments[3] === 'assistant') {
+          if (segments.length === 4 && method === 'GET') { json(response, assistant.view(id)); return; }
+          if (segments.length === 5 && segments[4] === 'messages' && method === 'POST') { json(response, assistant.start(id, await readJson(request)), 202); return; }
+          if (segments.length === 6 && segments[4] === 'messages' && validId(segments[5]) && method === 'GET') { json(response, assistant.read(id, segments[5])); return; }
+          if (segments.length === 7 && segments[4] === 'messages' && validId(segments[5]) && method === 'POST') {
+            const input = await readJson(request);
+            if (segments[6] === 'apply') { json(response, assistant.apply(id, segments[5], input)); return; }
+            if (segments[6] === 'cancel') { json(response, assistant.cancel(id, segments[5])); return; }
+          }
+        }
         if (segments[3] === 'creative') {
           if (segments.length === 4 && method === 'GET') { json(response, creative.view(id)); return; }
           if (segments.length === 4 && method === 'PUT') { json(response, creative.update(id, await readJson(request))); return; }
+          if (segments.length === 5 && segments[4] === 'script-workbench' && method === 'GET') { json(response, scriptWorkbench.view(id)); return; }
+          if (segments.length === 5 && segments[4] === 'script-editor' && method === 'PUT') { json(response, scriptWorkbench.saveEditor(id, await readJson(request))); return; }
           if (segments.length === 5 && segments[4] === 'export' && method === 'GET') { json(response, creative.export(id)); return; }
           if (segments.length === 5 && method === 'POST') {
             const input = await readJson(request);
             if (segments[4] === 'tasks') { json(response, creative.start(id, input), 202); return; }
             if (segments[4] === 'adopt') { json(response, creative.adopt(id, input)); return; }
             if (segments[4] === 'versions') { json(response, creative.addVersion(id, input), 201); return; }
+            if (segments[4] === 'script-generate') { json(response, scriptWorkbench.start(id, input), 202); return; }
+            if (segments[4] === 'script-confirm') { json(response, scriptWorkbench.confirm(id, input)); return; }
+            if (segments[4] === 'script-check') { json(response, scriptWorkbench.checkScript(id, input), 202); return; }
           }
         }
         if (segments[3] === 'script') {
@@ -325,7 +344,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, images, imageGeneration, videos, timeline, canvasVideo, getTools, getImageCapabilities, close: () => { canvasVideo.close(); timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, scriptWorkbench, assistant, images, imageGeneration, videos, timeline, canvasVideo, getTools, getImageCapabilities, close: () => { assistant.close(); scriptWorkbench.close(); canvasVideo.close(); timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {
