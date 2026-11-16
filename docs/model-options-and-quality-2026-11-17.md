@@ -9,7 +9,7 @@
 | 独立选择 | 承担任务 | 目前可研究的候选 |
 | --- | --- | --- |
 | 文字模型 | 梗概扩写、剧本、按时间分段的详细分镜词、助手修改建议 | DeepSeek API、OpenAI文本API；现有本机Codex保留为独立账号方式 |
-| 图片模型 | 人物正侧背三视图与细节综合图、每片段一张四宫格视觉参考、必要首尾帧 | 豆包对应的Seedream图像API、OpenAI GPT Image；用户提到的“Imagine 2.5”名称待确认 |
+| 图片模型 | 人物正侧背三视图与细节综合图、每片段一张四宫格视觉参考、必要首尾帧 | 豆包对应的Seedream图像API、OpenAI GPT Image；OpenAI GPT Image 2.5（用户已明确指ChatGPT中的生图功能） |
 | 视频模型 | 文字/参考资料转动态视频、首尾帧过渡、必要分段或延长 | Seedance 2.5、MiniMax H3、Wan 3.0的已验证可用渠道 |
 | 本地运行设置 | 承载所选本地模型与工作流 | ComfyUI或WanGP，作为运行方式，不与模型名混成同一层级 |
 
@@ -36,7 +36,7 @@ DeepSeek官方Janus/Janus-Pro属于独立的多模态生成项目。若以后研
 
 豆包是产品/品牌名，接图像API应记录实际Seedream模型ID。火山官方图像教程已提供Seedream系列的文生图、图像编辑与多参考图能力。是否能稳定画好三视图和细节板还需本项目验证。
 
-OpenAI的文字模型与GPT Image图像能力也应分别配置。官方文档列出了GPT Image 2.5系列，但无法仅凭口述“Imagine 2.5”断定用户指的是它；这个名称保留待确认，不擅自换成Google Imagen、微软MAI或其他产品。
+OpenAI的文字模型与GPT Image图像能力分别配置。用户已明确“image 2.5 / Imagine 2.5”指ChatGPT中的OpenAI生图功能，图片候选按GPT Image 2.5系列记录。API接入时核实具体型号与账户准入，不把ChatGPT产品内使用直接等同于软件已获得API授权。
 
 依据：
 - [火山方舟图片生成教程](https://console.volcengine.com/ark/region:cn-beijing/docs/image-generation-tutorial)
@@ -125,6 +125,6 @@ WanGP是运行应用，Wan是模型系列。软件版本号与模型版本号独
 - 已完成：用户前三点及独立组合选择的需求记录、官方接口与规格调研。
 - 已有草稿：DeepSeek文字适配器尚未接入正式页面和完成测试，不能作为已经接通。
 - 尚未完成：用户电脑硬件检查、选定渠道安装/认证、真实视频生成和本项目画质/运镜/人物连续性对照测试。
-- 待确认名称：“Imagine 2.5”具体是哪家图像模型。其他调研和软件结构不因此暂停。
+- 名称已澄清：“image 2.5 / Imagine 2.5”指ChatGPT中的OpenAI图像生成功能，归入GPT Image 2.5系列候选；具体API型号和接入测试尚未完成。
 
 以上是方案候选与验证依据，不是“全部已安装”或“已实现任意模型自由组合”的交付声明。
