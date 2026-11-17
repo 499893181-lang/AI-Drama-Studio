@@ -36,17 +36,17 @@ try {
   for (const [width, height] of [[1366, 768], [1440, 900]]) {
     await browser.call('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
     await nav(); await browser.waitFor("document.querySelectorAll('[data-testid=creative-shot-thumb]').length===3");
-    const geometry = await browser.evaluate(`(()=>{const rail=document.querySelector('.studio-rail').getBoundingClientRect(),panel=document.querySelector('.studio-panel').getBoundingClientRect(),footer=document.querySelector('.studio-footer').getBoundingClientRect(),content=document.querySelector('.studio-main').getBoundingClientRect(),preview=document.querySelector('[data-testid=creative-board-preview]').getBoundingClientRect(),editor=document.querySelector('[data-testid=creative-board-editor]').getBoundingClientRect();return {width:innerWidth,height:innerHeight,scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth,rail:{left:rail.left,right:rail.right},panel:{left:panel.left,right:panel.right},footer:{top:footer.top,bottom:footer.bottom},content:{left:content.left,right:content.right,bottom:content.bottom},preview:{right:preview.right},editor:{left:editor.left}};})()`);
+    const geometry = await browser.evaluate(`(()=>{const rail={left:0,right:0},panel=document.querySelector('.studio-panel').getBoundingClientRect(),footer=document.querySelector('.studio-footer').getBoundingClientRect(),content=document.querySelector('.studio-main').getBoundingClientRect(),preview=document.querySelector('[data-testid=creative-board-preview]').getBoundingClientRect(),editor=document.querySelector('[data-testid=creative-board-editor]').getBoundingClientRect();return {width:innerWidth,height:innerHeight,scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth,rail:{left:rail.left,right:rail.right},panel:{left:panel.left,right:panel.right},footer:{top:footer.top,bottom:footer.bottom},content:{left:content.left,right:content.right,bottom:content.bottom},preview:{right:preview.right},editor:{left:editor.left}};})()`);
     assert.equal(geometry.scroll, geometry.client); assert.ok(geometry.rail.right <= geometry.panel.left + 1); assert.ok(geometry.panel.right <= geometry.content.left + 1); assert.ok(geometry.content.bottom <= geometry.footer.top + 1); assert.ok(geometry.preview.right < geometry.editor.left); assert.ok(geometry.footer.bottom <= height + 1);
-    assert.equal(await browser.evaluate("document.querySelectorAll('.studio-step').length"), 7); assert.equal(await browser.evaluate("document.querySelectorAll('.creative-route,.workflow').length"), 0);
+    assert.equal(await browser.evaluate("document.querySelectorAll('[data-agent-nav]').length"), 6); assert.equal(await browser.evaluate("document.querySelectorAll('.creative-route,.workflow').length"), 0);
     const decoded = await browser.evaluate("(async()=>{const image=document.querySelector('[data-testid=creative-board-preview] img');await image.decode();return {width:image.naturalWidth,height:image.naturalHeight};})()"); assert.deepEqual(decoded, { width: 1280, height: 720 });
-    await screenshot(`storyboard-${width}x${height}.png`); report.checks.push(`${width}×${height}完整窄图标栏+项目面板+七步流程，主预览/右编辑/缩略图/底栏无重叠或横溢出，实际TEST PNG解码`);
+    await screenshot(`storyboard-${width}x${height}.png`); report.checks.push(`${width}×${height}单文字左栏+六Agent，主预览/右编辑/缩略图/底栏无重叠或横溢出，实际TEST PNG解码`);
   }
   const beforeNavigation = app.creative.view(project.id);
   for (let iteration = 0; iteration < 2; iteration++) {
     await nav('script'); await browser.waitFor("!!document.querySelector('[data-testid=creative-script-draft]')");
-    await click('.studio-footer [data-studio-action="primary"]'); await browser.waitFor("new URLSearchParams(location.search).get('stage')==='storyboard'&&!!document.querySelector('[data-testid=creative-board-stage]')");
-    await click('.studio-footer [data-studio-action="primary"]'); await browser.waitFor("location.pathname==='/images.html'");
+    await click('.studio-footer [data-studio-action="primary"]'); await browser.waitFor("location.pathname==='/studio.html'&&new URLSearchParams(location.search).get('page')==='entities'"); await nav('storyboard');
+    await click('.studio-footer [data-studio-action="primary"]'); await browser.waitFor("location.pathname==='/studio.html'&&new URLSearchParams(location.search).get('page')==='prompts'");
   }
   const afterNavigation = app.creative.view(project.id);
   assert.equal(afterNavigation.versions.length, beforeNavigation.versions.length); assert.equal(afterNavigation.activeScriptId, beforeNavigation.activeScriptId); assert.equal(afterNavigation.activeStoryboardId, beforeNavigation.activeStoryboardId);
@@ -100,7 +100,7 @@ try {
   await app.close(); app = createStudio(options); base = await listen(); await nav('storyboard');
   assert.equal((await api(`/api/projects/${project.id}/creative`)).shots[0].moment, long); assert.ok(await browser.evaluate("document.body.textContent.includes('需要复核')||document.body.textContent.includes('需复核')")); await screenshot('restored-needs-review.png'); report.checks.push('重启保留人工长文本、历史与审阅；上游/预设改动后的需复核状态继续显示');
   const beforeContinue = await api(`/api/projects/${project.id}/creative`);
-  await click('.studio-footer [data-studio-action="primary"]'); await browser.waitFor("location.pathname==='/images.html'");
+  await click('.studio-footer [data-studio-action="primary"]'); await browser.waitFor("location.pathname==='/studio.html'&&new URLSearchParams(location.search).get('page')==='prompts'");
   const continued = await api(`/api/projects/${project.id}/creative`); assert.equal(continued.versions.length, beforeContinue.versions.length + 1); assert.notEqual(continued.activeStoryboardId, beforeContinue.activeStoryboardId); assert.equal(calls.length, 1);
   report.checks.push('底部确认分镜实际追加人工版本并进入图片步骤，不提交出图或其它生成任务');
   assert.equal(browser.messages.length, 0, JSON.stringify(browser.messages)); assert.equal(calls.length, 1); report.passed = true; report.consoleExceptions = 0;

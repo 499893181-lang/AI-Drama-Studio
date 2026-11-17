@@ -2,6 +2,7 @@
 // same vocabulary. No example project, preview asset or completion is implied.
 export const studioConfig = Object.freeze({
   name: 'AI 短剧',
+  brand: 'AI DRAMA STUDIO',
   layoutLabel: '创作工作台',
   steps: [
     { id: 'story', label: '故事', href: '/' },

@@ -1,7 +1,11 @@
 import { studioConfig } from './studio-config.js';
+import { t, preferences, translateInterface } from './studio-i18n.js';
+import { mountCreativeAssistant } from './creative-assistant.js';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const states = new WeakMap(), workflowCache = new Map();
+let preferenceRead;
+function syncPreferences(frame,title){preferenceRead??=fetch('/api/studio/preferences').then(async response=>{if(!response.ok)return;const value=await response.json();preferences({language:value.language?.startsWith('en')?'en':'zh',theme:value.theme});}).catch(()=>{});void preferenceRead.then(()=>{if(frame.isConnected){translateInterface(frame);document.title=studioConfig.name+' · '+t(title);}});}
 const icons = {
   film: '<path d="m3 6 16-4 2 5-16 4-2-5ZM4 10v11h16V7M7 5l3 4m3-6 3 4M10 13l5 3-5 3v-6Z"/>',
   home: '<path d="m3 11 9-8 9 8M5 9v12h5v-7h4v7h5V9"/>',
@@ -30,13 +34,21 @@ function projectList(options) {
   return (options.projects ?? []).map(project => `<button type="button" class="studio-project-option ${project.id === options.project?.id ? 'is-current' : ''}" ${attribute}="${escape(project.id)}" title="${escape(project.name)}"><span>${escape(project.name)}</span><small>${escape(project.durationSeconds)}秒 · ${escape(project.aspectRatio)}</small></button>`).join('') || '<p class="studio-empty-small">尚无项目，请先创建故事。</p>';
 }
 function projectPanel(options) {
-  const project = options.project, current = initialStep(options.step), pid = project?.id;
-  const thumbnail = safeImage(options.thumbnailUrl ?? options.workflow?.thumbnailUrl);
-  return `<aside class="studio-panel" aria-label="项目与制作流程"><div class="studio-product-name">${escape(studioConfig.name)}</div><section class="studio-project-summary"><div class="studio-project-thumbnail" data-studio-thumbnail>${thumbnail ? `<img src="${escape(thumbnail)}" alt="当前项目已保存素材">` : studioIcon('film')}</div><div class="studio-project-copy"><strong title="${escape(project?.name ?? '选择或创建项目')}">${escape(project?.name ?? '选择或创建项目')}</strong><div class="studio-project-facts">${project ? `<span>${studioIcon('clock')}${escape(project.durationSeconds)}秒</span><span>${studioIcon('ratio')}${escape(project.aspectRatio)}</span>` : '<span>从一个故事开始</span>'}</div></div></section><details class="studio-project-picker"><summary>切换项目 ${studioIcon('down')}</summary><div class="studio-project-options">${projectList(options)}<a class="studio-new-project" href="/?new=1" data-leave>${studioIcon('plus')}新建项目</a></div></details><nav class="studio-steps" aria-label="七步制作流程">${studioConfig.steps.map((step, index) => `<a class="studio-step ${step.id === current.id ? 'is-active' : ''}" href="${escape(studioHref(step.href, pid))}" data-leave data-studio-step="${step.id}" ${step.id === current.id ? 'aria-current="step"' : ''} title="${escape(step.label)}：状态待核对"><span class="studio-step-dot" data-step-dot></span><span class="studio-step-label">${step.label}</span><span class="studio-step-status" data-step-status>待处理</span></a>`).join('')}</nav><nav class="studio-resources" aria-label="项目资源">${studioConfig.resources.map(item => `<a class="studio-resource ${options.section === item.id ? 'is-active' : ''}" href="${escape(studioHref(`/resources.html?section=${item.id}`, pid))}" data-leave>${studioIcon(item.icon)}<span>${item.label}</span></a>`).join('')}</nav><div class="studio-panel-bottom">项目保存在本机</div></aside>`;
-}
-function rail(options) {
-  const pid = options.project?.id;
-  return `<aside class="studio-rail" aria-label="应用导航"><a class="studio-rail-logo" href="/" data-leave title="${escape(studioConfig.name)}">${studioIcon('film')}</a><div class="studio-rail-links"><a class="studio-rail-link" href="/" data-leave title="项目与故事" aria-label="项目与故事">${studioIcon('home')}</a><button type="button" class="studio-rail-link is-active" data-studio-toggle-panel title="显示或收起项目面板" aria-label="显示或收起项目面板" aria-expanded="true">${studioIcon('play')}</button>${studioConfig.resources.map(item => `<a class="studio-rail-link ${options.section === item.id ? 'is-active' : ''}" href="${escape(studioHref(`/resources.html?section=${item.id}`, pid))}" data-leave title="${item.label}" aria-label="${item.label}">${studioIcon(item.icon)}</a>`).join('')}</div></aside>`;
+  const pid = options.project?.id, step = options.step, section = options.section;
+  const url = (page) => studioHref('/studio.html?page='+page,pid);
+  const current = options.studioPage ?? (section === 'style' ? 'directors' : section === 'entities' ? 'entities' : section === 'settings' ? 'services' : null);
+  const agents = [
+    ['script','剧本','/creative.html?stage=script','script'],
+    ['entities','角色与场景',url('entities'),'images'],
+    ['storyboard','分镜拆解','/creative.html?stage=storyboard','storyboard'],
+    ['prompts','提示词',url('prompts'),'video'],
+    ['voice','配音与声音',url('voice'),'finishing'],
+    ['editing','剪辑与导出（剪映）',url('editing'),'export']
+  ];
+  const isAgent = !['services','general','style','directors','storage'].includes(current);
+  return '<aside class="studio-panel" aria-label="'+t('Agent配置')+'"><a class="studio-product-name" href="/" data-leave><img src="/studio-mark.svg" alt="">'+escape(studioConfig.brand??studioConfig.name)+'</a><nav class="studio-primary-nav" aria-label="应用导航">'+
+    [['services','AI服务配置','settings'],['general','通用','panel'],['style','风格预设','image'],['directors','导演风格预设','film']].map(([id,label,icon]) => '<a class="studio-nav-item '+(current === id ? 'is-active':'')+'" href="'+escape(url(id))+'" data-leave data-primary-nav="'+id+'">'+studioIcon(icon)+'<span>'+t(label)+'</span></a>').join('')+
+    '<details class="studio-agent-group" open><summary class="studio-nav-item '+(isAgent ? 'is-current':'')+'" data-primary-nav="agents">'+studioIcon('database')+'<span>'+t('Agent配置')+'</span>'+studioIcon('down')+'</summary><nav class="studio-agent-nav" aria-label="Agents">'+agents.map(([id,label,href,legacyStep])=>'<a class="studio-nav-item '+((current === id || !current && (step === legacyStep || id === 'script' && step === 'story')) ? 'is-active':'')+'" href="'+escape(studioHref(href,pid))+'" data-leave data-agent-nav="'+id+'" data-studio-agent="'+id+'" data-studio-step="'+legacyStep+'"><span class="studio-agent-branch"></span><span class="studio-step-label">'+t(label)+'</span><span class="studio-step-status" data-step-status></span></a>').join('')+'</nav></details><a class="studio-nav-item '+(current === 'storage' ? 'is-active':'')+'" href="'+escape(url('storage'))+'" data-leave data-primary-nav="storage">'+studioIcon('home')+'<span>'+t('存储位置')+'</span></a></nav><a class="studio-nav-item studio-panel-bottom" href="'+escape(studioHref('/resources.html?section=budget',pid))+'" data-leave>'+studioIcon('settings')+'<span>'+t('项目设置')+'</span></a></aside>';
 }
 function actionMarkup(action, primary) {
   if (!action) return '';
@@ -52,14 +64,15 @@ function applyWorkflow(state, value) {
   if (states.get(state.container) !== state) return;
   const statuses = normalizeStatuses(value), labels = { completed: '已完成', complete: '已完成', in_progress: '进行中', active: '进行中', pending: '待处理', needs_review: '需复核', stale: '需复核', blocked: '待处理', failed: '待处理' };
   for (const link of state.frame.querySelectorAll('[data-studio-step]')) {
-    const record = statuses.get(link.dataset.studioStep), status = labels[record?.status] ? record.status : 'pending';
-    link.dataset.status = status; link.querySelector('[data-step-status]').textContent = labels[status];
+    const agent = value?.agents?.find(item=>item.id===link.dataset.studioAgent);
+    const record = agent ?? statuses.get(link.dataset.studioStep), status = labels[record?.status] ? record.status : 'pending';
+    link.dataset.status = status; link.querySelector('[data-step-status]').textContent = t(labels[status]);
     const complete = ['completed', 'complete'].includes(status), review = ['needs_review', 'stale'].includes(status);
-    link.querySelector('[data-step-dot]').innerHTML = complete ? studioIcon('check') : review ? '!' : '';
+    if (link.querySelector('[data-step-dot]')) link.querySelector('[data-step-dot]').innerHTML = complete ? studioIcon('check') : review ? '!' : '';
     link.title = `${link.querySelector('.studio-step-label').textContent}：${labels[status]}${record?.reason ? `；${record.reason}` : ''}`;
   }
   const thumbnail = safeImage(value?.thumbnailUrl ?? value?.project?.thumbnailUrl);
-  if (thumbnail) { const holder = state.frame.querySelector('[data-studio-thumbnail]'); if (!holder.querySelector('img')) holder.innerHTML = `<img src="${escape(thumbnail)}" alt="当前项目已保存素材">`; }
+  if (thumbnail) { const holder = state.frame.querySelector('[data-studio-thumbnail]'); if (holder && !holder.querySelector('img')) holder.innerHTML = `<img src="${escape(thumbnail)}" alt="当前项目已保存素材">`; }
 }
 async function loadWorkflow(state, refresh = false) {
   const id = state.options.project?.id; if (!id) return;
@@ -78,6 +91,13 @@ async function loadWorkflow(state, refresh = false) {
   try { applyWorkflow(state, await requested); } catch (error) { if (states.get(state.container) === state) for (const node of state.frame.querySelectorAll('[data-studio-step]')) node.title = `状态尚未核实：${error.message}。项目及原任务未改变。`; }
 }
 function findTarget(state, action) { if (!action?.selector) return null; try { return state.content.querySelector(action.selector) ?? state.actions?.querySelector(action.selector) ?? state.container.querySelector(action.selector); } catch { return null; } }
+function retireLegacyInputs(state) {
+  if (!['/script.html','/video.html','/canvas-video.html'].includes(location.pathname)) return;
+  for (const node of state.content.querySelectorAll('[data-testid="canvas-prepare"],[data-testid="canvas-submit"],[data-testid="canvas-redo"],[data-testid="video-prepare"],[data-testid="video-submit"],[data-redo],[data-action="prepare-outline"],[data-action="prepare-script"],[data-task-action="submit"],[data-testid="video-model"],#script-model')) {
+    if (!node.disabled) node.disabled = true;
+    node.title = t('即梦已退出新任务；此页仅保留历史查询、下载和人工版本。');
+  }
+}
 function syncActions(state) {
   if (states.get(state.container) !== state) return;
   for (const kind of ['primary', 'secondary']) {
@@ -88,7 +108,7 @@ function syncActions(state) {
 }
 export function mountStudio(container, options = {}) {
   if (!container) return;
-  const previous = states.get(container); previous?.observer?.disconnect();
+  const previous = states.get(container); previous?.observer?.disconnect(); previous?.assistant?.destroy();
   document.body.classList.add('studio-ui'); container.classList.add('studio-mounted');
   const originalMain = container.querySelector('.main') ?? container.querySelector('.channel-main') ?? container;
   const content = originalMain.querySelector(':scope > .content') ?? container.querySelector('.content');
@@ -106,11 +126,12 @@ export function mountStudio(container, options = {}) {
     }
   }
   const contentNode = content; contentNode.classList.add('studio-content');
+  if (['/script.html','/video.html','/canvas-video.html'].includes(location.pathname) && !contentNode.querySelector('[data-legacy-retired]')) { const notice=document.createElement('div');notice.className='warning-box';notice.dataset.legacyRetired='';notice.textContent=t('即梦已退出新任务；此页仅保留历史查询、下载和人工版本。');contentNode.querySelector('.page-heading')?.after(notice); }
   for (const duplicate of contentNode.querySelectorAll('.workflow,.creative-route,.video-route,.canvas-stage,.timeline-route')) duplicate.remove();
   const frame = document.createElement('div'); frame.className = 'studio-frame';
   if (matchMedia('(max-width: 900px)').matches) frame.classList.add('studio-panel-collapsed');
   const current = initialStep(options.step), title = options.title ?? (options.section ? studioConfig.resources.find(item => item.id === options.section)?.label : current.label) ?? current.label;
-  frame.innerHTML = `${rail(options)}${projectPanel(options)}<header class="studio-header"><div class="studio-breadcrumb"><a href="/" data-leave>项目</a><span>›</span><span class="studio-breadcrumb-project">${escape(options.project?.name ?? '新项目')}</span><span>›</span><strong>${escape(title)}</strong></div><div class="studio-header-actions"></div></header><main class="studio-main main" aria-label="${escape(title)}工作区"></main><footer class="studio-footer"><div class="studio-footer-secondary">${actionMarkup(options.secondary, false)}</div><div class="studio-footer-next"><span data-studio-message>${escape(options.nextText ?? '完成当前内容后，继续下一步。')}</span>${actionMarkup(options.primary, true)}</div></footer>`;
+  frame.innerHTML = `${projectPanel(options)}<header class="studio-header"><button class="ghost-button studio-mobile-menu" data-studio-toggle-panel aria-label="导航" aria-expanded="false">☰</button><div class="studio-breadcrumb"><a href="/" data-leave>故事与需求</a><span>›</span><span class="studio-breadcrumb-project">${escape(options.project?.name ?? '新项目')}</span><span>›</span><strong>${escape(title)}</strong></div><div class="studio-header-actions"><details class="studio-top-projects"><summary>${escape(options.project?.name ?? t("切换项目"))}${options.project ? `<small class="studio-project-facts">${escape(options.project.durationSeconds)}${t('秒')} · ${escape(options.project.aspectRatio)}</small>` : ""}</summary><div class="studio-project-options">${projectList(options)}</div></details><a class="studio-new-link" href="/?new=1" data-leave>${studioIcon("plus")}${t("新建项目")}</a></div></header><main class="studio-main main" aria-label="${escape(title)}工作区"></main><footer class="studio-footer"><div class="studio-footer-secondary">${actionMarkup(options.secondary, false)}</div><div class="studio-footer-next"><span data-studio-message>${escape(options.nextText ?? '完成当前内容后，继续下一步。')}</span>${actionMarkup(options.primary, true)}</div></footer>`;
   frame.querySelector('.studio-main').append(contentNode);
   if (oldActions?.children.length) { const details = document.createElement('details'); details.className = 'studio-more-actions'; details.innerHTML = `<summary title="更多操作" aria-label="更多操作">${studioIcon('more')}</summary>`; oldActions.classList.add('studio-original-actions'); details.append(oldActions); frame.querySelector('.studio-header-actions').append(details); }
   container.replaceChildren(frame);
@@ -125,8 +146,16 @@ export function mountStudio(container, options = {}) {
     else if (action.selector) { const target = findTarget(state, action); if (target && !target.disabled) target.click(); }
     else if (action.href) { const anchor = document.createElement('a'); anchor.href = studioHref(action.href, options.project?.id); anchor.dataset.leave = ''; anchor.hidden = true; state.content.append(anchor); anchor.click(); anchor.remove(); }
   });
-  state.observer = new MutationObserver(() => syncActions(state)); state.observer.observe(contentNode, { attributes: true, attributeFilter: ['disabled', 'aria-disabled'], childList: true, subtree: true }); if (oldActions) state.observer.observe(oldActions, { attributes: true, attributeFilter: ['disabled', 'aria-disabled'], childList: true, subtree: true });
+  state.observer = new MutationObserver(() => { syncActions(state); translateInterface(contentNode); }); state.observer.observe(contentNode, { attributes: true, attributeFilter: ['disabled', 'aria-disabled'], childList: true, subtree: true }); if (oldActions) state.observer.observe(oldActions, { attributes: true, attributeFilter: ['disabled', 'aria-disabled'], childList: true, subtree: true });
   document.title = `${studioConfig.name} · ${title}`;
-  syncActions(state); void loadWorkflow(state);
+  syncActions(state); void loadWorkflow(state); translateInterface(frame);syncPreferences(frame,title);
+  setTimeout(() => {
+    if (!frame.isConnected || frame.querySelector('.creative-assistant')) return;
+    const types = {entities:'entity',prompts:'prompt',voice:'voice',editing:'editing',style:'settings',directors:'settings',services:'settings',general:'settings',storage:'settings'};
+    const targetType = options.assistantTargetType ?? types[options.studioPage] ?? (options.step === 'storyboard' ? 'storyboard' : options.step === 'finishing' || options.step === 'export' ? 'editing' : options.step === 'images' || options.step === 'video' ? 'prompt' : 'settings');
+    const apiPath = options.project?.id ? '/api/projects/'+encodeURIComponent(options.project.id)+'/studio-assistant' : '/api/studio/assistant';
+    state.assistant = mountCreativeAssistant({container:frame,projectId:options.project?.id ?? 'global',apiPath,targetType,targetId:options.assistantTargetId,contextLabel:options.assistantContextLabel??title,getContext:async()=>{await options.beforeAssistantContext?.();const response=await fetch(apiPath+'?'+new URLSearchParams({targetType,...(options.assistantTargetId?{targetId:options.assistantTargetId}:{})}));const result=await response.json();if(!response.ok)throw new Error(result.error ?? 'Context unavailable'); return {projectId:options.project?.id,targetType,targetId:result.target?.id,targetHash:result.target?.hash,selectedText:window.getSelection()?.toString() ?? ''};},onApplied:()=>location.reload()});
+    translateInterface(frame);
+  },0);
   return { refreshWorkflow: () => loadWorkflow(state, true), syncActions: () => syncActions(state) };
 }

@@ -21,9 +21,9 @@ const report = { checkedAt: new Date().toISOString(), fixturesOnly:true, realMod
 try {
   await browser.call('Emulation.setDeviceMetricsOverride', { width:1366, height:768, deviceScaleFactor:1, mobile:false });
   await browser.call('Page.navigate', { url:base }); await browser.waitFor("!!document.querySelector('.studio-frame')");
-  assert.equal(await browser.evaluate("document.querySelectorAll('.studio-steps [data-studio-step]').length"), 7);
-  assert.ok(await browser.evaluate("!!document.querySelector('.studio-rail')&&!!document.querySelector('.studio-panel')&&!document.querySelector('.workflow')"));
-  await screenshot('story-empty-1366.png'); report.checks.push('空项目保留窄图标栏、项目面板及七步制作流程，顶部无重复流程，主操作明确新建故事');
+  assert.equal(await browser.evaluate("document.querySelectorAll('[data-agent-nav]').length"), 6);
+  assert.ok(await browser.evaluate("!document.querySelector('.studio-rail')&&!!document.querySelector('.studio-panel')&&!document.querySelector('.workflow')"));
+  await screenshot('story-empty-1366.png'); report.checks.push('空项目保留单文字左栏及六Agent，顶部无重复流程，主操作明确新建故事');
   await click(query('new-project')); await fill('name','[TEST] C版故事·山间来信');
   const idea='【独立软件测试】少年在山间车站收到一封迟到的信，守站人帮助他找到收信人。保留信件和温暖结局。';
   await fill('idea',idea); assert.equal(await browser.evaluate(`document.querySelector(${JSON.stringify(query('duration'))}).value`),'30');
