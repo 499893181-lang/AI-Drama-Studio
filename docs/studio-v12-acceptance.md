@@ -28,6 +28,7 @@
 | 页面 | 截图 |
 |---|---|
 | 改版前：v11 双侧栏，独立 TEST 稿 | [改版前](studio-v12-evidence/before-v11-script.png) |
+| 剧本 / 分镜（隔离 TEST 候选，非真实生成） | [剧本正文](studio-v12-evidence/script-1440x900.png) · [分镜编辑](studio-v12-evidence/storyboard-1440x900.png) |
 | 改版后：声音页 1366×768，翻句/表演/操作说明首屏可见 | [声音 1366](studio-v12-evidence/voice-1366x768.png) |
 | 声音页 1440×900 | [声音 1440](studio-v12-evidence/voice-1440x900.png) |
 | 角色与场景并列 | [人物场景](studio-v12-evidence/entities.png) |
