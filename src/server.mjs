@@ -24,6 +24,7 @@ import { StudioAssistant } from './studio-assistant.mjs';
 import { createProductionServices, handleProductionRoute } from './production-routes.mjs';
 import { bindStudioMedia } from './studio-media-binding.mjs';
 import { cropReference } from './image-derive.mjs';
+import {runtimeRoot,rememberRuntimeRoot} from './runtime-location.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -58,7 +59,7 @@ function sendVideo(request, response, file) {
   response.end(request.method === 'HEAD' ? undefined : bytes.subarray(start, end + 1));
 }
 export function createStudio(options = {}) {
-  const store = new Store(options.dataDir ?? process.env.DATA_DIR ?? path.join(repoRoot, 'data'));
+  const store = new Store(options.dataDir ?? runtimeRoot(repoRoot));
   const services = new ServiceRegistry(store,{...options.serviceOptions,allowGeneration:false});
   const settings = new StudioSettings(store,options.settingsOptions);
   const jobs = new CodexJobs(store,{runner:services.runText,...options.codexOptions});
@@ -394,12 +395,14 @@ function acquireLock(dataRoot) {
   return () => { try { const value = JSON.parse(fs.readFileSync(lockfile, 'utf8')); if (value.pid === process.pid) fs.unlinkSync(lockfile); } catch {} };
 }
 if (process.argv[1] && fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url))) {
-  const dataRoot = path.resolve(process.env.DATA_DIR ?? path.join(repoRoot, 'data'));
+  let dataRoot;
   let unlock;
   try {
+    dataRoot=runtimeRoot(repoRoot);
     const port = Number(process.env.PORT ?? 4317);
     if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT 须为 1–65535 的整数。');
     unlock = acquireLock(dataRoot);
+    rememberRuntimeRoot(repoRoot,dataRoot);
     const app = createStudio({ dataDir: dataRoot });
     app.server.on('error', error => { unlock(); console.error(`启动失败：${error.message}`); process.exitCode = 1; });
     app.server.listen(port, '127.0.0.1', () => console.log(`AI-Drama-Studio 已启动：http://127.0.0.1:${port}\n项目数据：${dataRoot}\n按 Ctrl+C 关闭服务。`));
