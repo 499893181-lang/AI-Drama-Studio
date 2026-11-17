@@ -13,7 +13,7 @@ function testPrice() { return { status: 'known', canSubmit: true, currency: 'CRE
 async function fixture(t, options = {}) {
   const dataDir = fs.mkdtempSync(path.join(directory, 'video-http-')); let calls = 0;
   const adapter = { executionMode: 'isolated-fixture', inspect: async () => structuredClone(cap), quote: async () => testPrice(), submit: async () => { calls++; return { status: 'success', externalTaskId: 'TEST-SUBMIT-ONLY' }; }, download: async ({ cwd }) => { const video = await createTestVideo(cwd); return { status: 'success', externalTaskId: 'TEST-SUBMIT-ONLY', path: video.path }; }, ...options };
-  const app = createStudio({ dataDir, videoOptions: { adapter } }); t.after(() => app.close());
+  const app = createStudio({ allowLegacyNewTasks:true, dataDir, videoOptions: { adapter } }); t.after(() => app.close());
   const project = app.store.create({ name: '[隔离HTTP视频验收]', idea: 'TEST FIXTURE ONLY，未调用即梦。' });
   app.creative.update(project.id, { revision: 0, entities: structuredClone(fixtureEntities), shots: fixtureShots() });
   app.creative.addVersion(project.id, { revision: 1, kind: 'storyboard', body: '【测试】三个镜头' });

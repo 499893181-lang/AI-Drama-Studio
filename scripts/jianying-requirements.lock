@@ -1,0 +1,8 @@
+# Windows x64 CPython3.12 wheel hashes, downloaded/reviewed 2026-11-17.
+comtypes==1.5.0 --hash=sha256:c648ed3b243b1eb3b7cb893a873d1b35104ca1c8922061f4b1efafeb255bacb5
+imageio==2.38.2 --hash=sha256:d71174e7af8369a4f73525c5b1c0d2621eb2827ed3cfd7327560be02ac1b4084
+numpy==2.5.5 --hash=sha256:919eb420662b0b4ba34889df503f3d5329775b0c1d5f7e5f5af4fba8315b1e30
+pillow==13.0.0 --hash=sha256:ff3fe9eb621fbb9db4c4be33ab946f6bac5f98ab50ca8d3260503653656c961b
+pyjianyingdraft==0.3.1 --hash=sha256:6ce5efb014caff01b6d1ae433d109d8fb4861924d3ec06b6fc8f9431c89c7ae8
+pymediainfo==7.0.1 --hash=sha256:13224fa7590e198763b8baf072e704ea81d334e71aa32a469091460e243893c7
+uiautomation==2.0.29 --hash=sha256:5dd51c9e77e70470142a13d903be67f256c445e7cf20b47ada0ece2bdaff9f32

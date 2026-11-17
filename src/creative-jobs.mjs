@@ -8,6 +8,7 @@ import { CreativeWorkspace, creativeHash, validateEntities, validateEntityRefs, 
 import { runCreativeCodex } from './creative-runner.mjs';
 import { scriptReviewSchema, validateScriptReview } from './script-review.mjs';
 import { assessEntityProvenance, entityFactsHash, provenanceHash } from './entity-provenance.mjs';
+import { receiptSucceeded } from './service-catalog.mjs';
 
 const str = { type: 'string' }, strs = { type: 'array', items: str };
 const obj = properties => ({ type: 'object', additionalProperties: false, properties, required: Object.keys(properties) });
@@ -98,6 +99,7 @@ export class CreativeService {
     if (this.closed) throw new AppError('服务正在关闭。', 503);
     if (!['script', 'storyboard', 'review'].includes(body.kind)) throw new AppError('未知文字任务类型。');
     const refs = Object.fromEntries(['scriptTaskId', 'targetTaskId', 'targetVersionId'].filter(key => body[key]).map(key => [key, body[key]]));
+    if(this.workspace.defaultBindingPolicy===2)refs.bindingPolicy=2;
     // A storyboard/review binds the actually selected script, not whichever later becomes active.
     if (body.kind !== 'script' && !refs.scriptTaskId) { const selected = this.workspace.get(id).selectedScriptTaskId; if (selected) refs.scriptTaskId = selected; }
     const context = this.workspace.context(id, body.kind, refs); this.workspace.check(context.workspace, body.revision);
@@ -126,7 +128,8 @@ export class CreativeService {
     if ([...this.active.values()].some(run => run.job.projectId === id && run.job.kind === body.kind)) throw new AppError('本项目同类文字任务正在执行。', 409);
     if (this.active.size >= 2) throw new AppError('已有两个文字任务运行中，请稍候。', 429);
     const job = { id: randomUUID(), requestId: randomUUID(), projectId: id, kind: body.kind, stage: body.kind === 'script' ? 'drama-script' : body.kind === 'storyboard' ? 'drama-visual' : 'independent-review', provider: 'codex-cli', status: 'queued', inputRevision: context.workspace.revision, sourceProjectRevision: context.project.revision, inputHash: context.inputHash, sourceHash: context.sourceHash, knowledgeHash: context.knowledge.hash, inputSnapshot: context.snapshot, references: refs, packets: context.packets, createdAt: now(), updatedAt: now(), events: [], message: '已持久化任务，等待本机Codex真实执行。', error: null, result: null, rawText: '', threadId: null, usage: null, formalStageStatus: 'not_checked', mediaStatus: 'not_generated' };
-    if(body.kind==='review'&&body.bindEditorBody===true&&context.target?.kind==='script')job.editorReviewBinding={scopeHash:this.workspace.editorReviewScope(id,context.workspace),targetHash:creativeHash(context.target),proofHash:this.workspace.editorReviewProof(context.target,context.workspace),bodyHash:creativeHash(context.target.body??context.target.result?.body??'')};
+    if(body.kind==='review'&&body.bindEditorBody===true&&context.target?.kind==='script')job.editorReviewBinding={bindingPolicy:refs.bindingPolicy??1,scopeHash:this.workspace.editorReviewScope(id,context.workspace,refs.bindingPolicy??1),targetHash:creativeHash(context.target),proofHash:this.workspace.editorReviewProof(context.target,context.workspace),bodyHash:creativeHash(context.target.body??context.target.result?.body??'')};
+    if(this.runner.snapshot){job.serviceSnapshot=this.runner.snapshot(id);job.provider=job.serviceSnapshot.provider;job.message='已持久化任务，等待所选文字服务执行。';}
     this.store.write('creative-jobs', job);
     const run = { job, controller: new AbortController() }; this.active.set(job.id, run);
     Promise.resolve().then(() => this.execute(run, context)).catch(error => this.fail(run, error.message)); return job;
@@ -144,7 +147,7 @@ export class CreativeService {
     fs.writeFileSync(path.join(cwd, 'input.json'), JSON.stringify(job.inputSnapshot, null, 2));
     fs.writeFileSync(path.join(cwd, 'prompt.txt'), inputPrompt); fs.writeFileSync(path.join(cwd, 'response.schema.json'), JSON.stringify(schema, null, 2));
     job.status = 'running'; job.rawResultPath = path.relative(this.store.root, cwd); this.record(job, 'running', '已启动文字任务；候选、人工稿、正式岗位状态分别保存。');
-    const receipt = await this.runner({ prompt: inputPrompt, schema, cwd, signal: run.controller.signal, onEvent: event => {
+    const receipt = await this.runner({ projectId:job.projectId,serviceSnapshot:job.serviceSnapshot,requestId:job.requestId,prompt: inputPrompt, schema, cwd, signal: run.controller.signal, onEvent: event => {
       if (this.closed || run.controller.signal.aborted || !this.active.has(job.id)) return;
       if (event.threadId || event.thread_id) job.threadId = event.threadId || event.thread_id;
       if (event.usage) job.usage = event.usage;
@@ -157,10 +160,11 @@ export class CreativeService {
     job.rawText = typeof receipt?.finalMessage === 'string' ? receipt.finalMessage : JSON.stringify(receipt?.finalMessage ?? null);
     job.threadId = receipt?.threadId ?? job.threadId; job.usage = receipt?.usage ?? job.usage;
     job.exitCode = receipt?.exitCode ?? null; job.turnCompleted = receipt?.completed === true;
+    job.completionEvidence=receipt?.completionEvidence??null;job.httpStatus=receipt?.httpStatus??null;job.responseId=receipt?.responseId??null;job.provider=receipt?.provider??job.provider;
     this.store.write('creative-jobs', job);
-    if (!receipt || receipt.exitCode !== 0 || receipt.completed !== true || receipt.error) throw new Error(`真实Codex任务失败：${receipt?.error || `退出码${receipt?.exitCode ?? '未知'}；缺少真实完成终态。`}`);
+    if (!receiptSucceeded(receipt)) throw new Error(`文字服务任务失败：${receipt?.error || '缺少真实完成终态。'}`);
     if (job.rawText.length > 250000) throw new Error('候选原文超过250000字，保留原始回执但不采用。');
-    let value; try { value = JSON.parse(job.rawText); } catch { throw new Error('Codex返回不是完整JSON，原文已保留；人工稿未改变。'); }
+    let value; try { value = JSON.parse(job.rawText); } catch { throw new Error('文字服务返回不是完整JSON，原文已保留；人工稿未改变。'); }
     job.result = job.kind === 'script' ? validateCreativeScript(value, context) : job.kind === 'storyboard' ? validateCreativeStoryboard(value, context) : validateScriptReview(value);
     if (job.kind === 'script') job.entityProvenance = assessEntityProvenance(job.result, job.inputSnapshot);
     else if (job.kind === 'storyboard') job.entityProvenance = structuredClone(context.effective.provenance ?? null);

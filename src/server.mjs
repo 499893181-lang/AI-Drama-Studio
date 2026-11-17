@@ -17,6 +17,13 @@ import { CanvasVideoService } from './canvas-video-jobs.mjs';
 import { inspectWorkflow } from './workflow.mjs';
 import { ScriptWorkbench } from './script-workbench.mjs';
 import { CreativeAssistantService } from './creative-assistant.mjs';
+import { ServiceRegistry, handleServiceRoutes } from './service-registry.mjs';
+import { StudioSettings, VISUAL_STYLES } from './studio-settings.mjs';
+import { StudioProduction } from './studio-production.mjs';
+import { StudioAssistant } from './studio-assistant.mjs';
+import { createProductionServices, handleProductionRoute } from './production-routes.mjs';
+import { bindStudioMedia } from './studio-media-binding.mjs';
+import { cropReference } from './image-derive.mjs';
 
 const repoRoot = fileURLToPath(new URL('../', import.meta.url));
 const mimeTypes = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ico': 'image/x-icon' };
@@ -52,16 +59,25 @@ function sendVideo(request, response, file) {
 }
 export function createStudio(options = {}) {
   const store = new Store(options.dataDir ?? process.env.DATA_DIR ?? path.join(repoRoot, 'data'));
-  const jobs = new CodexJobs(store);
-  const scripts = new ScriptService(store, options.scriptOptions);
-  const creative = new CreativeService(store, options.creativeOptions);
+  const services = new ServiceRegistry(store,{...options.serviceOptions,allowGeneration:false});
+  const settings = new StudioSettings(store,options.settingsOptions);
+  const jobs = new CodexJobs(store,{runner:services.runText,...options.codexOptions});
+  const scripts = new ScriptService(store,{...options.scriptOptions,reviewOptions:{runner:services.runText,...options.scriptOptions?.reviewOptions}});
+  const creative = new CreativeService(store,{runner:services.runText,...options.creativeOptions});
+  creative.workspace.defaultBindingPolicy=2;
+  creative.workspace.services=services;
   const scriptWorkbench = new ScriptWorkbench(store, { creative, ...options.scriptWorkbenchOptions });
-  const assistant = new CreativeAssistantService(store, { creative, scriptWorkbench, ...options.assistantOptions });
+  const assistant = new CreativeAssistantService(store, { creative, scriptWorkbench, runner:services.runText, ...options.assistantOptions });
   const images = new ImageWorkspace(store, { creativeWorkspace: creative.workspace, ...options.imageOptions });
   const imageGeneration = new ImageGenerationJobs(store, { images, ...options.imageGenerationOptions });
   const videos = new VideoService(store, { images, ...options.videoOptions });
   const timeline = new TimelineService(store, { videos, ...options.timelineOptions });
   const canvasVideo = new CanvasVideoService(store, { videos, ...options.canvasVideoOptions });
+  const production = createProductionServices(store,{creative,videos,registry:services,...options.productionOptions});
+  const visuals = new StudioProduction(store,{creative,images,services});
+  const studioAssistant = new StudioAssistant(store,{creative,visuals,production,settings,services,...options.studioAssistantOptions});
+  const mediaBridge=bindStudioMedia({services,images,videos,visuals,store});
+  const legacyNew = () => { if(options.allowLegacyNewTasks!==true)throw new AppError('即梦已退出新建及生成路由；原任务仍可查询、下载。请在 AI 服务配置选择新渠道。',403); };
   let imageReport = null, imageInspection = null;
   const getImageCapabilities = () => {
     if (imageReport && Date.now() - Date.parse(imageReport.checkedAt) < 60000) return Promise.resolve(imageReport);
@@ -102,7 +118,18 @@ export function createStudio(options = {}) {
       const url = new URL(request.url, 'http://127.0.0.1');
       const segments = url.pathname.split('/').filter(Boolean).map(value => decodeURIComponent(value));
       const method = request.method;
-      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.10.0', phase: 'script-tabs-and-creative-assistant', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video', 'creative-assistant'], now: now() }); return; }
+      if(segments[0]==='api'&&segments[1]==='projects'&&segments[3]==='media-prepare'&&method==='POST'){const input=await readJson(request);json(response,mediaBridge.prepare(segments[2],input.category,input),201);return;}
+      if(await handleServiceRoutes({request,response,segments,method,readJson,json,registry:services,url}))return;
+      if(await handleProductionRoute(request,response,{url,readJson,json,sendVideo,production}))return;
+      if(segments[0]==='api'&&segments[1]==='studio'){
+        if(segments[2]==='preferences'){if(method==='GET')json(response,settings.preferences());else if(method==='PUT')json(response,settings.update(await readJson(request)));else throw new AppError('不支持此操作。',405);return;}
+        if(segments[2]==='visual-styles'&&method==='GET'){json(response,{styles:VISUAL_STYLES});return;}
+        if(segments[2]==='storage'){if(segments[3]==='pick'&&method==='POST')json(response,await settings.pick());else if(method==='GET')json(response,settings.storage());else if(method==='PUT')json(response,settings.saveStorage(await readJson(request)));else throw new AppError('不支持此操作。',405);return;}
+      }
+      const globalAssistant=segments[0]==='api'&&segments[1]==='studio'&&segments[2]==='assistant';
+      const projectAssistant=segments[0]==='api'&&segments[1]==='projects'&&segments[3]==='studio-assistant';
+      if(globalAssistant||projectAssistant){const projectId=projectAssistant?segments[2]:null,parts=segments.slice(projectAssistant?4:3);if(parts.length===0&&method==='GET'){json(response,studioAssistant.view(projectId,url.searchParams.get('targetType')??'settings',url.searchParams.get('targetId')??'current'));return;}if(parts[0]==='messages'){if(parts.length===1&&method==='POST'){json(response,studioAssistant.start(projectId,await readJson(request)),202);return;}if(validId(parts[1])){if(parts.length===2&&method==='GET'){const row=store.read('studio-assistant-turns',parts[1]);if(row.projectId!==(projectId??null))throw new AppError('消息不属于当前作用域。',404);json(response,studioAssistant.present(row));return;}if(parts[2]==='apply'&&method==='POST'){json(response,studioAssistant.apply(projectId,parts[1],await readJson(request)));return;}if(parts[2]==='undo'&&method==='POST'){json(response,studioAssistant.undo(projectId,parts[1],await readJson(request)));return;}if(parts[2]==='cancel'&&method==='POST'){await readJson(request);json(response,studioAssistant.cancel(projectId,parts[1]));return;}}}throw new AppError('助手接口不存在。',404);}
+      if (url.pathname === '/api/health' && method === 'GET') { json(response, { ok: true, app: 'AI-Drama-Studio', version: '0.11.0', phase: 'multi-service-six-agents-voice-editing', supportedPhases: ['story-initiation', 'script', 'creative', 'images', 'videos', 'timeline', 'canvas-video', 'creative-assistant','services','visuals','voice','edit-plan'], now: now() }); return; }
       if (url.pathname === '/api/images/capabilities' && method === 'GET') { json(response, await getImageCapabilities()); return; }
       if (url.pathname === '/api/video-channels/canvas') {
         if (method !== 'GET') throw new AppError('渠道证据仅供只读查看，生成和授权入口关闭。', 405);
@@ -119,10 +146,13 @@ export function createStudio(options = {}) {
         }
         const id = segments[2];
         if (!validId(id)) throw new AppError('项目标识不正确。');
-        if (segments[3] === 'workflow' && segments.length === 4 && method === 'GET') { json(response, inspectWorkflow({ store, creative, scripts, images, videos, timeline, canvasVideo }, id)); return; }
+        if(segments[3]==='visuals'&&segments.length===4){if(method==='GET')json(response,visuals.view(id));else if(method==='PUT')json(response,visuals.update(id,await readJson(request)));else throw new AppError('不支持此操作。',405);return;}
+        if(segments[3]==='studio-prompts'&&segments[4]==='compile'&&method==='POST'){json(response,visuals.compile(id,await readJson(request)),201);return;}
+        if(segments[3]==='studio-prompts'&&segments.length===4){if(method==='GET')json(response,{...visuals.prompts(id),promptNotes:visuals.get(id).promptNotes??''});else if(method==='PUT')json(response,visuals.update(id,await readJson(request)));else throw new AppError('不支持此操作。',405);return;}
+        if (segments[3] === 'workflow' && segments.length === 4 && method === 'GET') { json(response, inspectWorkflow({ store, creative, scripts, images, videos, timeline, canvasVideo, production,visuals,services }, id)); return; }
         if (segments[3] === 'canvas-video') {
           if (segments.length === 4 && method === 'GET') { json(response, canvasVideo.view(id)); return; }
-          if (segments.length === 4 && method === 'POST') { json(response, await canvasVideo.prepare(id, await readJson(request)), 201); return; }
+          if (segments.length === 4 && method === 'POST') { legacyNew(); json(response, await canvasVideo.prepare(id, await readJson(request)), 201); return; }
         }
         if (segments[3] === 'timeline') {
           if (segments.length === 4 && method === 'GET') { json(response, timeline.view(id)); return; }
@@ -136,7 +166,7 @@ export function createStudio(options = {}) {
           if (segments.length === 4 && method === 'GET') { json(response, await videos.view(id)); return; }
           if (segments.length === 5 && method === 'POST') {
             const input = await readJson(request);
-            if (segments[4] === 'prepare') { json(response, await videos.prepare(id, input), 201); return; }
+            if (segments[4] === 'prepare') { legacyNew(); json(response, await videos.prepare(id, input), 201); return; }
             if (segments[4] === 'review') { json(response, await videos.review(id, input)); return; }
             if (segments[4] === 'select') { json(response, await videos.select(id, input)); return; }
           }
@@ -146,6 +176,7 @@ export function createStudio(options = {}) {
           sendVideo(request, response, await videos.file(id, segments[4])); return;
         }
         if (segments[3] === 'images') {
+          if(segments[4]==='derive'&&segments.length===5&&method==='POST'){json(response,await cropReference(images,id,await readJson(request)),201);return;}
           if (segments.length === 4 && method === 'GET') { json(response, images.view(id)); return; }
           if (segments.length === 5 && segments[4] === 'generation' && method === 'GET') { json(response, await imageGeneration.view(id)); return; }
           if (segments.length === 6 && segments[4] === 'packets' && method === 'GET') {
@@ -215,7 +246,7 @@ export function createStudio(options = {}) {
             if (segments[4] === 'verify-binding') { await scripts.verifyBinding(id, input.revision); json(response, await scripts.view(id)); return; }
             if (segments[4] === 'versions') { scripts.workspace.addVersion(id, input); json(response, await scripts.view(id), 201); return; }
             if (segments[4] === 'activate') { scripts.workspace.activate(id, input.revision, input.versionId); json(response, await scripts.view(id)); return; }
-            if (segments[4] === 'prepare') { json(response, await scripts.prepare(id, input), 201); return; }
+            if (segments[4] === 'prepare') { legacyNew(); json(response, await scripts.prepare(id, input), 201); return; }
             if (segments[4] === 'reviews') { json(response, scripts.startReview(id, input), 202); return; }
           }
         }
@@ -236,7 +267,7 @@ export function createStudio(options = {}) {
           if (segments.length === 5 && method === 'GET') {
             const project = store.read('projects', id), ref = project.references.find(ref => ref.id === segments[4]);
             if (!ref || !validId(ref.id) || ref.storedName !== `${ref.id}.bin`) throw new AppError('参考素材不存在。', 404);
-            const file = path.join(store.root, 'references', id, ref.storedName);
+            const file = path.join(store.directory('references', id), ref.storedName);
             if (!fs.existsSync(file)) throw new AppError('参考素材文件丢失，项目记录已保留。', 404);
             response.writeHead(200, { 'Content-Type': 'application/octet-stream', 'Content-Disposition': `attachment; filename*=UTF-8''${encodeURIComponent(ref.name)}`, 'Content-Length': fs.statSync(file).size, 'Cache-Control': 'no-store' });
             fs.createReadStream(file).pipe(response); return;
@@ -249,7 +280,7 @@ export function createStudio(options = {}) {
         if (segments.length === 4 && ['GET', 'HEAD'].includes(method) && segments[3] === 'original') { sendVideo(request, response, canvasVideo.originalFile(id)); return; }
         if (segments.length === 4 && method === 'POST') {
           await readJson(request); // Request bodies can never issue or override a grant.
-          if (['refresh', 'submit', 'query', 'download'].includes(segments[3])) { json(response, await canvasVideo[segments[3]](id), 202); return; }
+          if (['refresh', 'submit', 'query', 'download'].includes(segments[3])) { if(segments[3]==='submit')legacyNew(); json(response, await canvasVideo[segments[3]](id), 202); return; }
           if (segments[3] === 'cancel') { json(response, canvasVideo.cancel(id)); return; }
         }
       }
@@ -287,7 +318,7 @@ export function createStudio(options = {}) {
         if (segments.length === 3 && method === 'GET') { json(response, store.read('script-jobs', id)); return; }
         if (segments.length === 4 && method === 'POST') {
           const input = await readJson(request);
-          if (segments[3] === 'submit') { json(response, await scripts.submit(id, input), 202); return; }
+          if (segments[3] === 'submit') { legacyNew(); json(response, await scripts.submit(id, input), 202); return; }
           if (segments[3] === 'query') { json(response, await scripts.query(id)); return; }
           if (segments[3] === 'adopt') { const task = store.read('script-jobs', id); scripts.adopt(id, input.revision); json(response, await scripts.view(task.projectId)); return; }
         }
@@ -322,7 +353,7 @@ export function createStudio(options = {}) {
         if (segments.length === 3 && method === 'GET') { json(response, videos.read(id)); return; }
         if (segments.length === 4 && method === 'POST') {
           const input = await readJson(request);
-          if (segments[3] === 'submit') { json(response, await videos.submit(id, input), 202); return; }
+          if (segments[3] === 'submit') { legacyNew(); json(response, await videos.submit(id, input), 202); return; }
           if (segments[3] === 'query') { json(response, await videos.query(id)); return; }
           if (segments[3] === 'download') { json(response, await videos.download(id)); return; }
           if (segments[3] === 'cancel') { json(response, await videos.cancel(id)); return; }
@@ -344,7 +375,7 @@ export function createStudio(options = {}) {
   });
   server.requestTimeout = 30000;
   server.headersTimeout = 15000;
-  return { server, store, jobs, scripts, creative, scriptWorkbench, assistant, images, imageGeneration, videos, timeline, canvasVideo, getTools, getImageCapabilities, close: () => { assistant.close(); scriptWorkbench.close(); canvasVideo.close(); timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
+  return { server, store, jobs, scripts, creative, scriptWorkbench, assistant, images, imageGeneration, videos, timeline, canvasVideo, services,settings,production,visuals,studioAssistant, getTools, getImageCapabilities, close: () => { studioAssistant.close(); services.close(); production.close(); assistant.close(); scriptWorkbench.close(); canvasVideo.close(); timeline.close(); videos.close(); imageGeneration.close(); creative.close(); scripts.close(); jobs.close(); server.closeAllConnections(); return new Promise(resolve => server.close(resolve)); } };
 }
 
 function acquireLock(dataRoot) {

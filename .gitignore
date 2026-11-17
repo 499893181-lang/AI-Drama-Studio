@@ -29,3 +29,9 @@ credentials.json
 Thumbs.db
 .DS_Store
 
+
+# Current-user encrypted credentials also stay local
+*.dpapi
+
+__pycache__/
+*.pyc

@@ -48,7 +48,7 @@ export class VideoWorkspace {
     if (!validId(assetId)) throw new AppError('视频资产ID无效。');
     const asset = this.get(projectId).assets.find(item => item.id === assetId);
     if (!asset || !['mp4', 'webm', 'mov'].includes(asset.extension) || asset.storedName !== `${asset.id}.${asset.extension}`) throw new AppError('视频文件不存在。', 404);
-    const file = path.join(this.store.root, 'video-files', projectId, asset.storedName);
+    const file = path.join(this.store.directory('video-files',projectId),asset.storedName);
     if (!fs.existsSync(file)) throw new AppError('视频原文件缺失，版本和历史记录已保留。', 404);
     const bytes = fs.readFileSync(file);
     if (sha(bytes) !== asset.sha256) throw new AppError('视频实际文件Hash改变，停止预览和选用；原记录保留。', 409);
@@ -77,16 +77,21 @@ export class VideoWorkspace {
     const workspace = this.get(projectId), existing = workspace.assets.find(item => item.taskId === task.id), hash = sha(bytes);
     if (existing) {
       if (existing.sha256 !== hash) throw new AppError('同一视频任务已有不同产物，旧文件保留，不能覆盖。', 409);
-      const original = path.join(this.store.root, 'video-files', projectId, existing.storedName);
+      const original = path.join(this.store.directory('video-files',projectId),existing.storedName);
       if (!fs.existsSync(original)) fs.writeFileSync(original, bytes, { flag: 'wx' });
       this.file(projectId, existing.id); return existing;
     }
     if (task.providerStatus !== 'success' || !task.externalTaskId || probe?.verified !== true || probe.sha256 !== hash || !(probe.durationSeconds > 0) || !(probe.width > 0 && probe.height > 0) || !(probe.videoStreams > 0)) throw new AppError('候选缺少真实成功终态、下载文件或FFprobe核验，不能显示生成成功。', 409);
     const id = randomUUID(), extension = probe.mimeType === 'video/webm' ? 'webm' : probe.mimeType === 'video/quicktime' ? 'mov' : 'mp4';
-    const directory = path.join(this.store.root, 'video-files', projectId); fs.mkdirSync(directory, { recursive: true });
+    const directory = this.store.directory('video-files',projectId); fs.mkdirSync(directory, { recursive: true });
     const asset = { id, taskId: task.id, externalTaskId: task.externalTaskId, shotId: task.shotId, version: workspace.assets.filter(item => item.shotId === task.shotId).length + 1, filename: `${task.executionMode === 'isolated-fixture' ? 'TEST-FIXTURE-NOT-AI-' : 'Dreamina-'}${task.shotId}-v${workspace.assets.filter(item => item.shotId === task.shotId).length + 1}.${extension}`, storedName: `${id}.${extension}`, extension, mimeType: probe.mimeType ?? 'video/mp4', size: bytes.length, sha256: hash, binding: clone(task.binding), bindingHash: task.bindingHash, inputSnapshot: clone(task.inputSnapshot), parameters: clone(task.parameters), probe: clone(probe), createdAt: now(), source: { kind: task.executionMode === 'isolated-fixture' ? 'test' : 'dreamina-cli', description: task.executionMode === 'isolated-fixture' ? '隔离runner与明确测试视频；不是即梦真实生成结果。' : '官方即梦CLI任务成功、实际下载且FFprobe核验；仍需人工视觉检查。' }, testFixture: task.executionMode === 'isolated-fixture', canvasStatus: 'not_synced', audioStatus: task.parameters.audioMode === 'mute_derivative' && probe.hasAudio ? 'requires_explicit_derivation' : probe.hasAudio ? 'original_has_audio' : 'no_audio_detected' };
     if (provenance) {
       asset.provenance = clone(provenance);
+      if(task.executionMode==='official-service-api'){
+        if(!provenance.completionEvidence||provenance.provider!==task.provider)throw new AppError('云端候选缺少原渠道原生完成证据。',409);
+        asset.filename=`${task.provider}-${task.shotId}-v${asset.version}.${extension}`;
+        asset.source={kind:'service-api',description:`${task.provider} 官方接口终态、原任务下载与FFprobe核验；实际画面仍待人工检查。`};
+      }
       if (task.provider === 'dreamina-canvas-node-video') {
         asset.canvasStatus = 'source_canvas_resource_bound';
         if (!asset.testFixture) asset.source = { kind: 'dreamina-canvas', description: '官方画布原任务成功终态、资源下载与FFprobe核验；实际首帧/画面仍待人工检查。' };

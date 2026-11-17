@@ -5,6 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { StringDecoder } from 'node:string_decoder';
 import { AppError, now, generationInput, inputHash, validateBrief, briefKeys } from './store.mjs';
 import { resolveExecutable, redact } from './tools.mjs';
+import { receiptSucceeded } from './service-catalog.mjs';
 
 export const briefSchema = {
   type: 'object', additionalProperties: false,
@@ -17,8 +18,8 @@ export function promptFor(project) {
 const scrub = text => redact(text).slice(0, 1800);
 
 export class CodexJobs {
-  constructor(store) {
-    this.store = store; this.active = new Map(); this.closed = false;
+  constructor(store, {runner} = {}) {
+    this.store = store; this.runner=runner;this.active = new Map(); this.closed = false;
     for (const job of store.list('jobs').values) {
       if (['queued', 'running'].includes(job.status)) {
         job.status = 'interrupted'; job.error = '上次运行因工作台关闭而中断。未自动重试，请手动重新扩写。'; job.message = job.error; job.updatedAt = now();
@@ -38,8 +39,9 @@ export class CodexJobs {
     if ([...this.active.values()].some(run => run.job.projectId === project.id)) throw new AppError('本项目已有扩写任务运行中。', 409);
     if (this.active.size >= 2) throw new AppError('已有两个 Codex 任务在运行，请稍后再试。', 429);
     const job = { id: randomUUID(), projectId: project.id, status: 'queued', phase: 'checking', message: '正在检查本机 Codex 登录状态', error: null, result: null, inputRevision: revision, inputHash: inputHash(project), input: generationInput(project), createdAt: now(), updatedAt: now(), events: [], appliedAt: null, provider: 'codex-cli', usage: null };
+    if(this.runner?.snapshot){job.serviceSnapshot=this.runner.snapshot(project.id);job.provider=job.serviceSnapshot.provider;job.message='等待所选文字服务。';}
     this.store.write('jobs', job); this.store.markJob(project.id, job.id);
-    const run = { job, child: null, cancelled: false, timer: null };
+    const run = { job, child: null, cancelled: false, timer: null, controller:new AbortController() };
     this.active.set(job.id, run);
     this.execute(run, project).catch(error => { if (!this.closed) this.fail(run, error.message); });
     return job;
@@ -51,6 +53,13 @@ export class CodexJobs {
   }
   cleanup(run) { clearTimeout(run.timer); this.active.delete(run.job.id); }
   async execute(run, project) {
+    if(this.runner){
+      const job=run.job,cwd=path.join(this.store.root,'runtime',job.id);fs.mkdirSync(cwd,{recursive:true});job.status='running';job.phase='generating';this.event(job,'running','所选文字服务扩写开始；尚无结果。');
+      const receipt=await this.runner({projectId:project.id,serviceSnapshot:job.serviceSnapshot,requestId:job.id,prompt:promptFor(project),schema:briefSchema,cwd,signal:run.controller.signal,onEvent:event=>{if(!this.closed&&!run.cancelled)this.event(job,event.type??'event',event.message??event.type);}});
+      fs.writeFileSync(path.join(cwd,'receipt.json'),JSON.stringify(receipt,null,2));if(this.closed||run.cancelled)return;
+      job.usage=receipt?.usage??null;job.threadId=receipt?.threadId??null;job.completionEvidence=receipt?.completionEvidence??null;job.httpStatus=receipt?.httpStatus??null;job.rawText=receipt?.finalMessage??'';
+      if(!receiptSucceeded(receipt))throw new AppError(receipt?.error??'文字服务未返回完成终态。');const result=validateBrief(JSON.parse(receipt.finalMessage));if(briefKeys.some(key=>!result[key].trim()))throw new AppError('创作说明存在空段落。');job.result=result;job.status='succeeded';job.phase='completed';job.error=null;this.event(job,'validated','扩写候选已保存，等待人工检查采用。');this.cleanup(run);return;
+    }
     const executable = await resolveExecutable('codex');
     if (!executable) { this.fail(run, '待配置：未找到 Codex CLI。请安装官方 Codex，并确保 codex 在 PATH 或设置 CODEX_BIN。'); return; }
     if (run.cancelled || this.closed) return;
@@ -118,14 +127,14 @@ export class CodexJobs {
   cancel(id) {
     const job = this.store.read('jobs', id), run = this.active.get(id);
     if (!run) throw new AppError('此任务已经结束。', 409);
-    run.cancelled = true; run.child?.kill(); run.job.status = 'cancelled'; run.job.phase = 'cancelled';
+    run.cancelled = true; run.controller?.abort();run.child?.kill(); run.job.status = 'cancelled'; run.job.phase = 'cancelled';
     this.event(run.job, 'cancelled', '用户已取消扩写。现有项目和创作说明均已保留。'); this.cleanup(run);
     return run.job;
   }
   close() {
     this.closed = true;
     for (const run of this.active.values()) {
-      run.cancelled = true; run.child?.kill(); clearTimeout(run.timer); run.job.status = 'interrupted'; run.job.phase = 'interrupted';
+      run.cancelled = true;run.controller?.abort(); run.child?.kill(); clearTimeout(run.timer); run.job.status = 'interrupted'; run.job.phase = 'interrupted';
       run.job.error = '服务关闭，扩写中断。未自动重试。'; this.event(run.job, 'interrupted', run.job.error);
     }
     this.active.clear();

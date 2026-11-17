@@ -6,7 +6,7 @@ import { createCanvasFixture } from './canvas-fixtures.mjs';
 
 async function setup(t) {
   const ctx = await createCanvasFixture(t);
-  const app = createStudio({ dataDir: ctx.store.root, canvasVideoOptions: { adapter: ctx.adapter, evidence: ctx.evidence } });
+  const app = createStudio({ allowLegacyNewTasks:true, dataDir: ctx.store.root, canvasVideoOptions: { adapter: ctx.adapter, evidence: ctx.evidence } });
   t.after(() => app.close()); await new Promise(resolve => app.server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${app.server.address().port}`;
   const api = async (url, body) => { const response = await fetch(base + url, { method: body === undefined ? 'GET' : 'POST', headers: { 'Content-Type': 'application/json' }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) }); return { response, value: await response.json() }; };

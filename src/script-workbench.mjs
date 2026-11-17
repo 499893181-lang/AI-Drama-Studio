@@ -39,7 +39,8 @@ export class ScriptWorkbench {
     for(const generation of store.list('script-generations').values)if(busy.has(generation.status)){generation.status='interrupted';generation.error='服务已重启，原文字任务保留；未自动重新创作或检查。';this.record(generation);}
   }
   guard(id,workspace=this.workspace.get(id)){
-    const context=this.workspace.context(id,'script',{},workspace);
+    const context=this.workspace.context(id,'script',{bindingPolicy:this.workspace.defaultBindingPolicy??1},workspace);
+    if(this.workspace.defaultBindingPolicy===2)return creativeHash({source:context.sourceHash,knowledge:context.knowledge.hash,episodeId:workspace.episodeId,instructions:workspace.instructions,shotCount:workspace.shotCount,locks:workspace.locks,entities:workspace.entities,entityInputEvidence:workspace.entityInputEvidence??{}});
     return creativeHash({source:context.sourceHash,knowledge:context.knowledge.hash,episodeId:workspace.episodeId,instructions:workspace.instructions,shotCount:workspace.shotCount,locks:workspace.locks,entities:workspace.entities,entityInputEvidence:workspace.entityInputEvidence??{},stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds,shots:workspace.shots});
   }
   editor(id,workspace=this.workspace.get(id)){
@@ -52,7 +53,7 @@ export class ScriptWorkbench {
   }
   view(id){
     const workspace=this.creative.view(id),editor=this.editor(id),generation=this.store.list('script-generations').values.find(item=>item.projectId===id)??null;
-    return {workspace,editor,generation,usageNote:'生成剧本包含至多一次新会话独立检查，最多两次Codex文字任务；使用已有账号用量，人民币和积分费用未返回，不代表免费。'};
+    return {workspace,editor,generation,usageNote:'生成剧本包含至多一次新会话独立检查，最多两次所选文字服务任务；按服务记录账号用量或 API 费用，未知不代表免费。'};
   }
   check(id,input,workspace=this.workspace.get(id)){
     this.workspace.check(workspace,input.workspaceRevision);
@@ -124,9 +125,10 @@ export class ScriptWorkbench {
     const pendingVersion=workspace.versions.find(item=>item.id===editor.baseVersionId&&item.awaitingConfirmation&&item.id!==workspace.activeScriptId);
     if(activate&&(editor.sourceTaskId||pendingVersion)&&data.shotSeeds?.length){next.scriptTransitions=[...(workspace.scriptTransitions??[]),{at:now(),activeScriptId:workspace.activeScriptId,activeStoryboardId:workspace.activeStoryboardId,shots:clone(workspace.shots),scriptDraft:workspace.scriptDraft}];next.shots=data.shotSeeds.map(seedToShot);}
     if(entityChanges.length)next.entities=next.entities.map(entity=>clone(entityChanges.find(change=>change.id===entity.id)?.after??entity));
-    const context=this.workspace.context(id,'script',{},next),provenance=mergeEntityProvenance(data.entities??[],[...bases,this.workspace.manualSourceBase(next)]);
+    const references=this.workspace.defaultBindingPolicy===2?{bindingPolicy:2}:{};
+    const context=this.workspace.context(id,'script',references,next),provenance=mergeEntityProvenance(data.entities??[],[...bases,this.workspace.manualSourceBase(next)]);
     if(activate&&provenance.pendingCount&&input.confirmPendingSources!==true)throw new AppError('部分设定来源待确认；请明确确认保留待确认状态，不提升为用户事实。',409);
-    const version={id:randomUUID(),kind:'script',body,data:clone(data),origin,taskId:null,sourceTaskId:source.taskId,assistantTurnId,parentVersionId:workspace.activeScriptId,parentSource:editor.sourceTaskId?{id:editor.sourceTaskId,type:'task'}:editor.baseVersionId?{id:editor.baseVersionId,type:'version'}:null,entityProvenanceBases:bases,entityChanges,references:{},createdAt:now(),sourceHash:context.sourceHash,inputHash:context.inputHash,knowledgeHash:context.knowledge.hash,pendingSourcesAcknowledged:provenance.pendingCount?{at:now(),remainsPending:true}:null,awaitingConfirmation:!activate};
+    const version={id:randomUUID(),kind:'script',body,data:clone(data),origin,taskId:null,sourceTaskId:source.taskId,assistantTurnId,parentVersionId:workspace.activeScriptId,parentSource:editor.sourceTaskId?{id:editor.sourceTaskId,type:'task'}:editor.baseVersionId?{id:editor.baseVersionId,type:'version'}:null,entityProvenanceBases:bases,entityChanges,references,createdAt:now(),sourceHash:context.sourceHash,inputHash:context.inputHash,knowledgeHash:context.knowledge.hash,pendingSourcesAcknowledged:provenance.pendingCount?{at:now(),remainsPending:true}:null,awaitingConfirmation:!activate};
     next.versions=[...workspace.versions,version];if(activate)next.activeScriptId=version.id;
     next.scriptEditor={revision:editor.revision+1,body,sourceTaskId:null,baseVersionId:version.id,baseVersionHash:creativeHash(version),updatedAt:now(),requirementsHash:this.guard(id,next),awaitingConfirmation:!activate};
     next.scriptEditorHistory=this.archive(workspace,editor);
@@ -142,7 +144,7 @@ export class ScriptWorkbench {
     const existing=this.store.list('script-generations').values.find(item=>item.projectId===id&&item.requestId===input.requestId);if(existing){if(existing.requestHash!==requestHash)throw new AppError('同一requestId不能绑定不同输入，请核对原任务。',409);return clone(existing);}
     const workspace=this.workspace.get(id),editor=this.editor(id,workspace),project=this.store.read('projects',id);this.workspace.check(workspace,input.revision);if(project.revision!==input.projectRevision)throw new AppError('故事立项已改变，请刷新。',409);
     if(this.store.list('script-generations').values.some(item=>item.projectId===id&&busy.has(item.status)))throw new AppError('本项目剧本创作或检查仍在进行，请等待原任务。',409);
-    const generation={id:randomUUID(),requestId:input.requestId,requestHash,projectId:id,status:'queued',createdAt:now(),updatedAt:now(),workspaceRevision:workspace.revision,projectRevision:project.revision,editorRevision:editor.revision,requirementsHash:this.guard(id,workspace),includeReview:input.includeReview!==false,scriptTaskId:null,reviewTaskId:null,reviewAttempted:false,publishedEditor:false,error:null,formalStageStatus:'not_checked',accountUsageNote:'一次创作，至多一次独立检查；现有Codex账号用量，人民币和积分未知。'};
+    const generation={id:randomUUID(),requestId:input.requestId,requestHash,projectId:id,status:'queued',createdAt:now(),updatedAt:now(),workspaceRevision:workspace.revision,projectRevision:project.revision,editorRevision:editor.revision,requirementsHash:this.guard(id,workspace),includeReview:input.includeReview!==false,scriptTaskId:null,reviewTaskId:null,reviewAttempted:false,publishedEditor:false,error:null,formalStageStatus:'not_checked',accountUsageNote:'一次创作，至多一次独立检查；使用项目所选文字服务，实际账号用量及金额以回执为准；未知不等于免费。'};
     this.record(generation);
     try{const job=this.creative.start(id,{kind:'script',revision:workspace.revision,projectRevision:project.revision,retry:input.retry===true});generation.scriptTaskId=job.id;generation.status='generating';this.record(generation);this.schedule(generation.id);return clone(generation);}catch(error){generation.status='failed';generation.error=redact(error.message);this.record(generation);throw error;}
   }

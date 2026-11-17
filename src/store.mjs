@@ -47,15 +47,29 @@ export const inputHash = project => createHash('sha256').update(JSON.stringify(g
 export class Store {
   constructor(root) {
     this.root = path.resolve(root);
+    this.governanceRoot = this.root;
     for (const part of ['projects', 'jobs', 'references', 'runtime']) fs.mkdirSync(path.join(this.root, part), { recursive: true });
   }
   file(kind, id) {
     if (!validId(id)) throw new AppError('无效的标识。', 400);
-    return path.join(this.root, kind, `${id}.json`);
+    if (!/^[a-z][a-z0-9-]*$/.test(kind)) throw new AppError('无效的数据类型。');
+    return path.join(this.projectRoot(kind,id), kind, `${id}.json`);
   }
+  // Governance, task ledgers and signing keys NEVER follow the project default.
+  // Only new project production records/assets are indexed to a chosen folder.
+  projectRoot(kind,id) {
+    const scoped = kind==='projects'||kind==='references'||kind==='scripts'||kind.endsWith('-workspaces')||['image-files','video-files','voice-files','studio-production'].includes(kind);
+    if(!scoped)return this.root;
+    const index=path.join(this.root,'project-locations.json');
+    if(!fs.existsSync(index))return this.root;
+    let value;try{value=JSON.parse(fs.readFileSync(index,'utf8'));}catch{throw new AppError('项目位置索引损坏，停止写入以保留历史目录。',500);}
+    return value.locations?.[id]?.root??this.root;
+  }
+  directory(kind,id) { if(!validId(id)||!/^[a-z][a-z0-9-]*$/.test(kind))throw new AppError('无效的素材位置。');return path.join(this.projectRoot(kind,id),kind,id); }
   write(kind, value) {
     const file = this.file(kind, value.id);
     const temp = `${file}.${randomUUID()}.tmp`;
+    fs.mkdirSync(path.dirname(file),{recursive:true});
     let fd;
     try {
       fd = fs.openSync(temp, 'wx');
@@ -82,7 +96,12 @@ export class Store {
   }
   list(kind) {
     const values = [], warnings = [];
-    for (const name of fs.readdirSync(path.join(this.root, kind)).filter(name => name.endsWith('.json'))) {
+    const names=new Set(fs.readdirSync(path.join(this.root, kind)).filter(name => name.endsWith('.json')));
+    if(kind==='projects'){
+      const index=path.join(this.root,'project-locations.json');
+      if(fs.existsSync(index)){let value;try{value=JSON.parse(fs.readFileSync(index,'utf8'));}catch{throw new AppError('项目位置索引损坏，停止枚举。',500);}for(const id of Object.keys(value.locations??{}))names.add(`${id}.json`);}
+    }
+    for (const name of names) {
       try { values.push(this.read(kind, name.slice(0, -5))); }
       catch (error) { warnings.push(error.message); }
     }
@@ -91,7 +110,13 @@ export class Store {
   }
   create(input) {
     const timestamp = now();
-    return this.write('projects', { id: randomUUID(), ...fields(input), references: [], revision: 1, createdAt: timestamp, updatedAt: timestamp, latestJobId: null, briefProvenance: null });
+    const value={ id: randomUUID(), ...fields(input), references: [], revision: 1, createdAt: timestamp, updatedAt: timestamp, latestJobId: null, briefProvenance: null };
+    const preferences=path.join(this.root,'studio-settings','preferences.json');
+    if(fs.existsSync(preferences)){
+      const directory=JSON.parse(fs.readFileSync(preferences,'utf8')).defaultProjectDirectory;
+      if(directory){const index=path.join(this.root,'project-locations.json');const locations=fs.existsSync(index)?JSON.parse(fs.readFileSync(index,'utf8')):{schemaVersion:1,governanceRoot:this.root,locations:{}};const root=path.join(directory,`AI-Drama-${value.id}`);fs.mkdirSync(root,{recursive:true});locations.locations[value.id]={root,createdAt:timestamp};const tmp=`${index}.${randomUUID()}.tmp`;fs.writeFileSync(tmp,JSON.stringify(locations,null,2),{flag:'wx'});if(fs.existsSync(index))fs.copyFileSync(index,index+'.bak');fs.renameSync(tmp,index);}
+    }
+    return this.write('projects',value);
   }
   update(id, input) {
     const previous = this.read('projects', id);
@@ -115,7 +140,7 @@ export class Store {
       ...fields({ creativeBrief: job.result }, project),
       revision: project.revision + 1,
       updatedAt: now(),
-      briefProvenance: { source: 'codex-cli', jobId: job.id, inputHash: job.inputHash, inputRevision: job.inputRevision, generatedAt: job.updatedAt, userEditedAt: null },
+      briefProvenance: { source: job.provider??'codex-cli', jobId: job.id, inputHash: job.inputHash, inputRevision: job.inputRevision, generatedAt: job.updatedAt, userEditedAt: null },
     };
     return this.write('projects', updated);
   }
@@ -125,7 +150,7 @@ export class Store {
     const id = randomUUID();
     const safeName = name.replace(/[\\/\x00-\x1f]/g, '_').slice(0, 180) || '参考素材';
     const storedName = `${id}.bin`;
-    const dir = path.join(this.root, 'references', projectId);
+    const dir = this.directory('references', projectId);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, storedName), bytes, { flag: 'wx' });
     const reference = { id, name: safeName, mimeType: /^[\w.+-]+\/[\w.+-]+$/.test(mimeType) ? mimeType : 'application/octet-stream', size: bytes.length, storedName };

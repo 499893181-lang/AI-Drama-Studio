@@ -1,8 +1,8 @@
 {
   "name": "ai-drama-studio",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
-  "description": "Windows 本地 AI 短剧、分镜与图片版本工作台",
+  "description": "Windows 本地多渠道 AI 短剧创作、声音与剪辑工作台",
   "type": "module",
   "engines": {
     "node": ">=22"
@@ -19,7 +19,9 @@
     "test:video-browser": "node tests/video-browser-smoke.mjs",
     "test:timeline-browser": "node tests/timeline-browser-smoke.mjs",
     "test:canvas-video-browser": "node tests/canvas-video-browser-smoke.mjs",
-    "test:c-ui": "node tests/studio-shell-browser-smoke.mjs && node tests/story-c-ui-browser.mjs && node tests/creative-c-ui-browser.mjs && node tests/ui-c-media-browser.mjs"
+    "test:c-ui": "node tests/studio-shell-browser-smoke.mjs && node tests/story-c-ui-browser.mjs && node tests/creative-c-ui-browser.mjs && node tests/ui-c-media-browser.mjs",
+    "test:studio-browser": "node tests/studio-v12-browser.mjs",
+    "verify:production": "node scripts/verify-production-v12.mjs"
   },
   "license": "MIT"
 }

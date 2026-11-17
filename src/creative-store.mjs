@@ -111,9 +111,15 @@ export class CreativeWorkspace {
     const shots = workspace.shots.length ? workspace.shots : (parent?.data?.shotSeeds ?? []).map(seedToShot);
     return { entities: entities.map(entity => { const entry = provenance.entries.find(row => row.entityId === entity.id && row.version === entity.version); return { ...copy(entity), resolvedSource: entry.resolvedSource, sourceProvenance: copy(entry) }; }), shots: copy(shots), provenance };
   }
-  context(id, kind, { scriptTaskId, targetTaskId, targetVersionId } = {}, workspaceOverride = null) {
+  context(id, kind, { scriptTaskId, targetTaskId, targetVersionId, bindingPolicy = 1 } = {}, workspaceOverride = null) {
     const workspace = workspaceOverride ?? this.get(id), project = this.store.read('projects', id), knowledge = this.knowledge();
     const source = { ...generationInput(project), creativeBrief: project.creativeBrief, projectRevision: project.revision };
+    if(bindingPolicy===2){
+      // Revision is a concurrency token, not a semantic dependency. Budgets and
+      // project labels do not rewrite a story. Old snapshots keep policy 1.
+      delete source.projectRevision;delete source.budgetCap;delete source.budgetCurrency;delete source.name;
+      source.references=project.references.map(ref=>{const file=path.join(this.store.directory('references',id),ref.storedName);return{id:ref.id,name:ref.name,mimeType:ref.mimeType,sha256:fs.existsSync(file)?createHash('sha256').update(fs.readFileSync(file)).digest('hex'):null};});
+    }
     const sourceHash = creativeHash(source);
     const common = { projectId: id, episodeId: workspace.episodeId, source, instructions: workspace.instructions, shotCount: workspace.shotCount, locks: workspace.locks, entities: workspace.entities, scriptDraft: workspace.scriptDraft, knowledgeHash: knowledge.hash };
     if (workspace.entityInputEvidence && Object.keys(workspace.entityInputEvidence).length) common.entityInputEvidence = copy(workspace.entityInputEvidence);
@@ -123,6 +129,7 @@ export class CreativeWorkspace {
       parent = this.parentScript(id, workspace, scriptTaskId);
       effective = this.effective(workspace, parent);
       snapshot = { ...common, stylePresetId: workspace.stylePresetId, manualRuleIds: workspace.manualRuleIds, shots: effective.shots, effectiveEntities: effective.entities, selectedScriptTaskId: workspace.selectedScriptTaskId, parent, storyboardDraft: workspace.storyboardDraft };
+      if(bindingPolicy===2&&fs.existsSync(this.store.file('studio-production',id))){const visual=this.store.read('studio-production',id);snapshot.visualReferences={visualStyleId:visual.visualStyleId,visualNotes:visual.visualNotes,visuals:effective.entities.filter(e=>['character','scene'].includes(e.type)).map(entity=>[...visual.visuals].reverse().find(v=>v.entityId===entity.id&&v.entityVersion===entity.version)??{entityId:entity.id,status:'not_defined'})};}
       if (kind === 'review') {
         if (targetTaskId) {
           const task = this.store.read('creative-jobs', targetTaskId);
@@ -150,8 +157,9 @@ export class CreativeWorkspace {
     // cannot supersede a source the user has subsequently chosen or saved.
     return !actual || actual.id === job.inputSnapshot.parent?.id && actual.type === job.inputSnapshot.parent?.type;
   }
-  editorReviewScope(id, workspace = this.get(id)) {
-    const context=this.context(id,'script',{},workspace);
+  editorReviewScope(id, workspace = this.get(id),bindingPolicy=1) {
+    const context=this.context(id,'script',{bindingPolicy},workspace);
+    if(bindingPolicy===2)return creativeHash({source:context.sourceHash,knowledge:context.knowledge.hash,episodeId:workspace.episodeId,instructions:workspace.instructions,shotCount:workspace.shotCount,locks:workspace.locks,entities:workspace.entities,entityInputEvidence:workspace.entityInputEvidence??{}});
     return creativeHash({source:context.sourceHash,knowledge:context.knowledge.hash,episodeId:workspace.episodeId,instructions:workspace.instructions,shotCount:workspace.shotCount,locks:workspace.locks,entities:workspace.entities,entityInputEvidence:workspace.entityInputEvidence??{},stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds});
   }
   editorReviewProof(target, workspace) {
@@ -161,18 +169,20 @@ export class CreativeWorkspace {
   }
   fresh(job) {
     try {
+      if(job.serviceSnapshot&&this.services)this.services.assertSnapshotCurrent(job.serviceSnapshot,job.projectId);
       const current = this.context(job.projectId, job.kind, job.references);
       if(job.kind==='review'&&job.editorReviewBinding){
         const binding=job.editorReviewBinding,body=current.workspace.scriptEditor?.body??current.workspace.scriptDraft;
         // Confirming an unchanged script moves a source pointer, not its text.
         // Keep this explicitly bound editor review current only while both the
         // immutable target and actual editor text/requirements still match.
-        return creativeHash(job.inputSnapshot)===job.inputHash&&binding.targetHash===creativeHash(current.target)&&binding.proofHash===this.editorReviewProof(current.target,current.workspace)&&binding.bodyHash===creativeHash(body)&&binding.scopeHash===this.editorReviewScope(job.projectId,current.workspace);
+        return creativeHash(job.inputSnapshot)===job.inputHash&&binding.targetHash===creativeHash(current.target)&&binding.proofHash===this.editorReviewProof(current.target,current.workspace)&&binding.bodyHash===creativeHash(body)&&binding.scopeHash===this.editorReviewScope(job.projectId,current.workspace,binding.bindingPolicy??1);
       }
       return this.matchesSelectedParent(job, current.workspace) && current.inputHash === job.inputHash;
     } catch { return false; }
   }
   validateCurrent(job, current) {
+    if(job.serviceSnapshot&&this.services)this.services.assertSnapshotCurrent(job.serviceSnapshot,job.projectId);
     if (current.parent?.entityProvenance?.entries.some(entry => entry.bindingValid === false)) throw new AppError('当前剧本来源证据绑定损坏，不能采用下游结果。', 409);
     if (creativeHash(job.inputSnapshot) !== job.inputHash) throw new AppError('原任务输入快照已改变，来源证据失效，不能采用。', 409);
     if (job.kind === 'script' && this.taskEntityProvenance(job).entries.some(entry => entry.bindingValid === false)) throw new AppError('实体来源证据与原输入或实体内容不匹配，不能采用。', 409);
@@ -192,7 +202,8 @@ export class CreativeWorkspace {
     if (workspace.versions.length >= 500) throw new AppError('已有500个不可变版本，请先备份整理。');
     if (!['script', 'storyboard'].includes(kind) || !text(body, '人工稿正文').trim()) throw new AppError('请填写剧本或分镜人工稿正文。');
     if (parentVersionId && !workspace.versions.some(item => item.id === parentVersionId)) throw new AppError('父版本不存在。');
-    const context = this.context(id, kind);
+    const references=this.defaultBindingPolicy===2?{bindingPolicy:2}:{};
+    const context = this.context(id, kind,references);
     let data = { shots: copy(context.effective.shots), notes: body }, parentSource = null;
     if (kind === 'script') {
       const parent = this.parentScript(id, workspace), effective = this.effective(workspace, parent);
@@ -202,7 +213,7 @@ export class CreativeWorkspace {
     }
     const parent = this.parentScript(id, workspace);
     const entityProvenanceBases = [...this.parentSourceBases(id, parent), this.manualSourceBase(workspace)];
-    const version = { id: randomUUID(), kind, body, data, entityProvenanceBases, origin: 'user', taskId: null, parentVersionId, parentSource, references: {}, createdAt: now(), sourceHash: context.sourceHash, inputHash: context.inputHash, knowledgeHash: context.knowledge.hash };
+    const version = { id: randomUUID(), kind, body, data, entityProvenanceBases, origin: 'user', taskId: null, parentVersionId, parentSource, references, createdAt: now(), sourceHash: context.sourceHash, inputHash: context.inputHash, knowledgeHash: context.knowledge.hash };
     // Saving a manual script explicitly chooses that immutable version as the
     // downstream source. Preserve inherited candidate entities/seeds in it,
     // instead of leaving downstream work pinned to an obsolete model task.
@@ -220,7 +231,7 @@ export class CreativeWorkspace {
     const provenance = job.kind === 'script' ? this.taskEntityProvenance(job) : current.effective.provenance;
     if (provenance?.pendingCount && body.confirmPendingSources !== true) throw new AppError('部分实体来源待确认。请明确确认仅保存待确认候选，不把它们提升为用户事实或事实锁。', 409);
     const entityProvenanceBases = job.kind === 'script' && job.entityProvenance ? [provenanceBase(job.result, job.inputSnapshot, provenance, job.inputHash)] : [...this.parentSourceBases(id, current.parent), this.manualSourceBase(workspace)];
-    const version = { id: randomUUID(), kind: job.kind, body: job.kind === 'script' ? job.result.body : renderStoryboard(job.result.shots), data: copy(job.result), entityProvenanceBases, pendingSourcesAcknowledged: provenance?.pendingCount ? { at: now(), entityIds: provenance.entries.filter(entry => entry.resolvedSource === 'pending').map(entry => entry.entityId), remainsPending: true } : null, origin: 'codex-cli', taskId: job.id, parentVersionId: workspace[job.kind === 'script' ? 'activeScriptId' : 'activeStoryboardId'], createdAt: now(), sourceHash: job.sourceHash, inputHash: job.inputHash, knowledgeHash: job.knowledgeHash, references: copy(job.references) };
+    const version = { id: randomUUID(), kind: job.kind, body: job.kind === 'script' ? job.result.body : renderStoryboard(job.result.shots), data: copy(job.result), entityProvenanceBases, pendingSourcesAcknowledged: provenance?.pendingCount ? { at: now(), entityIds: provenance.entries.filter(entry => entry.resolvedSource === 'pending').map(entry => entry.entityId), remainsPending: true } : null, origin: job.provider??'codex-cli', taskId: job.id, parentVersionId: workspace[job.kind === 'script' ? 'activeScriptId' : 'activeStoryboardId'], createdAt: now(), sourceHash: job.sourceHash, inputHash: job.inputHash, knowledgeHash: job.knowledgeHash, references: copy(job.references) };
     // One atomic workspace write: append immutable version and move pointer together. Drafts untouched.
     return this.save({ ...workspace, versions: [...workspace.versions, version], [job.kind === 'script' ? 'activeScriptId' : 'activeStoryboardId']: version.id });
   }

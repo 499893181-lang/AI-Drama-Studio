@@ -274,7 +274,7 @@ test('等待新报价期间上游、输入或绑定变化时仍拒绝提交，�
 
 test('HTTP剧本路由保存手稿与历史，未知费用提交返回409且不触发外部生成', async t => {
   const ctx = fixture(t);
-  const app = createStudio({ dataDir: ctx.root, inspectTools: async () => ({ checkedAt: new Date().toISOString(), tools: [] }), scriptOptions: { adapter: ctx.adapter, reviewer: mockReviewer(ctx.store) } });
+  const app = createStudio({ allowLegacyNewTasks:true, dataDir: ctx.root, inspectTools: async () => ({ checkedAt: new Date().toISOString(), tools: [] }), scriptOptions: { adapter: ctx.adapter, reviewer: mockReviewer(ctx.store) } });
   await new Promise(resolve => app.server.listen(0, '127.0.0.1', resolve));
   const base = `http://127.0.0.1:${app.server.address().port}`;
   const call = async (route, method = 'GET', input) => {
