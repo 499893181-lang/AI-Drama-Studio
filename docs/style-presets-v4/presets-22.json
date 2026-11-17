@@ -1,0 +1,381 @@
+{
+  "schemaVersion": 1,
+  "status": "requirements_seed_not_runtime_installation",
+  "date": "2026-11-17",
+  "scope": "用户已固定的22个一级画风选项；本轮学习只细化规则、示例和兼容视觉组合，不新增一级画风。",
+  "expectedCount": 22,
+  "presets": [
+    {
+      "id": "3d_drama",
+      "order": 1,
+      "name": "3D漫剧",
+      "category": "动画",
+      "visualCharacteristics": "半写实人物、三维建模质感、立体光影、较精细的服装与环境",
+      "suitedFor": [
+        "都市",
+        "玄幻",
+        "剧情短剧"
+      ],
+      "avoidGuidance": "避免Q版比例、塑料皮肤和所有材质同样光滑。",
+      "legacyAliases": [
+        "3d"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "anime_cel",
+      "order": 2,
+      "name": "日漫赛璐璐",
+      "category": "动画",
+      "visualCharacteristics": "清晰轮廓线、平涂色块、边界明确的阴影、动画化五官",
+      "suitedFor": [
+        "校园",
+        "青春",
+        "热血"
+      ],
+      "avoidGuidance": "避免摄影毛孔、油画厚涂和不必要的三维镜面。",
+      "legacyAliases": [
+        "anime"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "handdrawn_healing",
+      "order": 3,
+      "name": "吉卜力手绘／手绘治愈动画",
+      "category": "动画",
+      "visualCharacteristics": "柔和手绘线条、绘画式背景、自然配色、生活化细节",
+      "suitedFor": [
+        "日常",
+        "亲情",
+        "乡村",
+        "童话"
+      ],
+      "avoidGuidance": "描述具体手绘语言；保留原创角色，避免仅提交品牌名或替换成既有作品角色。",
+      "legacyAliases": [
+        "ghibli",
+        "手绘治愈动画"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "watercolor_storybook",
+      "order": 4,
+      "name": "水彩绘本",
+      "category": "绘画",
+      "visualCharacteristics": "透明水彩晕染、纸张纹理、柔和边缘、绘本式人物与场景",
+      "suitedFor": [
+        "儿童故事",
+        "宠物",
+        "温情短片"
+      ],
+      "avoidGuidance": "避免油画厚重堆积、塑料表面和遮盖主体的纸纹。",
+      "legacyAliases": [
+        "watercolor"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "western_comic",
+      "order": 5,
+      "name": "美式漫画",
+      "category": "漫画",
+      "visualCharacteristics": "粗线条、强明暗对比、网点或排线、鲜明色块",
+      "suitedFor": [
+        "动作",
+        "冒险",
+        "夸张喜剧"
+      ],
+      "avoidGuidance": "不自动添加气泡文字；避免无差别网点覆盖主体。",
+      "legacyAliases": [
+        "comic"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "guofeng_25d",
+      "order": 6,
+      "name": "国风2.5D",
+      "category": "动画",
+      "visualCharacteristics": "二维绘画外观结合立体体积感、细腻服饰、国风线条与设色",
+      "suitedFor": [
+        "古诗词",
+        "古装",
+        "仙侠"
+      ],
+      "avoidGuidance": "不随画风修改朝代、服装或题材；避免无意混成摄影或图标。",
+      "legacyAliases": [
+        "guofeng"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "webtoon",
+      "order": 7,
+      "name": "韩系网漫",
+      "category": "漫画",
+      "visualCharacteristics": "清爽数字上色、柔和渐变、修长造型、精致人物表现",
+      "suitedFor": [
+        "都市",
+        "爱情",
+        "人物剧情"
+      ],
+      "avoidGuidance": "保留角色关键辨识；避免所有人物同脸或改变锁定年龄。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "monochrome_comic",
+      "order": 8,
+      "name": "黑白漫画",
+      "category": "漫画",
+      "visualCharacteristics": "黑白墨线、排线阴影、大块黑白关系、强调轮廓与表情",
+      "suitedFor": [
+        "悬疑",
+        "动作",
+        "情绪短片"
+      ],
+      "avoidGuidance": "避免无意混入彩色、吞没主体的黑位和自动加字。",
+      "legacyAliases": [
+        "noir"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "realistic",
+      "order": 9,
+      "name": "电影写实",
+      "category": "写实",
+      "visualCharacteristics": "自然人体比例、可信材质、明确光源、摄影景深与空间层次",
+      "suitedFor": [
+        "真人剧情",
+        "历史",
+        "亲情"
+      ],
+      "avoidGuidance": "避免蜡质皮肤、过度磨皮、CG模型感、无来源光束和过强HDR。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "cartoon_3d",
+      "order": 10,
+      "name": "三维卡通／3D童话",
+      "category": "动画",
+      "visualCharacteristics": "圆润或适度夸张的造型、立体材质、清晰表情、童话式环境",
+      "suitedFor": [
+        "宠物",
+        "童话",
+        "生活喜剧"
+      ],
+      "avoidGuidance": "与半写实3D漫剧区分；避免默认婴儿比例或改变动物物种结构。",
+      "legacyAliases": [
+        "3D童话"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "transparent_watercolor",
+      "order": 11,
+      "name": "清透水彩",
+      "category": "绘画",
+      "visualCharacteristics": "轻薄透明设色、大面积留白、细腻淡彩、较少厚重轮廓",
+      "suitedFor": [
+        "宠物头像",
+        "抒情",
+        "生活片段"
+      ],
+      "avoidGuidance": "保留可辨主体；避免灰脏浑浊、厚重轮廓和主体完全溶解。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "handdrawn_storybook",
+      "order": 12,
+      "name": "手绘绘本",
+      "category": "绘画",
+      "visualCharacteristics": "手工线条、概括造型、可见笔触、统一的插画叙事语言",
+      "suitedFor": [
+        "儿童故事",
+        "日常",
+        "亲情"
+      ],
+      "avoidGuidance": "不强制水彩介质；避免逐镜随机换笔触和材质。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "ink_wash",
+      "order": 13,
+      "name": "水墨写意",
+      "category": "绘画",
+      "visualCharacteristics": "墨色浓淡、干湿笔触、虚实关系、留白与简练造型",
+      "suitedFor": [
+        "古诗词",
+        "山水",
+        "意境短片"
+      ],
+      "avoidGuidance": "不把需辨识主体化成墨团，也不自动更换古装。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "colored_ink",
+      "order": 14,
+      "name": "彩墨写意",
+      "category": "绘画",
+      "visualCharacteristics": "水墨骨架结合淡彩或彩墨，保留渗化、笔意与留白",
+      "suitedFor": [
+        "古诗词",
+        "东方叙事"
+      ],
+      "avoidGuidance": "与普通水彩区分；避免满屏浓彩抹去虚实。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "guofeng_painterly",
+      "order": 15,
+      "name": "国风厚涂",
+      "category": "绘画",
+      "visualCharacteristics": "色块塑造体积、较厚重的绘画笔触、细腻服饰与层次",
+      "suitedFor": [
+        "古装",
+        "历史",
+        "东方幻想"
+      ],
+      "avoidGuidance": "避免过度锐化和发光边；不强制幻想服装或摄影皮肤。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "oil_painting",
+      "order": 16,
+      "name": "油画",
+      "category": "绘画",
+      "visualCharacteristics": "可见笔触、颜料叠加、色彩塑形、绘画式明暗关系",
+      "suitedFor": [
+        "文学改编",
+        "人物",
+        "风景"
+      ],
+      "avoidGuidance": "避免用均匀噪声冒充笔触、每处同样厚重或无意混为水彩。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "flat_illustration",
+      "order": 17,
+      "name": "扁平插画",
+      "category": "绘画",
+      "visualCharacteristics": "简化造型、平面色块、有限配色、清楚的图形关系",
+      "suitedFor": [
+        "知识科普",
+        "生活分享",
+        "说明动画"
+      ],
+      "avoidGuidance": "避免摄影景深、复杂镜面和无意三维渲染。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "doodle",
+      "order": 18,
+      "name": "涂鸦",
+      "category": "绘画",
+      "visualCharacteristics": "自由线条、手写感、不规则造型、鲜明而活泼的色彩",
+      "suitedFor": [
+        "搞笑",
+        "情绪表达",
+        "轻松日常"
+      ],
+      "avoidGuidance": "不自动增加无意义文字；线条不掩盖动作和角色辨识。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "clay",
+      "order": 19,
+      "name": "黏土",
+      "category": "手工",
+      "visualCharacteristics": "揉捏痕迹、圆润体块、黏土表面、微缩布景感",
+      "suitedFor": [
+        "宠物",
+        "喜剧",
+        "童话"
+      ],
+      "avoidGuidance": "避免毛毡或塑料镜面混入；定格节奏另由动态规则表达。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "felt",
+      "order": 20,
+      "name": "毛毡",
+      "category": "手工",
+      "visualCharacteristics": "羊毛纤维、柔软绒面、针毡塑形、手工玩偶质感",
+      "suitedFor": [
+        "萌宠",
+        "治愈",
+        "儿童故事"
+      ],
+      "avoidGuidance": "避免黏土光面、纤维无限变厚或失去五官服装辨识。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "paper_art",
+      "order": 21,
+      "name": "纸艺／剪纸",
+      "category": "手工",
+      "visualCharacteristics": "纸张边缘、叠层结构、纸面纹理、层间投影",
+      "suitedFor": [
+        "节日",
+        "民俗",
+        "童话",
+        "诗词"
+      ],
+      "avoidGuidance": "保留结构和统一层次；避免纸片突然变成真人皮肤。",
+      "legacyAliases": [
+        "剪纸"
+      ],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    },
+    {
+      "id": "pixel_art",
+      "order": 22,
+      "name": "像素",
+      "category": "像素",
+      "visualCharacteristics": "明确像素网格、有限色板、像素化角色及场景",
+      "suitedFor": [
+        "游戏叙事",
+        "复古",
+        "趣味短片"
+      ],
+      "avoidGuidance": "保持像素尺度；避免照片纹理、平滑插值和无意抗锯齿模糊。",
+      "legacyAliases": [],
+      "validationStatus": "not_generation_validated",
+      "sampleAssets": []
+    }
+  ]
+}
