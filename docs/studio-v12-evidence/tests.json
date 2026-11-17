@@ -1,0 +1,27 @@
+{
+  "checkedAt": "2026-11-17T02:23:50.501Z",
+  "command": "node --test tests/*.test.mjs",
+  "tests": 408,
+  "passed": 408,
+  "failed": 0,
+  "skipped": 0,
+  "durationMs": 155626.9051,
+  "uiCheck": {
+    "javascriptModules": 16,
+    "htmlPages": 10,
+    "passed": true
+  },
+  "realModelCalls": 0,
+  "isolatedProviderTransport": true,
+  "actualLocalTools": [
+    "Windows CurrentUser DPAPI (invalid TEST credential only)",
+    "FFmpeg",
+    "FFprobe",
+    "pinned pyJianYingDraft"
+  ],
+  "formalStageStatus": "not_checked",
+  "followupRuntimeGuardChecks": {
+    "tests": 9,
+    "passed": 9
+  }
+}

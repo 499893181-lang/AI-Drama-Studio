@@ -11,7 +11,7 @@ export function applyMediaLayout(container, options) {
   const content = container.querySelector('.content'); if (!content) return;
   const finishing = kind === 'timeline' && options.view !== 'export', exporting = kind === 'timeline' && !finishing;
   const title = kind === 'canvas' ? '制作所选镜头视频' : kind === 'direct' ? '制作视频 · 直连渠道' : exporting ? '导出成片' : '配音与剪辑';
-  const intro = kind === 'canvas' ? '检查当前画面与运镜，核对费用和本人授权后再生成一个镜头。' : kind === 'direct' ? '保留直连任务的准备、查询和下载能力；认证或费用未就绪时不会生成。' : exporting ? '检查已保存的镜头顺序，导出本地MP4。测试素材和真实作品分别标明。' : '整理已选视频的顺序和音轨。当前支持本地剪辑拼接，配音与字幕尚未接通。';
+  const intro = kind === 'canvas' ? '检查当前画面与运镜，核对费用和本人授权后再生成一个镜头。' : kind === 'direct' ? '保留直连任务的准备、查询和下载能力；认证或费用未就绪时不会生成。' : exporting ? '检查已保存的镜头顺序，导出本地MP4。测试素材和真实作品分别标明。' : '原v1完整镜头拼接保留。配音、字幕与多轨剪辑请使用左侧六Agent工作台。';
   const heading = content.querySelector('.page-heading h1'); if (heading) heading.textContent = title;
   const explanation = content.querySelector('.page-heading p'); if (explanation) explanation.textContent = intro;
   content.classList.add('studio-media-content');
@@ -27,7 +27,7 @@ export function applyMediaLayout(container, options) {
     content.classList.toggle('studio-export-view', exporting); content.classList.toggle('studio-finishing-view', finishing);
     if (exporting) fold(content.querySelector('.timeline-grid'), '检查或修改镜头顺序、素材和音轨');
     else {
-      const note = document.createElement('section'); note.className = 'studio-unavailable'; note.innerHTML = '<h2>配音与字幕</h2><p>当前尚未接通配音生成和字幕编辑。已有音轨可保留，或选择本地去音轨派生；不会自动生成声音。</p><button class="secondary-button" disabled title="尚未接通配音生成服务；本轮不调用配音。">生成配音 · 尚未接通</button>'; content.append(note);
+      const note = document.createElement('section'); note.className = 'studio-unavailable'; note.innerHTML = '<h2>声音与多轨剪辑</h2><p>当前页面为旧v1拼接。请使用左侧“配音与声音”和“剪辑与导出”管理声音、字幕和多轨计划；本轮生成关闭。</p><a class="secondary-button" href="/studio.html?page=voice">配音与声音</a>'; content.append(note);
       fold(content.querySelector('#timeline-exports')?.closest('.timeline-panel'), '本地导出与历史文件');
     }
     fold(content.querySelector('.timeline-table-wrap')?.closest('.timeline-panel'), '时间轴版本记录');

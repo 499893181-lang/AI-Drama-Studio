@@ -1,0 +1,29 @@
+{
+  "fixtureOnly": true,
+  "realModelCalls": 0,
+  "checks": [
+    "1440×900、1366×768为单文字导航+六Agent+独立右助手，固定输入及底部操作无遮挡，无横向页面滚动",
+    "角色与场景同时并列，读取实际确认剧本实体及独立视觉稿，不要求先生成图片",
+    "两人物未保存视觉稿切换返回逐字保留，保存一人不会丢另一人草稿；未保存时阻断下一步，分别保存后恢复，未改剧本事实",
+    "逐句分页编辑完整保留；保存并刷新恢复两句人工稿，无模型请求",
+    "语言与深色主题持久化，导航和新页面界面英文化，用户台词原文不翻译",
+    "切换项目隔离声音与助手上下文，不复用另一项目台词",
+    "窄屏导航/助手抽屉可分别开关，助手输入可见且主区无横向溢出"
+  ],
+  "screenshots": [
+    "voice-1440x900.png",
+    "voice-1366x768.png",
+    "services.png",
+    "general.png",
+    "style.png",
+    "directors.png",
+    "entities.png",
+    "prompts.png",
+    "video.png",
+    "editing.png",
+    "storage.png",
+    "general-dark-en.png",
+    "voice-narrow.png"
+  ],
+  "passed": true
+}

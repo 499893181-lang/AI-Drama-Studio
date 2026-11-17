@@ -1,0 +1,598 @@
+{
+  "pages": {
+    "/": [],
+    "/creative.html?stage=script": [
+      {
+        "text": "CHAR-01@v1 · 用户输入证据有效",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "原声明：user；实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "独居老人，灰蓝长衫；用户锁定。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "SCENE-01@v1 · 用户输入证据有效",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "原声明：user；实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "家中桌边，阴天傍晚。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "PROP-01@v1 · 用户输入证据有效",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "原声明：user；实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "茶杯与空椅子。",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/creative.html?stage=storyboard": [
+      {
+        "text": "01　建立等待",
+        "tag": "FIGCAPTION",
+        "classes": ""
+      },
+      {
+        "text": "01　建立等待",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "02　等待得到回应",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "03　温暖结尾",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "阴天傍晚，穿灰蓝长衫的独居老人给离家的女儿留一杯茶。收到她报平安的语音后，他把空椅子拉近桌边，温暖结尾。只有老人出镜。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "剧本 · user",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "CHAR-01@v1 · 用户输入证据有效",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "原声明：user；实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "独居老人，灰蓝长衫；用户锁定。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "SCENE-01@v1 · 用户输入证据有效",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "原声明：user；实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "家中桌边，阴天傍晚。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "PROP-01@v1 · 用户输入证据有效",
+        "tag": "STRONG",
+        "classes": ""
+      },
+      {
+        "text": "原声明：user；实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "茶杯与空椅子。",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/images.html": [
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "先用可读的对称或对峙构图交代多方位置",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "人物服装与场景形成少量有组织的大色块",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "先写叙事瞬间与观看顺序，再写质感",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "一张静态图锁定一个关键瞬间",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "前中后景各有空间或叙事功能",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "光源色彩与成片调色分开控制",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "用一个主导情绪及可见局部变化表达表情",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "生成前检测语义冲突并明确取舍",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "先用可读的对称或对峙构图交代多方位置",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "人物服装与场景形成少量有组织的大色块",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "先写叙事瞬间与观看顺序，再写质感",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "一张静态图锁定一个关键瞬间",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "前中后景各有空间或叙事功能",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "光源色彩与成片调色分开控制",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "用一个主导情绪及可见局部变化表达表情",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "生成前检测语义冲突并明确取舍",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "先用可读的对称或对峙构图交代多方位置",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "人物服装与场景形成少量有组织的大色块",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "先写叙事瞬间与观看顺序，再写质感",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "一张静态图锁定一个关键瞬间",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "前中后景各有空间或叙事功能",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "光源色彩与成片调色分开控制",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "用一个主导情绪及可见局部变化表达表情",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "生成前检测语义冲突并明确取舍",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      },
+      {
+        "text": "v1 · 有输入证据的用户信息：实体内容由工作台实际人工新建或修改提交，服务端记录了输入证据；不是模型自报。",
+        "tag": "SPAN",
+        "classes": ""
+      }
+    ],
+    "/script.html": [
+      {
+        "text": "官方指南说明剧本按产出字数计费且不支持总价预检；尚未明确script outline在当前账号CLI渠道的每字单价、计费币种及免费权益，不能计算本次总价。网页免费、余额或媒体节点估价不能代替该依据。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "计量规则：按产出字数；每字单价与计费币种待确认；不支持总价预检。计量单位“字”不等于价格单位。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "渠道：jimeng-novel-cli；计价单位：未确认；官方未注明有效期，仅代表本次检查；后续须重新核验。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "仅针对jimeng-novel CLI的script outline，不推广网页权益或另一剧本动作。",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "当前仍缺每字单价、计费币种与账号适用条件，不能据计量规则推算人民币、积分或免费。",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "即梦短剧CLI官方指南，第6节及第8节",
+        "tag": "A",
+        "classes": ""
+      },
+      {
+        "text": "：剧本按产出字数计费且不支持总价预检；未知报价不代表免费。",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "官方指南说明剧本按产出字数计费且不支持总价预检；尚未明确script episode在当前账号CLI渠道的每字单价、计费币种及免费权益，不能计算本次总价。网页免费、余额或媒体节点估价不能代替该依据。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "计量规则：按产出字数；每字单价与计费币种待确认；不支持总价预检。计量单位“字”不等于价格单位。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "渠道：jimeng-novel-cli；计价单位：未确认；官方未注明有效期，仅代表本次检查；后续须重新核验。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "仅针对jimeng-novel CLI的script episode，不推广网页权益或另一剧本动作。",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "当前仍缺每字单价、计费币种与账号适用条件，不能据计量规则推算人民币、积分或免费。",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "即梦短剧CLI官方指南，第6节及第8节",
+        "tag": "A",
+        "classes": ""
+      },
+      {
+        "text": "：剧本按产出字数计费且不支持总价预检；未知报价不代表免费。",
+        "tag": "LI",
+        "classes": ""
+      },
+      {
+        "text": "阴天傍晚，穿灰蓝长衫的独居老人给离家的女儿留一杯茶。收到她报平安的语音后，他把空椅子拉近桌边，温暖结尾。只有老人出镜。",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/video.html": [],
+    "/canvas-video.html": [
+      {
+        "text": "seedance_2.0_vip / 5秒 / 720p / count=1",
+        "tag": "DD",
+        "classes": ""
+      }
+    ],
+    "/timeline.html": [],
+    "/resources.html?section=entities": [],
+    "/resources.html?section=style": [
+      {
+        "text": "姜文 · 群像对峙与对白回击",
+        "tag": "H2",
+        "classes": ""
+      },
+      {
+        "text": "让子弹飞",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "适用边界：不要把广角、吼叫和快切当作全部风格；无对白片段应只借空间与表演，不凭空增加台词",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/resources.html?section=budget": [],
+    "/resources.html?section=settings": [],
+    "/video-channel.html": [
+      {
+        "text": "真实视频提交关闭 · 0笔视频生成。100积分仅为未授权计划预算，既不是报价，也不是平台硬限额。",
+        "tag": "DIV",
+        "classes": "video-notice"
+      },
+      {
+        "text": "本轮画布视频仅准备草稿与只读报价；尚未获准消费积分，confirm/run保持硬关闭。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "70积分",
+        "tag": "TD",
+        "classes": ""
+      },
+      {
+        "text": "报价只限本画布、本节点、本模型及参数，不能套给 direct image2video。生成前需重新检查最新草稿及报价，并由本人确认费用和预算；此存档不构成授权。实际扣费未返回时保持未知。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "沿用已保存的 TEST FIXTURE / NOT AI 测试图片，没有新生成图片。保存待生成视频草稿与导入已有视频是两类操作，草稿没有视频产物。",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "保存和报价已验证的范围以回执为准；运行、终态、下载、模型实际准入及参考画面符合性仍需下一次获批的真实验收。会话登录不能代替其他渠道登录，价格目录不能代替本账号准入。",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/studio.html?page=services": [],
+    "/studio.html?page=general": [],
+    "/studio.html?page=style": [],
+    "/studio.html?page=directors": [
+      {
+        "text": "姜文 · 群像对峙与对白回击",
+        "tag": "BUTTON",
+        "classes": "is-active"
+      },
+      {
+        "text": "贾樟柯 · 街道日常与现场视点",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "贾樟柯 · 时代环境中的远观",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "王家卫 · 都市空间中的靠近与错过",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "张艺谋 · 叙事段落的色彩组织",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "张艺谋 · 有限色盘与墨色材质",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "陈凯歌 · 土地与人物的空间关系",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "侯孝贤 · 家庭日常的固定视轴观察",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "杨德昌 · 都市空间与多重关系",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "是枝裕和 · 生活局部与克制情绪",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "岩井俊二 · 记忆与情绪驱动的视点",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "黑泽明 · 群体调度与环境压力",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "斯皮尔伯格 · 人物与机位共同调度",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "诺兰 · 危机中的临场目标与距离",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "韦斯·安德森 · 几何秩序与人物反差",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "大卫·芬奇 · 控制感与主客观视点",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "丹尼斯·维伦纽瓦 · 人物尺度与有限光区",
+        "tag": "BUTTON",
+        "classes": ""
+      },
+      {
+        "text": "姜文 · 群像对峙与对白回击",
+        "tag": "H2",
+        "classes": ""
+      },
+      {
+        "text": "让子弹飞",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "让人物目标、筹码与冲突推进对峙",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "先用可读的对称或对峙构图交代多方位置",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "人物服装与场景形成少量有组织的大色块",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "摄影运动由权力关系变化或行动触发",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "先保持空间方向清楚，再收紧人物反应",
+        "tag": "P",
+        "classes": ""
+      },
+      {
+        "text": "按对白回击、停顿和反应切镜；避免无意义快切",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/studio.html?page=entities": [],
+    "/studio.html?page=prompts": [],
+    "/studio.html?page=video": [],
+    "/studio.html?page=voice": [
+      {
+        "text": "独居老人",
+        "tag": "H3",
+        "classes": ""
+      },
+      {
+        "text": "独居老人，灰蓝长衫；用户锁定。",
+        "tag": "P",
+        "classes": ""
+      }
+    ],
+    "/studio.html?page=editing": [],
+    "/studio.html?page=storage": [
+      {
+        "text": "C:\\Users\\DYX\\Documents\\ChatGPT\\AI短剧 2\\.work\\worktrees\\AI-Drama-Studio-services-v12\\tests\\.artifacts\\i18n-v12\\data-gnb5nx",
+        "tag": "P",
+        "classes": "v12-code"
+      }
+    ]
+  },
+  "realModelCalls": 0
+}

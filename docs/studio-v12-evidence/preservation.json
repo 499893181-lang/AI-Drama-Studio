@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-17T02:08:05.0243193Z",
+  "protectedFiles": 570,
+  "changedOriginalFiles": 0,
+  "personalDataCopied": false,
+  "authenticationFilesCopied": false,
+  "originalImageLimit": {
+    "maxSubmissions": 1,
+    "submitted": 1,
+    "remaining": 0,
+    "restartResetsBudget": false,
+    "historyVerified": true,
+    "warnings": []
+  },
+  "automaticImageEntryEnabled": false,
+  "originalFailedTask": {
+    "id": "8eb1182e-5a89-47fe-9220-2e1ea08c1f00",
+    "status": "failed",
+    "resultStillNull": true
+  },
+  "newRealModelCalls": 0,
+  "baseline": "1e70fdaf2ed82f768ee3d02fe1d56b40d51b94e1",
+  "launcherRestartWithoutDataDirVerified": true
+}

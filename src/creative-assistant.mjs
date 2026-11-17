@@ -6,6 +6,7 @@ import { creativeHash } from './creative-store.mjs';
 import { runCreativeCodex } from './creative-runner.mjs';
 import { creativeScriptSchema, validateCreativeScript } from './creative-jobs.mjs';
 import { redact } from './tools.mjs';
+import { receiptSucceeded } from './service-catalog.mjs';
 
 const str = { type: 'string' };
 export const creativeAssistantSchema = {
@@ -126,6 +127,7 @@ export class CreativeAssistantService {
     if (this.active.size >= 2) throw new AppError('已有两个助手消息运行中，请稍后发送。', 429);
     const snapshot = this.context(id, value), history = values.slice(-12).map(job => ({ id: job.id, message: job.message, status: job.status, reply: job.status === 'succeeded' ? job.reply : null, proposal: job.status === 'succeeded' && job.proposal ? { kind: job.proposal.kind, reason: job.proposal.reason, appliedVersionId: job.appliedVersionId ?? null } : null }));
     const job = { id: randomUUID(), requestId: value.requestId, requestHash, projectId: id, sequence: values.length+1, stage: value.stage, status: 'queued', message: value.message, snapshot, inputHash: creativeHash(snapshot), conversationHistory: history, historyScope: { includedTurnIds: history.map(turn => turn.id), omittedCount: Math.max(0, values.length - history.length), maxTurns: 12 }, createdAt: now(), updatedAt: now(), events: [], statusMessage: '消息已保存，等待本机Codex真实回应。', reply: null, proposal: null, cautions: [], result: null, rawText: '', rawResultPath: null, threadId: null, usage: null, error: null, configurationStatus: 'not_verified', appliedVersionId: null, appliedAt: null };
+    if(this.runner.snapshot){job.serviceSnapshot=this.runner.snapshot(id);job.provider=job.serviceSnapshot.provider;job.statusMessage='消息已保存，等待所选文字服务回应。';}
     this.store.write('creative-assistant-turns', job);
     const validationContext = this.creative.workspace.context(id,'script');
     validationContext.workspace = { ...validationContext.workspace, entities: [...new Map([...(snapshot.currentScriptData.entities ?? []),...validationContext.workspace.entities].map(entity=>[entity.id,clone(entity)])).values()] };
@@ -147,7 +149,7 @@ export class CreativeAssistantService {
     job.rawResultPath = path.relative(this.store.root, cwd); job.status = 'running'; this.record(job, 'running', '本机Codex文字对话已启动；不会自动改稿。');
     const prompt = this.prompt(job); fs.writeFileSync(path.join(cwd,'input.json'), JSON.stringify(job.snapshot,null,2));
     fs.writeFileSync(path.join(cwd,'prompt.txt'),prompt); fs.writeFileSync(path.join(cwd,'response.schema.json'),JSON.stringify(creativeAssistantSchema,null,2));
-    const receipt = await this.runner({ prompt, schema: creativeAssistantSchema, cwd, signal: run.controller.signal, onEvent: event => {
+    const receipt = await this.runner({projectId:job.projectId,serviceSnapshot:job.serviceSnapshot,requestId:job.requestId,prompt, schema: creativeAssistantSchema, cwd, signal: run.controller.signal, onEvent: event => {
       if (this.closed || run.controller.signal.aborted || !this.active.has(job.id)) return;
       if (event.threadId || event.thread_id) job.threadId = event.threadId || event.thread_id;
       if (event.usage) job.usage = event.usage;
@@ -160,7 +162,8 @@ export class CreativeAssistantService {
     job.rawText = typeof receipt?.finalMessage === 'string' ? receipt.finalMessage : JSON.stringify(receipt?.finalMessage ?? null);
     job.threadId = receipt?.threadId ?? job.threadId; job.usage = receipt?.usage ?? job.usage; job.exitCode = receipt?.exitCode ?? null; job.turnCompleted = receipt?.completed === true;
     this.store.write('creative-assistant-turns',job);
-    if (!receipt || receipt.exitCode !== 0 || receipt.completed !== true || receipt.error) throw new AppError(`真实Codex对话失败：${receipt?.error || '缺少真实完成终态。'}`);
+    job.completionEvidence=receipt?.completionEvidence??null;job.httpStatus=receipt?.httpStatus??null;job.responseId=receipt?.responseId??null;job.provider=receipt?.provider??job.provider;
+    if (!receiptSucceeded(receipt)) throw new AppError(`文字服务对话失败：${receipt?.error || '缺少真实完成终态。'}`);
     if (job.rawText.length > 300000) throw new AppError('助手输出超过300000字，原始回执保留；正文未改变。');
     let value; try { value = JSON.parse(job.rawText); } catch { throw new AppError('助手返回不是完整JSON，原始回执保留；正文未改变。'); }
     job.result = validateAssistantResult(value,job.snapshot);

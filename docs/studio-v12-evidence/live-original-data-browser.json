@@ -1,0 +1,89 @@
+{
+  "version": "0.11.0",
+  "personalDataMutations": 0,
+  "realModelCalls": 0,
+  "checks": [
+    {
+      "page": "services",
+      "width": 1440,
+      "height": 900,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "general",
+      "width": 1440,
+      "height": 900,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "entities",
+      "width": 1440,
+      "height": 900,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "voice",
+      "width": 1440,
+      "height": 900,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "editing",
+      "width": 1440,
+      "height": 900,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "services",
+      "width": 1366,
+      "height": 768,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "general",
+      "width": 1366,
+      "height": 768,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "entities",
+      "width": 1366,
+      "height": 768,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "voice",
+      "width": 1366,
+      "height": 768,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    },
+    {
+      "page": "editing",
+      "width": 1366,
+      "height": 768,
+      "primary": 6,
+      "agents": 6,
+      "overflow": false
+    }
+  ],
+  "consoleExceptions": 0,
+  "passed": true
+}

@@ -1,0 +1,57 @@
+{
+  "label": "TEST FIXTURE / NOT AI",
+  "executedAt": "2026-11-17T01:31:57.628Z",
+  "externalGenerationCalls": 0,
+  "formalStageStatus": "not_checked",
+  "audio": {
+    "decoded": true,
+    "sha256": "5a5c0e3ab6846ad015651c7123e8e1f6abf8fb46884fb96d838494357a061323",
+    "durationSeconds": 2,
+    "codec": "pcm_s16le",
+    "sampleRate": 48000,
+    "channels": 1
+  },
+  "edit": {
+    "taskId": "e6757798-dc3e-4c0e-9bef-16d71586e7ee",
+    "sha256": "0220f4128b0188748bbfc6836c42b80518a2eefb709c211bfca16b9bbb9cd70f",
+    "durationSeconds": 6.52,
+    "width": 640,
+    "height": 360,
+    "videoCodec": "h264",
+    "audioStreams": 1,
+    "source": "two repository TEST video assets; local sine wave; ASS caption",
+    "trim": true,
+    "fadeDurationUs": 500000,
+    "audioVolume": 0.4,
+    "audioFadeInUs": 100000,
+    "audioFadeOutUs": 300000,
+    "subtitleRangeUs": [
+      1000000,
+      3000000
+    ],
+    "decode": true,
+    "reencoded": true,
+    "originalsRetained": true
+  },
+  "muted": {
+    "sha256": "c0a021172483499fa20350950d2cc064193b44ff656419915fd550fb1a4313be",
+    "audioStreams": 0,
+    "durationSeconds": 6.52,
+    "description": "explicit local post-processing derivative, not native silent generation"
+  },
+  "jianying": {
+    "status": "created",
+    "draftCreated": true,
+    "contentSha256": "a7a6754f0ae6e67da59e41ef5fc5fa77a7c1ec4b950d6ba348ca297f5020b327",
+    "draftMetadataUnique": true,
+    "materialReferencesIntact": true,
+    "openedInJianying": false,
+    "automaticallyExported": false,
+    "appVersion": "11.8.0.14778",
+    "library": "pyjianyingdraft==0.3.1",
+    "limitations": [
+      "Layer opacity keyframes represent the fade; actual Jianying 11.8 rendering still requires a separate open/preview check."
+    ]
+  },
+  "modelGeneration": "not_executed"
+}

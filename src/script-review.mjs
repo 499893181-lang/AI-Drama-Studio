@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { receiptSucceeded } from './service-catalog.mjs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
@@ -184,6 +185,7 @@ export class ScriptReviewJobs {
       message: '准备独立Codex审阅，尚未取得审阅结果', events: [], report: null, usage: null, threadId: null,
       inputSnapshot: { project: { name: project.name, idea: project.idea, revision: project.revision, durationSeconds: project.durationSeconds, aspectRatio: project.aspectRatio, style: project.style, budgetCap: project.budgetCap }, creativeBrief: structuredClone(project.creativeBrief), scriptVersion: structuredClone(scriptVersion) },
     };
+    if(this.runner.snapshot){job.serviceSnapshot=this.runner.snapshot(project.id);job.provider=job.serviceSnapshot.provider;job.message='准备所选文字服务的新会话独立审阅，尚未取得结果。';}
     this.store.write('script-reviews', job);
     const run = { job, controller: new AbortController() }; this.active.set(job.id, run);
     // Defer execution so the caller can persist and display the queued state first.
@@ -199,12 +201,13 @@ export class ScriptReviewJobs {
     if (run.controller.signal.aborted || this.closed) return;
     run.job.status = 'running'; this.record(run.job, 'review.started', '正在进行独立审阅；尚无完成结论');
     const result = await this.runner({
-      prompt: scriptReviewPrompt({ project, scriptVersion }), schema: scriptReviewSchema,
+      projectId:project.id,serviceSnapshot:run.job.serviceSnapshot,requestId:run.job.id,prompt: scriptReviewPrompt({ project, scriptVersion }), schema: scriptReviewSchema,
       cwd: path.join(this.store.root, 'runtime', 'script-review', run.job.id), signal: run.controller.signal,
       onEvent: event => { if (this.active.has(run.job.id) && !run.controller.signal.aborted && !this.closed) this.record(run.job, event.type || 'event', event.message || event.type || 'Codex事件'); },
     });
     if (run.controller.signal.aborted || this.closed || !this.active.has(run.job.id)) return;
-    if (!result || result.exitCode !== 0 || result.completed !== true || result.error) throw new Error(`独立Codex审阅失败：${scrub(result?.error || `退出码${result?.exitCode ?? '未知'}，没有完整完成事件`)}`);
+    run.job.completionEvidence=result?.completionEvidence??null;run.job.httpStatus=result?.httpStatus??null;run.job.responseId=result?.responseId??null;
+    if (!receiptSucceeded(result)) throw new Error(`独立文字审阅失败：${scrub(result?.error || '没有完整完成事件')}`);
     let report;
     try { report = validateScriptReview(typeof result.finalMessage === 'string' ? JSON.parse(result.finalMessage) : result.finalMessage); }
     catch (error) { throw new Error(`Codex已返回，但审阅报告未通过完整性校验：${error.message}；未记录为审阅成功。`); }

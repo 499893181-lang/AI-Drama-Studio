@@ -29,7 +29,9 @@ export class ImageWorkspace {
     const shots=active?.data?.shots?.length ? active.data.shots : workspace.shots;
     const saved=Boolean(active || workspace.revision>0 && shots.length);
     const sourceVersion=active?.id ?? `saved-input-r${workspace.revision}`;
-    const sourceHash=creativeHash({project:generationInput(project),brief:project.creativeBrief,sourceVersion,script:current.parent,requirements:workspace.instructions,stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds,locks:workspace.locks,knowledgeHash:knowledge.hash});
+    let sourceHash=creativeHash({project:generationInput(project),brief:project.creativeBrief,sourceVersion,script:current.parent,requirements:workspace.instructions,stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds,locks:workspace.locks,knowledgeHash:knowledge.hash});
+    const visualDomain=fs.existsSync(this.store.file('studio-production',id))?this.store.read('studio-production',id):null;
+    if(visualDomain?.referenceBindingPolicy===2)sourceHash=creativeHash({policy:2,project:{idea:project.idea,durationSeconds:project.durationSeconds,aspectRatio:project.aspectRatio,style:project.style,creativeBrief:project.creativeBrief},sourceVersion,script:current.parent?{id:current.parent.id,body:current.parent.body,data:current.parent.data}:null,requirements:workspace.instructions,stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds,locks:workspace.locks,knowledgeHash:knowledge.hash,visualStyleId:visualDomain.visualStyleId,visualNotes:visualDomain.visualNotes});
     const entities=current.effective.entities;
     const sourceStale=Boolean(active && creativeView.versions.find(version=>version.id===active.id)?.stale);
     const targets=[];
@@ -38,12 +40,26 @@ export class ImageWorkspace {
       const base={role,targetId:entity.id,targetVersion:entity.version,entity,sourceHash,sourceVersion,sourceStale};
       targets.push({...base,key:keyFor(role,entity.id),label:`${role==='character'?'人物定妆':'场景'} ${entity.id}@${entity.version}`,description:entity.description,entityRefs:[{id:entity.id,version:entity.version}],prompt:`创作${role==='character'?'人物定妆参考图':'场景参考图'}。保持稳定身份 ${entity.id}@${entity.version}：${entity.description}。仅按已提供的事实设计；来源待确认的内容不升级为用户锁定。未给出的视觉细节需声明为候选，不改变人物、天气与故事。`,rules:[],ready:saved&&!sourceStale,targetHash:creativeHash(base)});
     }
+    // Opt-in v12 visual domain. Legacy records retain their original hash rules;
+    // saving a new visual draft explicitly creates a new binding, never rewrites old evidence.
+    if(fs.existsSync(this.store.file('studio-production',id))){
+      const visual=this.store.read('studio-production',id),script=workspace.versions.find(v=>v.id===workspace.activeScriptId&&v.kind==='script');
+      if(visual.referenceBindingPolicy===2){
+        const scriptStale=!script||Boolean(creativeView.versions.find(v=>v.id===script.id)?.stale);
+        for(const target of targets){
+          const draft=[...visual.visuals].reverse().find(v=>v.entityId===target.targetId&&v.entityVersion===target.targetVersion);
+          const basis={policy:2,scriptVersionId:script?.id??null,scriptBody:script?.body??null,entity:target.entity,visual:draft??null,visualStyleId:visual.visualStyleId,visualStyleVersion:visual.visualStyleVersion,visualNotes:visual.visualNotes};
+          Object.assign(target,{bindingPolicy:2,sourceVersion:script?.id??null,sourceHash:creativeHash(basis),sourceStale:scriptStale,ready:!scriptStale,targetHash:creativeHash(basis),visualVersionId:draft?.id??null,assetPurpose:target.role==='character'?'character_board':'scene_board'});
+          target.prompt=`${target.role==='character'?'综合人物参考板，正面、侧面、背面及头手局部细节':'四宫格场景参考板，同一空间不同视角'}。${target.entity.description}。视觉候选：${draft?.body??''}。画风 ${visual.visualStyleId}：${visual.visualNotes}。保持来源区别，参考板不是视频首帧。`;
+        }
+      }
+    }
     for (const shot of saved ? shots : []) {
       const input={projectId:id,episodeId:workspace.episodeId,sourceRevision:project.revision,inputHashes:{source:sourceHash},stylePresetId:workspace.stylePresetId,manualRuleIds:workspace.manualRuleIds,shot,entities,locks:workspace.locks,references:[]};
       let design=null,error=null; try { validateEntityRefs(shot,entities);design=compileShotDesign(input,knowledge); } catch(cause) { error=cause.message; }
       const currentShot=current.effective.shots.find(item=>item.id===shot.id) ?? null;
       const binding={role:'shot',targetId:shot.id,targetVersion:sourceVersion,shot,currentShot,sourceHash,entities:entities.filter(entity=>shot.entityRefs?.some(ref=>ref.id===entity.id&&ref.version===entity.version))};
-      targets.push({...binding,key:keyFor('shot',shot.id),label:`分镜 ${shot.id}`,sourceVersion,description:shot.purpose,prompt:design?.imagePrompt??'',rules:design?.appliedRules.filter(rule=>rule.target==='imagePrompt')??[],style:design?.style??null,entityRefs:copy(shot.entityRefs??[]),ready:Boolean(design?.structuralStatus==='valid_draft'&&!sourceStale),targetHash:creativeHash(binding),findings:design?.findings??[],error,design});
+      targets.push({...binding,...(visualDomain?.referenceBindingPolicy===2?{bindingPolicy:2}:{}),key:keyFor('shot',shot.id),label:`分镜 ${shot.id}`,sourceVersion,description:shot.purpose,prompt:design?.imagePrompt??'',rules:design?.appliedRules.filter(rule=>rule.target==='imagePrompt')??[],style:design?.style??null,entityRefs:copy(shot.entityRefs??[]),ready:Boolean(design?.structuralStatus==='valid_draft'&&!sourceStale),targetHash:creativeHash(binding),findings:design?.findings??[],error,design});
     }
     return {workspace,project,knowledge,entities,parent:current.parent,sourceVersion,sourceHash,sourceStale,saved,targets,entityProvenance:creativeView.entityProvenance??null};
   }
@@ -59,11 +75,11 @@ export class ImageWorkspace {
       return asset ? {role:row.role,targetId:row.targetId,targetVersion:row.targetVersion,assetId:asset.id,sha256:asset.sha256,targetHash:asset.targetHash,currentTargetHash:row.targetHash,fileStatus:state?.fileStatus??'invalid_record',actualSha256:state?.actualSha256??null,reviewId:state?.review?.id??null,reviewVerdict:state?.review?.verdict??null,reviewCurrent:state?.reviewCurrent??false,eligible:Boolean(asset.role===row.role&&asset.targetId===row.targetId&&asset.targetVersion===row.targetVersion&&state?.selected&&!state.stale&&state.reviewCurrent&&state.review?.verdict==='accepted')} : {role:row.role,targetId:row.targetId,targetVersion:row.targetVersion,assetId:null};
     });
   }
-  binding(workspace,target,source) { const references=this.references(workspace,target,source); return {sourceVersion:source.sourceVersion,sourceHash:source.sourceHash,targetHash:target.targetHash,references,referenceHash:creativeHash(references),knowledgeHash:source.knowledge.hash}; }
+  binding(workspace,target,source) { const references=this.references(workspace,target,source); return {sourceVersion:target.bindingPolicy===2?target.sourceVersion:source.sourceVersion,sourceHash:target.bindingPolicy===2?target.sourceHash:source.sourceHash,targetHash:target.targetHash,references,referenceHash:creativeHash(references),knowledgeHash:source.knowledge.hash}; }
   snapshot(source,target) { return copy({project:generationInput(source.project),creativeBrief:source.project.creativeBrief,sourceVersion:source.sourceVersion,sourceHash:source.sourceHash,role:target.role,targetId:target.targetId,targetVersion:target.targetVersion,shot:target.shot??null,entity:target.entity??null,entityRefs:target.entityRefs,entities:source.entities.filter(entity=>target.entityRefs.some(ref=>ref.id===entity.id&&ref.version===entity.version)),parentScript:source.parent,requirements:source.workspace.instructions,stylePresetId:source.workspace.stylePresetId,manualRuleIds:source.workspace.manualRuleIds,locks:source.workspace.locks,knowledgeHash:source.knowledge.hash,entityProvenance:source.entityProvenance}); }
   integrity(id,asset) {
     if(!validId(asset.id)||!['png','jpg','webp'].includes(asset.extension)||asset.storedName!==`${asset.id}.${asset.extension}`)return{status:'invalid_record',actualSha256:null};
-    const file=path.join(this.store.root,'image-files',id,asset.storedName);
+    const file=path.join(this.store.directory('image-files',id),asset.storedName);
     try{const actualSha256=digest(fs.readFileSync(file));return{status:actualSha256===asset.sha256?'intact':'hash_changed',actualSha256};}
     catch{return{status:'missing',actualSha256:null};}
   }
@@ -86,7 +102,7 @@ export class ImageWorkspace {
     const packets=workspace.packets.map(packet=>{try{this.validatePacket(id,workspace,source,packet,false);return{...packet,stale:false,executable:true,packetStatus:'ready',validationError:null};}catch(cause){return{...packet,stale:true,executable:false,packetStatus:'needs_review',validationError:cause.message};}});
     return {...workspace,packets,project:source.project,targets:source.targets.map(target=>({...target,state:activeSelections.find(row=>row.key===target.key)?.asset?.state??(assets.some(asset=>asset.key===target.key)?'imported':'pending_production'),references:this.references(workspace,target,source)})),assets,activeSelections,sourceVersion:source.sourceVersion,sourceHash:source.sourceHash,entityProvenance:source.entityProvenance,sourceError:error,hasSavedStoryboard:source.saved,capability:{mode:'manual',automaticImageGeneration:'not_connected',costStatus:'unknown',costLabel:'费用待确认',message:'手工导出并在ChatGPT官网出图，再导入实际文件；订阅或登录不代表自动图像API已接通。'},formalStageStatus:'not_checked',mediaStatus:assets.length?'imported_not_formally_verified':'not_generated'};
   }
-  import(id,metadata,bytes,generatedEvidence=null) {
+  import(id,metadata,bytes,generatedEvidence=null,derivative=null) {
     const workspace=this.get(id);this.check(workspace,metadata.revision);
     if(workspace.assets.length>=1000)throw new AppError('本项目已保存1000张图片，请先备份整理。');
     const packet=metadata.packetId?workspace.packets.find(packet=>packet.id===metadata.packetId):null;
@@ -96,10 +112,10 @@ export class ImageWorkspace {
     const declaration=metadata.source;
     if(!declaration||!['test','user-upload','chatgpt-web','other',...(generatedEvidence?['codex-cli']:[])].includes(declaration.kind)||!safeText(declaration.description,'来源说明').trim())throw new AppError('请提供实际来源说明，并明确测试素材或用户声明平台。');
     const filename=safeText(metadata.filename??'图片','文件名',240).replace(/[\\/\x00-\x1f]/g,'_');
-    const info=inspectImage(bytes),idAsset=randomUUID(),storedName=`${idAsset}.${info.extension}`,directory=path.join(this.store.root,'image-files',id);
+    const info=inspectImage(bytes),idAsset=randomUUID(),storedName=`${idAsset}.${info.extension}`,directory=this.store.directory('image-files',id);
     fs.mkdirSync(directory,{recursive:true});
     if(metadata.packetId&&(!packet||target.role!=='shot'||packet.shotId!==target.targetId))throw new AppError('所选出图任务包不属于当前项目与镜头。',409);
-    const binding=packet?copy(packet.binding):this.binding(workspace,target,source),inputSnapshot=packet?copy(packet.sourceSnapshot):this.snapshot(source,target),asset={id:idAsset,key:target.key,role:target.role,targetId:target.targetId,targetVersion:packet?.targetVersion??target.targetVersion,version:workspace.assets.filter(asset=>asset.key===target.key).length+1,filename,storedName,...info,size:bytes.length,sha256:digest(bytes),source:{kind:declaration.kind,description:declaration.description},...binding,packetId:packet?.id??null,modelInputVerification:generatedEvidence?(generatedEvidence.testFixture?'isolated_fixture_not_real_generation':'official_cli_attachments_and_completion_evidence'):packet?'bound_to_exported_packet_user_declared':'not_verified_manual_current_binding',generation:generatedEvidence?copy(generatedEvidence):null,inputSnapshot,inputSnapshotHash:creativeHash(inputSnapshot),entityRefs:copy(packet?.entityRefs??target.entityRefs),entityProvenance:copy(packet?.entityProvenance??source?.entityProvenance??null),createdAt:now()};
+    const binding=packet?copy(packet.binding):this.binding(workspace,target,source),inputSnapshot=packet?copy(packet.sourceSnapshot):this.snapshot(source,target),asset={id:idAsset,key:target.key,role:target.role,targetId:target.targetId,targetVersion:packet?.targetVersion??target.targetVersion,version:workspace.assets.filter(asset=>asset.key===target.key).length+1,filename,storedName,...info,size:bytes.length,sha256:digest(bytes),source:{kind:declaration.kind,description:declaration.description},assetPurpose:target.assetPurpose??(target.role==='shot'?'shot_frame':'legacy_reference'),...(derivative?{derivative:copy(derivative)}:{}),...binding,packetId:packet?.id??null,modelInputVerification:generatedEvidence?(generatedEvidence.testFixture?'isolated_fixture_not_real_generation':'official_cli_attachments_and_completion_evidence'):packet?'bound_to_exported_packet_user_declared':'not_verified_manual_current_binding',generation:generatedEvidence?copy(generatedEvidence):null,inputSnapshot,inputSnapshotHash:creativeHash(inputSnapshot),entityRefs:copy(packet?.entityRefs??target.entityRefs),entityProvenance:copy(packet?.entityProvenance??source?.entityProvenance??null),createdAt:now()};
     fs.writeFileSync(path.join(directory,storedName),bytes,{flag:'wx'});
     // Binary written once; failed metadata saves leave a recoverable orphan, never delete originals.
     this.save({...workspace,assets:[...workspace.assets,asset]});return this.view(id);
@@ -108,11 +124,19 @@ export class ImageWorkspace {
     if(!validId(assetId))throw new AppError('图片ID不正确。');
     const asset=this.get(id).assets.find(asset=>asset.id===assetId);
     if(!asset||asset.storedName!==`${asset.id}.${asset.extension}`||!['png','jpg','webp'].includes(asset.extension))throw new AppError('图片不存在。',404);
-    const file=path.join(this.store.root,'image-files',id,asset.storedName);
+    const file=path.join(this.store.directory('image-files',id),asset.storedName);
     if(!fs.existsSync(file))throw new AppError('原图文件丢失，元数据和选用历史已保留。',404);
     const bytes=fs.readFileSync(file);
     if(digest(bytes)!==asset.sha256)throw new AppError('原图文件Hash已改变，停止预览/选用；元数据和原记录已保留。',409);
     return {path:file,mimeType:asset.mimeType,name:asset.filename,size:asset.size,bytes};
+  }
+  importServiceCandidate(id,{binding,task,bytes,probe,evidence}) {
+    const workspace=this.get(id),existing=workspace.assets.find(a=>a.generation?.taskId===task.id);
+    if(existing){if(existing.sha256!==digest(bytes))throw new AppError('同任务已有不同产物，不能覆盖。',409);this.file(id,existing.id);return existing;}
+    if(!task.completionEvidence||!task.submitId||probe?.sha256!==digest(bytes)||!probe.verified)throw new AppError('缺少原生完成回执和实际文件核验。',409);
+    const info=inspectImage(bytes),assetId=randomUUID(),storedName=`${assetId}.${info.extension}`,directory=this.store.directory('image-files',id);fs.mkdirSync(directory,{recursive:true});
+    const asset={id:assetId,key:keyFor(binding.role,binding.targetId),role:binding.role,targetId:binding.targetId,targetVersion:binding.targetVersion,version:workspace.assets.filter(a=>a.key===keyFor(binding.role,binding.targetId)).length+1,filename:`${task.input.testFixture?'TEST-NOT-AI-':''}${task.serviceSnapshot.provider}-${assetId}.${info.extension}`,storedName,...info,size:bytes.length,sha256:digest(bytes),source:{kind:task.input.testFixture?'test':'service-api',description:task.input.testFixture?'隔离TEST素材，不是实际AI结果。':`${task.serviceSnapshot.provider} 实际接口回执与文件；待人工视觉检查。`},...copy(binding.binding),packetId:null,assetPurpose:binding.assetPurpose,inputSnapshot:copy(binding.inputSnapshot),inputSnapshotHash:creativeHash(binding.inputSnapshot),entityRefs:copy(binding.entityRefs),generation:copy(evidence),modelInputVerification:'transport_recorded_tool_reference_usage_not_verified',createdAt:now()};
+    fs.writeFileSync(path.join(directory,storedName),bytes,{flag:'wx'});this.save({...workspace,assets:[...workspace.assets,asset]});return asset;
   }
   review(id,{revision,assetId,verdict,notes=''}) {
     const workspace=this.get(id);this.check(workspace,revision);
