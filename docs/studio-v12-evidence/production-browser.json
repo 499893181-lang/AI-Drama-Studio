@@ -1,0 +1,45 @@
+{
+  "label": "TEST FIXTURE / NOT AI",
+  "realModelCalls": 0,
+  "checks": [
+    "Actual Chrome decoded and advanced TEST sine-wave audio; explicitly NOT AI speech.",
+    "Edited and saved an existing multi-track plan through the real UI; source snapshots were not resubmitted as editable fields; refresh preserved all tracks, captions and volume.",
+    "Actual exported MP4 decoded and advanced in Chrome; old export retained after a new edit version.",
+    "Real browser uploaded labelled TEST audio as independent BGM, then reviewed, selected, decoded and restored it without a fake dialogue or character card.",
+    "Voice performance edit invalidated its previous audio and dependent edit plan without changing original files or historical versions.",
+    "Actual application restart restored voice edit, immutable asset history, edit plan and review-needed state."
+  ],
+  "media": {
+    "audio": {
+      "duration": 2,
+      "currentTime": 0.264044,
+      "readyState": 4,
+      "videoWidth": null,
+      "videoHeight": null
+    },
+    "video": {
+      "duration": 6.52,
+      "currentTime": 0.311045,
+      "readyState": 4,
+      "videoWidth": 640,
+      "videoHeight": 360
+    },
+    "captionSampleTime": 1.5,
+    "independentBgm": {
+      "duration": 2,
+      "currentTime": 0.298331,
+      "readyState": 4,
+      "videoWidth": null,
+      "videoHeight": null
+    }
+  },
+  "screenshots": [
+    "voice-test-audio-playback-1440.png",
+    "editing-existing-plan-saved-1440.png",
+    "editing-test-mp4-playback-1440.png",
+    "editing-test-caption-at-1p5s.png",
+    "editing-independent-test-bgm-selected.png",
+    "voice-stale-after-performance-change-1366.png"
+  ],
+  "passed": true
+}
